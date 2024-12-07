@@ -1,0 +1,398 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Registration - Student</title>
+    <link rel="stylesheet" href="{% static 'css/register_stud.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>
+    <body>
+
+       
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR4DvR0F3-QAhTirfUZl7u8qrAAxnzXnuzdA&s" class="corner-image" alt="Corner Image">
+        <div class="floating-title"  style="animation-duration: 30s;">CHARITHAM - RVCE Placement Portal</div>
+    </body>
+    
+
+
+<!-- Student Placement Registration Form -->
+<div class="form-container">
+    <div class="register-container">
+        <h1>STUDENT <br>PLACEMENT REGISTRATION FORM</h1>
+
+        <!-- Personal Details Section -->
+        <div class="section">
+            <h1>Personal Details</h1>
+            <form action="reg_stud_submit" method="post" enctype="multipart/form-data">
+                 
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md-4">  <!-- Adjust column width to control input field size -->
+                        <div class="form-group">
+                          <label for="fullName">Full Name</label>
+                          <input type="text" class="form-control" id="fullName" name="fullName" required placeholder="Enter your full name">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="dob">Date of Birth</label>
+                          <input type="date" class="form-control" id="dob" name="dob" required>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="gender">Gender</label>
+                          <select class="form-control" id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-4">  <!-- Adjust column width to control input field size -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="usn">USN</label>
+                            <input type="usn" id="usn" name="usn" required placeholder="Enter your USN">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="phone" id="phone" name="phone" required placeholder="Phone number">
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+        </div>
+
+        <!-- Educational Details Section -->
+        <!-- <div class="section"> -->
+            <h1>Educational Details</h1>
+            <!-- <form action="#" method="post"> -->
+                <div class="container mt-4">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="UGPG">UG/PG?</label>
+                          <select class="form-control" id="UGPG" name="UGPG" required>
+                            <option value="">Select</option>
+                            <option value="ug">UG</option>
+                            <option value="pg">PG</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="branch">Branch</label>
+                          <select class="form-control" id="branch" name="branch" required>
+                            <option value="">Select Branch</option>
+                            <option value="cs">CS</option>
+                            <option value="is">IS</option>
+                            <option value="cd">CD</option>
+                            <option value="cy">CY</option>
+                            <option value="ec">EC</option>
+                            <option value="me">ME</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="cgpa">CGPA</label>
+                          <input type="number" class="form-control" id="cgpa" name="cgpa" required placeholder="CGPA" step="0.01" min="0" max="10">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="yearOfGraduation">Year of Graduation</label>
+                          <input type="number" class="form-control" id="yearOfGraduation" name="yearOfGraduation" required placeholder="Year" min="2024" max="2100">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="tenthMarks">10th Marks</label>
+                          <input type="number" class="form-control" id="tenthMarks" name="tenthMarks" required placeholder="10th %" step="0.01" min="0" max="100">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="tenthStream">10th Stream</label>
+                          <select class="form-control" id="tenthStream" name="tenthStream" required>
+                            <option value="">Select Stream</option>
+                            <option value="icse">ICSE</option>
+                            <option value="cbse">CBSE</option>
+                            <option value="state">State</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="twelfthMarks">12th Marks</label>
+                          <input type="number" class="form-control" id="twelfthMarks" name="twelfthMarks" required placeholder="12th %" step="0.01" min="0" max="100">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="twelfthStream">12th Stream</label>
+                          <select class="form-control" id="twelfthStream" name="twelfthStream" required>
+                            <option value="">Select Stream</option>
+                            <option value="isc">ISC</option>
+                            <option value="cbse">CBSE</option>
+                            <option value="state">State</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="backlogs">No. of Backlogs</label>
+                          <input type="number" class="form-control" id="backlogs" name="backlogs" required placeholder="Backlogs" min="0" max="40">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="be_cgpa">B.E. CGPA (If PG student)</label>
+                          <input type="number" class="form-control" id="be_cgpa" name="be_cgpa" required placeholder="B.E. CGPA" step="0.01" min="0" max="10">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container mt-5">
+                    
+                    <!-- Table -->
+                <h1>Work Experience</h1>
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Job Title</th>
+                            <th>Company Name</th>
+                            <th>Experience (in months)</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody id="dynamicTable">
+                          <!-- Initial rows will be added dynamically -->
+                        </tbody>
+                      </table>
+                    </div>
+                
+                    <!-- Add Row Button -->
+                    <div class="text-end">
+                      <button id="addRow" class="btn btn-primary">+ Add Row</button>
+                    </div>
+                  </div>
+
+                  <h1>Skills</h1>
+                  <div class="container mt-3">
+                    <div class="row">
+        <!-- Technical Skills -->
+        <div id="hiddenSkillsGroup">
+            <div class="input-group dynamic-input-group">
+              <input type="text" class="form-control" name="hiddenSkills[]" placeholder="hidd1">
+              <button type="button" class="btn btn-outline-primary add-more" data-target="hiddenSkillsGroup">+</button>
+            </div>
+          <div class="input-group dynamic-input-group">
+            <input type="text" class="form-control" name="hiddenSkills[]" id="hiddenSkills[]" placeholder="hidd2">
+            <button type="button" class="btn btn-outline-danger remove-field">-</button>
+          </div></div>
+
+        <div class="col-md-6">
+      <div class="field-container">
+        <label class="form-label">Technical Skills</label>
+        <div id="technicalSkillsGroup">
+          <div class="input-group dynamic-input-group">
+            <input type="text" class="form-control" name="technicalSkills[]" placeholder="Enter a technical skill">
+            <button type="button" class="btn btn-outline-primary add-more" data-target="technicalSkillsGroup">+</button>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Soft Skills -->
+      <div class="col-md-6">
+      <div class="field-container">
+        <label class="form-label">Soft Skills</label>
+        <div id="softSkillsGroup">
+          <div class="input-group dynamic-input-group">
+            <input type="text" class="form-control" name="softSkills[]" placeholder="Enter a soft skill">
+            <button type="button" class="btn btn-outline-primary add-more" data-target="softSkillsGroup">+</button>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Certifications -->
+      <div class="col-md-7">
+      <div class="field-container">
+        <label class="form-label">Certifications</label>
+        <div id="certificationsGroup">
+          <div class="input-group dynamic-input-group">
+            <input type="text" class="form-control" name="certifications[]" placeholder="Enter a certification">
+            <button type="button" class="btn btn-outline-primary add-more" data-target="certificationsGroup">+</button>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Interested Domains -->
+      <div class="col-md-5">
+        <div class="field-container">
+          <label class="form-label">Interested Domains</label>
+          <div id="domainsGroup">
+            <div class="input-group dynamic-input-group">
+              <input type="text" class="form-control" name="domains[]" placeholder="Enter an interested domain">
+              <button type="button" class="btn btn-outline-primary add-more" data-target="domainsGroup">+</button>
+            </div>
+          </div>
+        </div></div>
+
+      <!-- Languages -->
+      <div class="col-md-4">
+      <div class="field-container">
+        <label class="form-label">Programming Languages</label>
+        <div id="languagesGroup">
+          <div class="input-group dynamic-input-group">
+            <input type="text" class="form-control" name="languages[]" placeholder="Enter a language">
+            <button type="button" class="btn btn-outline-primary add-more" data-target="languagesGroup">+</button>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- Achievements -->
+      <div class="col-md-8">
+        <div class="field-container">
+          <label class="form-label">Achievements</label>
+          <div id="achievementsGroup">
+            <div class="input-group dynamic-input-group">
+              <input type="text" class="form-control" name="achievements[]" placeholder="Enter an achievement">
+              <button type="button" class="btn btn-outline-primary add-more" data-target="achievementsGroup">+</button>
+            </div>
+          </div>
+        </div></div>
+
+            <!-- </form> -->
+        <!-- </div> -->
+                    </div></div>
+        <!-- Resume Section -->
+        <br>
+        <h1>Resume </h1>
+        <div class="container mt-4">
+            <div class="row">
+            <!-- <form action="#" method="post" enctype="multipart/form-data"> -->
+
+                <div class="form-group">
+                    <label for="resume">Choose your resume</label>
+                    <input type="file" id="resume" name="resume" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="register-btn">Submit Registration</button>
+                </div>
+            <!-- </form> -->
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+
+</body>
+<script>
+    // Add event listener to the add row button
+    document.getElementById('addRow').addEventListener('click', function () {
+      const tableBody = document.getElementById('dynamicTable');
+      
+      // Create a new row
+      const newRow = document.createElement('tr');
+      
+      // Create cells for input fields
+      newRow.innerHTML = `
+        <td><input type="text" class="form-control" name="w_jobtitle" id = "w_jobtitle" placeholder="Enter Job Title"></td>
+        <td><input type="text" class="form-control" name="w_compname" id = "w_compname" placeholder="Enter Company Name"></td>
+        <td><input type="number" class="form-control" name="w_jobmonths" id = "w_jobmonths" placeholder="Enter Months" min="1"></td>
+        <td class="text-center">
+          <button class="btn btn-danger btn-sm removeRow">Remove</button>
+        </td>
+      `;
+      
+      // Append the new row to the table
+      tableBody.appendChild(newRow);
+      
+      // Add event listener to the remove button in the newly added row
+      const removeButtons = document.querySelectorAll('.removeRow');
+      removeButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          button.closest('tr').remove();
+        });
+      });
+    });
+
+    document.querySelectorAll('.add-more').forEach(button => {
+      button.addEventListener('click', function () {
+        var targetId = this.dataset.target;
+        const targetGroup = document.getElementById(targetId);
+        targetId = targetId.substring(targetId.length - 5);
+        
+        // Create a new input group
+        const newInputGroup = document.createElement('div');
+        newInputGroup.classList.add('input-group', 'dynamic-input-group');
+        newInputGroup.innerHTML = `
+          <input type="text" class="form-control" name="${targetId}[]" id="${targetId}[]" placeholder="Enter more">
+          <button type="button" class="btn btn-outline-danger remove-field">-</button>
+        `;
+
+        // Append new input group
+        targetGroup.appendChild(newInputGroup);
+
+        // Add remove functionality to the new button
+        newInputGroup.querySelector('.remove-field').addEventListener('click', function () {
+          newInputGroup.remove();
+        });
+      });
+    });
+
+    // Remove field functionality for initial remove buttons
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.classList.contains('remove-field')) {
+        e.target.closest('.dynamic-input-group').remove();
+      }
+    });
+//     window.addEventListener("DOMContentLoaded", (event) => {
+//     const el = document.getElementById('registration_form');
+//     if (el) {
+//             el.addEventListener('submit', function (event) {
+//                 event.preventDefault(); // Prevent default form submission
+
+//                 const formData = new FormData(this); // Capture all form data
+
+//                 // Optional: Log form data for debugging
+//                 for (let [key, value] of formData.entries()) {
+//                     console.log(key, value);
+//                 }
+
+//                 // Submit the form manually (e.g., using fetch or XMLHttpRequest)
+//                 fetch('/reg_stud_submit/', {
+//                     method: 'POST',
+//                     body: formData,
+//                 })
+//                 .then(response => response.json())
+//                 .then(data => console.log(data))
+//                 .catch(error => console.error(error));
+//                 });
+//     }
+// });
+
+  </script>
+</html>
