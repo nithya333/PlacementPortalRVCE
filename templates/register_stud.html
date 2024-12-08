@@ -177,7 +177,7 @@
                     
                     <!-- Table -->
                 <h1>Work Experience</h1>
-                    <div class="table-responsive">
+                    <div class="form-group">
                       <table class="table table-bordered table-striped">
                         <thead class="table-light">
                           <tr>
@@ -203,24 +203,12 @@
                   <div class="container mt-3">
                     <div class="row">
         <!-- Technical Skills -->
-        <div id="hiddenSkillsGroup">
-            <div class="input-group dynamic-input-group">
-              <input type="text" class="form-control" name="hiddenSkills[]" placeholder="hidd1">
-              <button type="button" class="btn btn-outline-primary add-more" data-target="hiddenSkillsGroup">+</button>
-            </div>
-          <div class="input-group dynamic-input-group">
-            <input type="text" class="form-control" name="hiddenSkills[]" id="hiddenSkills[]" placeholder="hidd2">
-            <button type="button" class="btn btn-outline-danger remove-field">-</button>
-          </div></div>
 
         <div class="col-md-6">
       <div class="field-container">
         <label class="form-label">Technical Skills</label>
         <div id="technicalSkillsGroup">
-          <div class="input-group dynamic-input-group">
-            <input type="text" class="form-control" name="technicalSkills[]" placeholder="Enter a technical skill">
-            <button type="button" class="btn btn-outline-primary add-more" data-target="technicalSkillsGroup">+</button>
-          </div>
+            <input type="text" class="form-control" name="technicalSkills[]" placeholder="Your technical skills (comma separated)" multiple>
         </div>
       </div></div>
 
@@ -229,70 +217,53 @@
       <div class="field-container">
         <label class="form-label">Soft Skills</label>
         <div id="softSkillsGroup">
-          <div class="input-group dynamic-input-group">
-            <input type="text" class="form-control" name="softSkills[]" placeholder="Enter a soft skill">
-            <button type="button" class="btn btn-outline-primary add-more" data-target="softSkillsGroup">+</button>
+            <input type="text" class="form-control" name="softSkills[]" placeholder="Your soft skills (comma separated)" multiple>
           </div>
-        </div>
       </div></div>
 
       <!-- Certifications -->
-      <div class="col-md-7">
+      <div class="col-md-6">
       <div class="field-container">
         <label class="form-label">Certifications</label>
         <div id="certificationsGroup">
-          <div class="input-group dynamic-input-group">
-            <input type="text" class="form-control" name="certifications[]" placeholder="Enter a certification">
-            <button type="button" class="btn btn-outline-primary add-more" data-target="certificationsGroup">+</button>
-          </div>
+            <input type="text" class="form-control" name="certifications[]" placeholder="Your certifications (comma separated)" multiple>
         </div>
       </div></div>
 
       <!-- Interested Domains -->
-      <div class="col-md-5">
+      <div class="col-md-6">
         <div class="field-container">
           <label class="form-label">Interested Domains</label>
           <div id="domainsGroup">
-            <div class="input-group dynamic-input-group">
-              <input type="text" class="form-control" name="domains[]" placeholder="Enter an interested domain">
-              <button type="button" class="btn btn-outline-primary add-more" data-target="domainsGroup">+</button>
-            </div>
+              <input type="text" class="form-control" name="domains[]" placeholder="Interested Domains (comma separated)" multiple>
           </div>
         </div></div>
 
       <!-- Languages -->
-      <div class="col-md-4">
+      <div class="col-md-5">
       <div class="field-container">
         <label class="form-label">Programming Languages</label>
         <div id="languagesGroup">
-          <div class="input-group dynamic-input-group">
-            <input type="text" class="form-control" name="languages[]" placeholder="Enter a language">
-            <button type="button" class="btn btn-outline-primary add-more" data-target="languagesGroup">+</button>
-          </div>
+            <input type="text" class="form-control" name="languages[]" placeholder="Programming languages (comma separated)" multiple>
         </div>
       </div></div>
 
       <!-- Achievements -->
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="field-container">
           <label class="form-label">Achievements</label>
           <div id="achievementsGroup">
-            <div class="input-group dynamic-input-group">
-              <input type="text" class="form-control" name="achievements[]" placeholder="Enter an achievement">
-              <button type="button" class="btn btn-outline-primary add-more" data-target="achievementsGroup">+</button>
-            </div>
+              <input type="text" class="form-control" name="achievements[]" placeholder="Achievements (comma separated)" multiple>
           </div>
         </div></div>
+        </div></div>
 
-            <!-- </form> -->
-        <!-- </div> -->
-                    </div></div>
+
         <!-- Resume Section -->
         <br>
         <h1>Resume </h1>
         <div class="container mt-4">
             <div class="row">
-            <!-- <form action="#" method="post" enctype="multipart/form-data"> -->
 
                 <div class="form-group">
                     <label for="resume">Choose your resume</label>
@@ -301,7 +272,6 @@
                 <div class="form-group">
                     <button type="submit" class="register-btn">Submit Registration</button>
                 </div>
-            <!-- </form> -->
             </div>
         </div>
     </form>
