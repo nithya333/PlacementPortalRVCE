@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "register_login.apps.RegisterLoginConfig",
 ]
 
 MIDDLEWARE = [
@@ -89,8 +90,30 @@ DATABASES = {
        'PASSWORD': 'cse',
        'HOST': 'localhost',
        'PORT': '5432',
-   }
+   },
+   
 }
+# DATABASES = {
+#     'default' : {},
+#    'rdbms': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'placement_sql',
+#        'USER': 'postgres',
+#        'PASSWORD': 'cse',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    },
+#    'nrdbms': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'placement_sql',
+#        'USER': 'postgres',
+#        'PASSWORD': 'cse',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    },
+
+# }
+# DATABASE_ROUTERS = ["path.to.RdbmsRouter", "path.to.NrdbmsRouter"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -129,6 +152,9 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [ os.path.join(BASE_DIR,'static') ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -32,19 +32,19 @@
                     <div class="row">
                       <div class="col-md-4">  <!-- Adjust column width to control input field size -->
                         <div class="form-group">
-                          <label for="fullName">Full Name</label>
+                          <label for="fullName">Full Name *</label>
                           <input type="text" class="form-control" id="fullName" name="fullName" required placeholder="Enter your full name">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="dob">Date of Birth</label>
+                          <label for="dob">Date of Birth *</label>
                           <input type="date" class="form-control" id="dob" name="dob" required>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="gender">Gender</label>
+                          <label for="gender">Gender *</label>
                           <select class="form-control" id="gender" name="gender" required>
                             <option value="">Select Gender</option>
                             <option value="male">Male</option>
@@ -60,20 +60,20 @@
                     <div class="row">
                       <div class="col-md-4">  <!-- Adjust column width to control input field size -->
                         <div class="form-group">
-                            <label for="email">Email</label>
+                            <label for="email">Email *</label>
                             <input type="email" id="email" name="email" required placeholder="Enter your email">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                            <label for="usn">USN</label>
+                            <label for="usn">USN *</label>
                             <input type="usn" id="usn" name="usn" required placeholder="Enter your USN">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
                             <div class="form-group">
-                                <label for="phone">Phone Number</label>
+                                <label for="phone">Phone Number *</label>
                                 <input type="phone" id="phone" name="phone" required placeholder="Phone number">
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                     <div class="row">
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label for="UGPG">UG/PG?</label>
+                          <label for="UGPG">UG/PG? *</label>
                           <select class="form-control" id="UGPG" name="UGPG" required>
                             <option value="">Select</option>
                             <option value="ug">UG</option>
@@ -101,39 +101,52 @@
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="branch">Branch</label>
+                          <label for="branch">Branch *</label>
                           <select class="form-control" id="branch" name="branch" required>
                             <option value="">Select Branch</option>
-                            <option value="cs">CS</option>
-                            <option value="is">IS</option>
-                            <option value="cd">CD</option>
-                            <option value="cy">CY</option>
-                            <option value="ec">EC</option>
-                            <option value="me">ME</option>
+                            <option value="CS">CS</option>
+                            <option value="IS">IS</option>
+                            <option value="CD">CD</option>
+                            <option value="CY">CY</option>
+                            <option value="EC">EC</option>
+                            <option value="ME">ME</option>
+                            <option value="MCA">MCA</option>
+                            <option value="MCN">MCN</option>
                           </select>
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label for="cgpa">CGPA</label>
-                          <input type="number" class="form-control" id="cgpa" name="cgpa" required placeholder="CGPA" step="0.01" min="0" max="10">
-                        </div>
+                          <label for="sec">Section *</label>
+                          <select class="form-control" id="sec" name="sec" required>
+                            <option value="">Select</option>
+                            <option value="CSA">CSA</option>
+                            <option value="CSB">CSB</option>
+                            <option value="CSC">CSC</option>
+                            <option value="CSD">CSD</option>
+                            <option value="CD">CD</option>
+                            <option value="CY">CY</option>
+                            <option value="ECA">ECA</option>
+                            <option value="ECB">ECB</option>
+                            <option value="MCA">MCA</option>
+                            <option value="MCN">MCN</option>
+                          </select></div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label for="yearOfGraduation">Year of Graduation</label>
+                          <label for="yearOfGraduation">Year of Graduation *</label>
                           <input type="number" class="form-control" id="yearOfGraduation" name="yearOfGraduation" required placeholder="Year" min="2024" max="2100">
                         </div>
                       </div>
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label for="tenthMarks">10th Marks</label>
+                          <label for="tenthMarks">10th Marks *</label>
                           <input type="number" class="form-control" id="tenthMarks" name="tenthMarks" required placeholder="10th %" step="0.01" min="0" max="100">
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label for="tenthStream">10th Stream</label>
+                          <label for="tenthStream">10th Stream *</label>
                           <select class="form-control" id="tenthStream" name="tenthStream" required>
                             <option value="">Select Stream</option>
                             <option value="icse">ICSE</option>
@@ -144,13 +157,13 @@
                       </div>
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label for="twelfthMarks">12th Marks</label>
+                          <label for="twelfthMarks">12th Marks *</label>
                           <input type="number" class="form-control" id="twelfthMarks" name="twelfthMarks" required placeholder="12th %" step="0.01" min="0" max="100">
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label for="twelfthStream">12th Stream</label>
+                          <label for="twelfthStream">12th Stream *</label>
                           <select class="form-control" id="twelfthStream" name="twelfthStream" required>
                             <option value="">Select Stream</option>
                             <option value="isc">ISC</option>
@@ -161,13 +174,19 @@
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label for="backlogs">No. of Backlogs</label>
+                          <label for="cgpa">Current CGPA *</label>
+                          <input type="number" class="form-control" id="cgpa" name="cgpa" required placeholder="CGPA" step="0.01" min="0" max="10">
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="backlogs">No. of Backlogs *</label>
                           <input type="number" class="form-control" id="backlogs" name="backlogs" required placeholder="Backlogs" min="0" max="40">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="be_cgpa">B.E. CGPA (If PG student)</label>
+                          <label for="be_cgpa">B.E. CGPA (If PG student) *</label>
                           <input type="number" class="form-control" id="be_cgpa" name="be_cgpa" required placeholder="B.E. CGPA" step="0.01" min="0" max="10">
                         </div>
                       </div>
@@ -184,20 +203,35 @@
                             <th>Job Title</th>
                             <th>Company Name</th>
                             <th>Experience (in months)</th>
-                            <th>Actions</th>
+                            <!-- <th>Actions</th> -->
                           </tr>
                         </thead>
                         <tbody id="dynamicTable">
                           <!-- Initial rows will be added dynamically -->
+                          <tr>
+                            <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                            <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                            <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                            <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                            <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                            <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                            <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
                 
                     <!-- Add Row Button -->
-                    <div class="text-end">
+                    <!-- <div class="text-end">
                       <button id="addRow" class="btn btn-primary">+ Add Row</button>
                     </div>
-                  </div>
+                  </div> -->
 
                   <h1>Skills</h1>
                   <div class="container mt-3">
@@ -255,10 +289,66 @@
           <div id="achievementsGroup">
               <input type="text" class="form-control" name="achievements[]" placeholder="Achievements (comma separated)" multiple>
           </div>
-        </div></div>
-        </div></div>
-
-
+          </div>
+          </div>
+        <br>
+        <div class="col-md-7">
+          <div class="field-container">
+            <label class="form-label">Technologies</label>
+            <div id="technologiesGroup">
+                <input type="text" class="form-control" name="technologies[]" placeholder="Technologies (comma separated)" multiple>
+            </div>
+          </div></div>
+          </div></div>
+          <br>
+          
+        <h1>Projects</h1>
+        <div class="form-group">
+          <table class="table table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Project Title</th>
+                <th>Project Description</th>
+              </tr>
+            </thead>
+            <tbody id="dynamicTable">
+              <!-- Initial rows will be added dynamically -->
+              <tr>
+                <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+                <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+                </tr>
+              <tr>
+                <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+                <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+                </tr>
+              <tr>
+                <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+                <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+                  <br>
+        <h1>SPC Details</h1>
+                <div class="container mt-4">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="UGPG">Are you a SPC? *</label>
+                          <select class="form-control" id="spc" name="spc" required>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="form-group">
+                          <label for="spc_id">If yes, enter SPC ID</label>
+                          <input type="text" class="form-control" id="spc_id" name="spc_id" placeholder="SPC ID">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
         <!-- Resume Section -->
         <br>
         <h1>Resume </h1>
@@ -279,7 +369,7 @@
 </div>
 
 </body>
-<script>
+<!-- <script>
     // Add event listener to the add row button
     document.getElementById('addRow').addEventListener('click', function () {
       const tableBody = document.getElementById('dynamicTable');
@@ -364,5 +454,5 @@
 //     }
 // });
 
-  </script>
+  </script> -->
 </html>

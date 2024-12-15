@@ -49,5 +49,5 @@ def fetch_pdf():
 
 if __name__ == "__main__":
     main()
-    save_pdf()
-    fetch_pdf()
+    # save_pdf()
+    # fetch_pdf()
