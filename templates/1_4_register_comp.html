@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Coordinator - Registration</title>
+    <link rel="stylesheet" href="{% static 'css/register_stud.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        /* Custom Styling */
+        .top-bar {
+            background-color: #d1d2d4;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            color: rgb(45, 43, 43);
+            padding: 10px 20px;
+            height: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .top-bar .name {
+            font-size: 2rem;
+            font-variant: small-caps;
+            text-align: center;
+        }
+        .register-container {
+            background-color: #2caea1;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;  /* Ensures the form doesn't stretch too wide */
+            box-sizing: border-box;
+            
+        }
+  
+    </style>
+</head>
+<body>
+    <body>
+        <div class="top-bar d-flex justify-content-between align-items-center">
+            <div><a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <img src = "https://csitss.ieee-rvce.org/Logo3.png" style = "height: 4rem;"/>
+              </a></div>
+            <!-- <div class="logo">RV</div> -->
+            <div class="name">Charitham</div>
+            <div><a href="#" style="color: rgb(72, 71, 71); text-decoration:none ;font-style:italic; font-size:large">Go, Change The World</a></div>
+        </div></body>
+<!-- Faculty Coordinator Registration Form -->
+<br>
+<br>
+<div class="form-container">
+    <div class="register-container">
+        <h3>Company Registration Form</h3>
+        <br>
+        <!-- Personal Details Section -->
+        <div class="section">
+            <form action="reg_comp_submit" method="post">
+                <h4>Company Details</h4>
+                <div class="container mt-4">
+                    {% comment %} <div class="row"> {% endcomment %}
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="compName">Company Name</label>
+                            <input type="text" id="compName" name="compName" required placeholder="Name of organisation">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="compId">Company ID (as per college login)</label>
+                            <input type="text" id="compId" name="compId" required placeholder="ID of organisation">
+                        </div>
+                      </div>
+                      
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <label for="compType">Company Type</label>
+                              <select id="compType" name="compType" required>
+                                  <option value="">Select Type of Organisation</option>
+                                  <option value="Technology">Technology</option>
+                                  <option value="Healthcare">Healthcare</option>
+                                  <option value="Finance">Finance</option>
+                                  <option value="Manufacturing">Manufacturing</option>
+                                  <option value="Retail & E-commerce">Retail & E-commerce</option>
+                                  <option value="Education">Education</option>
+                                  <option value="other">Other</option>
+                              </select>
+                          </div>
+                      </div> 
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="compLoc">Company Location *</label>
+                            <input type="text" id="compLoc" name="compLoc" required placeholder="Enter company location">
+                        </div>
+                      </div>
+                      {% comment %} <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                    </div> {% endcomment %}
+                    {% comment %} <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="UGPG">UG/PG? *</label>
+                          <select class="form-control" id="UGPG" name="UGPG" required>
+                            <option value="">Coordinating UG/PG?</option>
+                            <option value="ug">UG</option>
+                            <option value="pg">PG</option>
+                          </select>
+                        </div>
+                      </div> {% endcomment %}
+                    </div>
+                <div class="container mt-4">
+                    <hr>
+                    <br>
+            <h4>Contact Person Details</h4>
+            <br>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="contName">Contact Person's Name</label>
+                            <input type="text" id="contName" name="contName" required placeholder="Enter your name">
+                        </div>
+                    </div>
+            
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="contEmail">Contact Person's Email</label>
+                            <input type="email" id="contEmail" name="contEmail" required placeholder="Enter your email address">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="contPhone">Contact Person's Phone Number *</label>
+                                <input type="phone" id="contPhone" name="contPhone" required placeholder="Phone number">
+                            </div>
+                        </div>
+                      {% comment %} </div> {% endcomment %}
+            </form>
+        </div><br>
+        <div class="form-group">
+            <button type="submit" class="register-btn">Submit Registration</button>
+        </div>
+       
+            </div>
+        </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

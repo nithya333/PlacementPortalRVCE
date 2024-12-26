@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #dae8f1;
+  }
+
+  .nav-link.active {
+    background-color: #3f7fa6; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #7eafce; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #23465c;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+</style>
+<div class="d-flex">
+    <!-- Side Panel -->
+    <!-- <div class="side-panel">
+        <a href="#">Profile</a>
+        <a href="#">Track Applied Jobs</a>
+        <a href="#">Check New Offers</a>
+    </div> -->
+    {% comment %} <div class="card" >
+      <img
+        src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg"
+        class="card-img-top"
+        style="width: 15rem;"
+      />
+      <div class="card-body">
+        <h5 class="card-title" style="padding-top: 5px">
+          Student Name : <%= student.student_fullName %>
+        </h5>
+        <p class="card-text"></p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><b>USN:</b> <%= student.student_id %></li>
+        <li class="list-group-item"><b>Student email:</b> <%= student.student_email %></li>
+        <li class="list-group-item"><b>Student Department:</b> <%= student.student_dept %></li>
+        <li class="list-group-item"><b>Student Class:</b> <%= student.student_class_name %></li>
+      </ul>
+    </div> {% endcomment %}
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              Nithyashree
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/student/home" class="nav-link link-dark" aria-current="page">
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/student/profile" class="nav-link active" style = "background-color: #3f7fa6; ">
+                <i class="bi bi-person-fill me-2"></i>
+              Profile
+            </a>
+          </li>
+          <li>
+            <a href="/student/applied" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+              Applied Jobs
+            </a>
+          </li>
+          <li>
+            <a href="/student/new" class="nav-link link-dark">
+                <i class="bi bi-megaphone me-2"></i>
+              New Offers
+            </a>
+          </li>
+          {% comment %} <li>
+            <a href="#" class="nav-link link-dark">
+                <i class="bi bi-peoplecircle me-2"></i>
+              Customers
+            </a>
+          </li> {% endcomment %}
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+        
+<!-- Student Placement Registration Form -->
+<div class="form-container">
+  <div class="register-container">
+
+      <!-- Personal Details Section -->
+      <div class="section">
+          <h3>Personal Details</h3>
+          <form action="reg_stud_submit" method="post" enctype="multipart/form-data">
+               
+              <div class="container">
+                  <div class="row">
+                    <div class="col-md-4">  <!-- Adjust column width to control input field size -->
+                      <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" required placeholder="Enter your full name">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="dob">Date of Birth *</label>
+                        <input type="date" class="form-control" id="dob" name="dob" required>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                          <option value="">Select Gender</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-4">  <!-- Adjust column width to control input field size -->
+                      <div class="form-group">
+                          <label for="email">Email *</label>
+                          <input type="email" id="email" name="email" required placeholder="Enter your email">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="usn">USN *</label>
+                          <input type="usn" id="usn" name="usn" required placeholder="Enter your USN">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                          <div class="form-group">
+                              <label for="phone">Phone Number *</label>
+                              <input type="phone" id="phone" name="phone" required placeholder="Phone number">
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          
+          </div>
+
+      <!-- Educational Details Section -->
+      <!-- <div class="section"> -->
+          <h3>Educational Details</h3>
+          <!-- <form action="#" method="post"> -->
+              <div class="container mt-4">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="UGPG">UG/PG? *</label>
+                        <select class="form-control" id="UGPG" name="UGPG" required>
+                          <option value="">Select</option>
+                          <option value="ug">UG</option>
+                          <option value="pg">PG</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="branch">Branch *</label>
+                        <select class="form-control" id="branch" name="branch" required>
+                          <option value="">Select Branch</option>
+                          <option value="CS">CS</option>
+                          <option value="IS">IS</option>
+                          <option value="CD">CD</option>
+                          <option value="CY">CY</option>
+                          <option value="EC">EC</option>
+                          <option value="ME">ME</option>
+                          <option value="MCA">MCA</option>
+                          <option value="MCN">MCN</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="sec">Section *</label>
+                        <select class="form-control" id="sec" name="sec" required>
+                          <option value="">Select</option>
+                          <option value="CSA">CSA</option>
+                          <option value="CSB">CSB</option>
+                          <option value="CSC">CSC</option>
+                          <option value="CSD">CSD</option>
+                          <option value="CD">CD</option>
+                          <option value="CY">CY</option>
+                          <option value="ECA">ECA</option>
+                          <option value="ECB">ECB</option>
+                          <option value="MCA">MCA</option>
+                          <option value="MCN">MCN</option>
+                        </select></div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="yearOfGraduation">Year of Graduation *</label>
+                        <input type="number" class="form-control" id="yearOfGraduation" name="yearOfGraduation" required placeholder="Year" min="2024" max="2100">
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="tenthMarks">10th Marks *</label>
+                        <input type="number" class="form-control" id="tenthMarks" name="tenthMarks" required placeholder="10th %" step="0.01" min="0" max="100">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="tenthStream">10th Stream *</label>
+                        <select class="form-control" id="tenthStream" name="tenthStream" required>
+                          <option value="">Select Stream</option>
+                          <option value="icse">ICSE</option>
+                          <option value="cbse">CBSE</option>
+                          <option value="state">State</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="twelfthMarks">12th Marks *</label>
+                        <input type="number" class="form-control" id="twelfthMarks" name="twelfthMarks" required placeholder="12th %" step="0.01" min="0" max="100">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="twelfthStream">12th Stream *</label>
+                        <select class="form-control" id="twelfthStream" name="twelfthStream" required>
+                          <option value="">Select Stream</option>
+                          <option value="isc">ISC</option>
+                          <option value="cbse">CBSE</option>
+                          <option value="state">State</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="cgpa">Current CGPA *</label>
+                        <input type="number" class="form-control" id="cgpa" name="cgpa" required placeholder="CGPA" step="0.01" min="0" max="10">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="backlogs">No. of Backlogs *</label>
+                        <input type="number" class="form-control" id="backlogs" name="backlogs" required placeholder="Backlogs" min="0" max="40">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="be_cgpa">B.E. CGPA (If PG student) </label>
+                        <input type="number" class="form-control" id="be_cgpa" name="be_cgpa" placeholder="B.E. CGPA" step="0.01" min="0" max="10">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="container mt-5">
+                  
+                  <!-- Table -->
+              <h3>Work Experience</h3>
+                  <div class="form-group">
+                    <table class="table table-bordered table-striped">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Job Title</th>
+                          <th>Company Name</th>
+                          <th>Experience (in months)</th>
+                          <!-- <th>Actions</th> -->
+                        </tr>
+                      </thead>
+                      <tbody id="dynamicTable">
+                        <!-- Initial rows will be added dynamically -->
+                        <tr>
+                          <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                          <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                          <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                        </tr>
+                        <tr>
+                          <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                          <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                          <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                        </tr>
+                        <tr>
+                          <td><input type="text" class="form-control" name="w_jobtitle[]" id = "w_jobtitle[]" placeholder="Enter Job Title"></td>
+                          <td><input type="text" class="form-control" name="w_compname[]" id = "w_compname[]" placeholder="Enter Company Name"></td>
+                          <td><input type="number" class="form-control" name="w_jobmonths[]" id = "w_jobmonths[]" placeholder="Enter Months" min="1"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              
+                  <!-- Add Row Button -->
+                  <!-- <div class="text-end">
+                    <button id="addRow" class="btn btn-primary">+ Add Row</button>
+                  </div>
+                </div> -->
+
+                <h3>Skills</h3>
+                <div class="container mt-3">
+                  <div class="row">
+      <!-- Technical Skills -->
+
+      <div class="col-md-6">
+    <div class="field-container">
+      <label class="form-label">Technical Skills</label>
+      <div id="technicalSkillsGroup">
+          <input type="text" class="form-control" name="technicalSkills[]" placeholder="Your technical skills (comma separated)" multiple>
+      </div>
+    </div></div>
+
+    <!-- Soft Skills -->
+    <div class="col-md-6">
+    <div class="field-container">
+      <label class="form-label">Soft Skills</label>
+      <div id="softSkillsGroup">
+          <input type="text" class="form-control" name="softSkills[]" placeholder="Your soft skills (comma separated)" multiple>
+        </div>
+    </div></div>
+
+    <!-- Certifications -->
+    <div class="col-md-6">
+    <div class="field-container">
+      <label class="form-label">Certifications</label>
+      <div id="certificationsGroup">
+          <input type="text" class="form-control" name="certifications[]" placeholder="Your certifications (comma separated)" multiple>
+      </div>
+    </div></div>
+
+    <!-- Interested Domains -->
+    <div class="col-md-6">
+      <div class="field-container">
+        <label class="form-label">Interested Domains</label>
+        <div id="domainsGroup">
+            <input type="text" class="form-control" name="domains[]" placeholder="Interested Domains (comma separated)" multiple>
+        </div>
+      </div></div>
+
+    <!-- Languages -->
+    <div class="col-md-5">
+    <div class="field-container">
+      <label class="form-label">Programming Languages</label>
+      <div id="languagesGroup">
+          <input type="text" class="form-control" name="languages[]" placeholder="Programming languages (comma separated)" multiple>
+      </div>
+    </div></div>
+
+    <!-- Achievements -->
+    <div class="col-md-7">
+      <div class="field-container">
+        <label class="form-label">Achievements</label>
+        <div id="achievementsGroup">
+            <input type="text" class="form-control" name="achievements[]" placeholder="Achievements (comma separated)" multiple>
+        </div>
+        </div>
+        </div>
+      <br>
+      <div class="col-md-7">
+        <div class="field-container">
+          <label class="form-label">Technologies</label>
+          <div id="technologiesGroup">
+              <input type="text" class="form-control" name="technologies[]" placeholder="Technologies (comma separated)" multiple>
+          </div>
+        </div></div>
+        </div></div>
+        <br>
+        
+      <h3>Projects</h3>
+      <div class="form-group">
+        <table class="table table-bordered table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>Project Title</th>
+              <th>Project Description</th>
+            </tr>
+          </thead>
+          <tbody id="dynamicTable">
+            <!-- Initial rows will be added dynamically -->
+            <tr>
+              <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+              <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+              </tr>
+            <tr>
+              <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+              <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+              </tr>
+            <tr>
+              <td><input type="text" class="form-control" name="sk_project_name[]" id = "sk_project_name[]" placeholder="Enter Project Title"></td>
+              <td><input type="text" class="form-control" name="sk_project_desc[]" id = "sk_project_desc[]" placeholder="Enter Project Description"></td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+                <br>
+      <h3>SPC Details</h3>
+              <div class="container mt-4">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="UGPG">Are you a SPC? *</label>
+                        <select class="form-control" id="spc" name="spc" required>
+                          <option value="no">No</option>
+                          <option value="yes">Yes</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="spc_id">If yes, enter SPC ID</label>
+                        <input type="text" class="form-control" id="spc_id" name="spc_id" placeholder="SPC ID">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+      <!-- Resume Section -->
+      <br>
+      <h3>Resume </h3>
+      <div class="container mt-4">
+          <div class="row">
+
+              <div class="form-group">
+                  <label for="resume">Choose your resume</label>
+                  <input type="file" id="resume" name="resume" required>
+              </div>
+              <div class="form-group">
+                  <button type="submit" class="register-btn" style="background-color: #3f7fa6;">Update Profile</button>
+              </div>
+          </div>
+      </div>
+  </form>
+  </div>
+</div>
+    </div>
+</div>
+{% endblock %}

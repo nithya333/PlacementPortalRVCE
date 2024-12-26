@@ -97,3 +97,14 @@ class Company(models.Model):
     class Meta:
         managed = False
         db_table = 'company'
+
+class Resumes(models.Model):
+    # title = models.CharField(max_length=255)
+    # uploaded_at = models.DateTimeField(auto_now_add=True)
+    fi_id = models.BigAutoField(primary_key=True)
+    fi_name = models.CharField(max_length=60, blank=True, null=True)
+    fi_data = models.FileField(upload_to='resumes/')  # Specify the upload path
+
+    class Meta:
+        managed = False
+        db_table = 'resumes'

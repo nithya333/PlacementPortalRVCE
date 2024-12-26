@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    height: 100vh;  /* Ensure the body takes full height */
+}
+
+/* Centered Form Container */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;  /* Ensure the form starts at the top */
+    min-height: 100vh;  /* Ensures the container takes the full screen height */
+    padding: 20px;  /* Adds padding to prevent content from touching edges */
+}
+@keyframes float-left {
+    0% {
+        left: 80%; /* Start from the right */
+    }
+    100% {
+        left: -10%; /* End at the far left */
+    }
+} 
+.floating-title:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* More shadow when hovered */
+}
+
+/* Register Container Styling */
+/* #2caea1; */
+.register-container {
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;  /* Ensures the form doesn't stretch too wide */
+    box-sizing: border-box;
+}
+
+/* Title */
+.register-container h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+/* Section Headers */
+h3 {
+    
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="phone"],
+input[type="usn"],
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;  /* Ensure padding doesn't affect width */
+}
+
+/* Button Styling */
+.register-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Additional Styling for Form Elements */
+input[type="file"] {
+    border: none;
+}
+
+/* Make sure form sections are properly spaced */
+.section {
+    margin-bottom: 30px;  /* Adds space between each section */
+}
+
+
+    .add-row-btn {
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 10px;
+      color: #007bff;
+    }
+    .add-row-btn:hover {
+      color: #0056b3;
+    }

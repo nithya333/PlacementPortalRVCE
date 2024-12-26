@@ -2,12 +2,20 @@ from django.db import connection
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Department, Education, Students
+from .models import Department, Education, Students, Resumes
+import psycopg2
+import base64
+from base64 import b64encode
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
 def reg_common_view(request):
-    return render(request, 'register_common.html')
+    return render(request, '1_1_register_common.html')
+
+
+def login_common_view(request):
+    return render(request, 'index.html')
 
 @csrf_exempt
 def reg_common_submit(request):
@@ -15,14 +23,14 @@ def reg_common_submit(request):
         usertype = request.POST.get('usertype')
         useremail = request.POST.get('useremail')
         password = request.POST.get('password')
-        
+
         print(f"useremail: {useremail}, Usertype: {usertype}, Password: {password}")
 
         # Query database to verify user credentials
         try:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    SELECT COUNT(*)
+                    SELECT u_id
                     FROM users
                     WHERE u_email = %s AND u_type = %s AND u_pass = %s
                 """, [useremail, usertype, password])
@@ -30,20 +38,81 @@ def reg_common_submit(request):
                 result = cursor.fetchone()
 
                 # Check if the user exists
-                if result[0] > 0:
+                if result:  # This will be True if a row was fetched
+                    u_id = result[0]  # Fetch the `u_id` from the result tuple
+                    request.session['u_type'] = usertype
+                    request.session['u_id'] = u_id
+                    # username = request.session.get('username')
+
                     message = "Login successful!"
-                    print("Successful login")
-                    return render(request, 'register_stud.html', {'message': message})
+                    print(f"Successful login for user ID: {u_id}")
+
+                    if usertype == "Student":
+                        return render(request, '1_2_register_stud.html', {'message': message})
+                    elif usertype == "Coordinator":
+                        return render(request, '1_3_register_fac.html', {'message': message})
+                    elif usertype == "Company":
+                        return render(request, '1_4_register_comp.html', {'message': message})
+                    elif usertype == "Admin":
+                        return render(request, 'home_admin.html', {'message': message})
                 else:
                     message = "Invalid credentials. Please try again."
                     print("Invalid credentials")
-                    return render(request, 'register_common.html')
+                    return render(request, '1_1_register_common.html')
 
         except Exception as e:
             message = f"An error occurred: {str(e)}"
     else:
-        return render("register_common.html")
+        return render("1_1_register_common.html")
+    
+@csrf_exempt
+def login_common_submit(request):
+    if request.method == "POST":
+        usertype = request.POST.get('usertype')
+        useremail = request.POST.get('useremail')
+        password = request.POST.get('password')
 
+        print(f"useremail: {useremail}, Usertype: {usertype}, Password: {password}")
+
+        # Query database to verify user credentials
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT u_id
+                    FROM users
+                    WHERE u_email = %s AND u_type = %s AND u_pass = %s
+                """, [useremail, usertype, password])
+
+                result = cursor.fetchone()
+
+                # Check if the user exists
+                if result:  # This will be True if a row was fetched
+                    u_id = result[0]  # Fetch the `u_id` from the result tuple
+                    request.session['u_type'] = usertype
+                    request.session['u_id'] = u_id
+                    # username = request.session.get('username')
+
+                    message = "Login successful!"
+                    print(f"Successful login for user ID: {u_id}")
+
+                    if usertype == "Student":
+                        return render(request, '2_1_student_home.html', {'message': message})
+                    elif usertype == "Coordinator":
+                        return render(request, 'register_fac.html', {'message': message})
+                    elif usertype == "Company":
+                        return render(request, 'register_comp.html', {'message': message})
+                    elif usertype == "Admin":
+                        return render(request, 'home_admin.html', {'message': message})
+                else:
+                    message = "Invalid credentials. Please try again."
+                    print("Invalid credentials")
+                    return render(request, '1_1_register_common.html')
+
+        except Exception as e:
+            message = f"An error occurred: {str(e)}"
+    else:
+        return render("index.html")
+    
 @csrf_exempt
 def reg_stud_submit(request):
     if request.method == "POST":
@@ -60,12 +129,12 @@ def reg_stud_submit(request):
         st_id = request.POST.get('usn').strip()
         st_year_of_passing = request.POST.get('yearOfGraduation').strip()
         ug_pg = request.POST.get('UGPG') 
-        if ug_pg == "UG":
+        if ug_pg == "ug":
             st_program = bin(0)[2:]
         else:
             st_program = bin(1)[2:]
-        is_spc = request.POST.get('UGPG') 
-        if is_spc == "Yes":
+        is_spc = request.POST.get('spc') 
+        if is_spc == "yes":
             spc_id = request.POST.get('spc_id')
             spc_stud_id = st_id
         dept = request.POST.get('branch')
@@ -73,7 +142,6 @@ def reg_stud_submit(request):
         st_dept_id = departments.d_id
         # print(departments.d_id)
 
-        
         e_program = st_program
         e_student_id = st_id
         e_cgpa = request.POST.get('cgpa')
@@ -82,7 +150,7 @@ def reg_stud_submit(request):
         e_12thmarks = request.POST.get('twelfthMarks')
         e_12thstream = request.POST.get('twelfthStream')
         e_backlogs = request.POST.get('backlogs')
-        e_be_cgpa = request.POST.get('be_cgpa')
+        e_be_cgpa = request.POST.get('be_cgpa') if 'be_cgpa' in request.POST else None
 
         w_program = st_program
         w_student_id = st_id
@@ -101,6 +169,28 @@ def reg_stud_submit(request):
         sk_project_name = request.POST.getlist('sk_project_name[]') if 'sk_project_name[]' in request.POST else []
         sk_project_desc = request.POST.getlist('sk_project_desc[]') if 'sk_project_desc[]' in request.POST else []
 
+        a = Resumes(fi_name=st_name, fi_data=request.FILES['resume'])
+        a.save()
+
+        conn = psycopg2.connect(
+        host="localhost",
+        database="placement_sql",
+        user="postgres",
+        password="cse"
+        )
+        cursor = conn.cursor()
+
+        # Fetch the PDF data
+        cursor.execute("SELECT fi_data FROM resumes WHERE fi_id = %s", ('3'))
+        pdf_data = cursor.fetchone()[0]
+
+        # Return the PDF as an HTTP response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="document_{3}.pdf"'
+        response.write(pdf_data)
+
+        cursor.close()
+        conn.close()
 
         # edu = Education(
         #     e_program=e_program,
@@ -140,16 +230,138 @@ def reg_stud_submit(request):
                             VALUES (%s, %s, %s, %s, %s)
                         """, (w_student_id, job_title, company, months, w_program))
 
-            if is_spc == "Yes":
+            if is_spc == "yes":
                 cursor.execute("""
-                    INSERT INTO education (spc_id, spc_stud_id)
+                    INSERT INTO spc (spc_id, spc_stud_id)
                     VALUES (%s, %s)
                 """, (spc_id, spc_stud_id))
             
 
-        return render(request, 'register_stud.html')
+        return render(request, '2_1_student_home.html')
     else:
         return render(request, 'register_stud.html')
+    
+
+# @csrf_exempt
+# def reg_common_submit(request):
+#     if request.method == "POST":
+#         usertype = request.POST.get('usertype')
+#         useremail = request.POST.get('useremail')
+#         password = request.POST.get('password')
+        
+#         print(f"useremail: {useremail}, Usertype: {usertype}, Password: {password}")
+
+#         # Query database to verify user credentials
+#         try:
+#             with connection.cursor() as cursor:
+#                 cursor.execute("""
+#                     SELECT COUNT(*)
+#                     FROM users
+#                     WHERE u_email = %s AND u_type = %s AND u_pass = %s
+#                 """, [useremail, usertype, password])
+
+#                 result = cursor.fetchone()
+
+#                 # Check if the user exists
+#                 if result[0] > 0:
+#                     message = "Login successful!"
+#                     print("Successful login")
+#                     return render(request, 'register_stud.html', {'message': message})
+#                 else:
+#                     message = "Invalid credentials. Please try again."
+#                     print("Invalid credentials")
+#                     return render(request, '1_1_register_common.html')
+
+#         except Exception as e:
+#             message = f"An error occurred: {str(e)}"
+#     else:
+#         return render("1_1_register_common.html")
+
+@csrf_exempt
+def reg_fac_submit(request):
+    if request.method == "POST":
+        print(request.POST)
+        cd_name = request.POST.get('fullName').strip()
+        cd_id = request.POST.get('co_id').strip()
+        # cd_dob = request.POST.get('dob')
+        # cd_gender = request.POST.get('gender')
+        program = request.POST.get('UGPG')
+        dept = request.POST.get('branch')
+        cd_email = request.POST.get('email').strip()
+        cd_phone = request.POST.get('phone').strip()
+        st_name = request.POST.get('fullName').strip()
+
+        if program == "ug":
+            cd_program = bin(0)[2:]
+        else:
+            cd_program = bin(1)[2:]
+        
+        dept = request.POST.get('branch')
+        departments = Department.objects.get(d_abbr_code = dept)
+        cd_dept_id = departments.d_id
+
+
+        with connection.cursor() as cursor:
+            # %s is a placeholder for any datatype, prevents SQL injection
+            cursor.execute("""
+                INSERT INTO coordinator (cd_name, cd_id, cd_email, cd_phone, cd_program, cd_dept_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (cd_name, cd_id, cd_email, cd_phone, cd_program, cd_dept_id))
+            
+
+        return render(request, 'register_fac.html')
+    else:
+        return render(request, 'register_fac.html')
+        
+
+
+@csrf_exempt
+def reg_comp_submit(request):
+    if request.method == "POST":
+        print(request.POST)
+        cp_id = request.POST.get('compId').strip()
+        cp_name = request.POST.get('compName').strip()
+        cp_type = request.POST.get('compType')
+        cp_location = request.POST.get('compLoc').strip()
+        cp_contact_name = request.POST.get('contName').strip()
+        cp_contact_email = request.POST.get('contEmail')
+        cp_contact_phone = request.POST.get('contPhone')
+        
+        with connection.cursor() as cursor:
+            # %s is a placeholder for any datatype, prevents SQL injection
+            cursor.execute("""
+                INSERT INTO company (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone )
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone ))
+            
+
+        return render(request, 'register_comp.html')
+    else:
+        return render(request, 'register_comp.html')
+    
+# @csrf_exempt
+# def reg_admin_submit(request):
+#     if request.method == "POST":
+#         print(request.POST)
+#         cp_id = request.POST.get('compId').strip()
+#         cp_name = request.POST.get('compName').strip()
+#         cp_type = request.POST.get('compType')
+#         cp_location = request.POST.get('compLoc').strip()
+#         cp_contact_name = request.POST.get('contName').strip()
+#         cp_contact_email = request.POST.get('contEmail')
+#         cp_contact_phone = request.POST.get('contPhone')
+        
+#         with connection.cursor() as cursor:
+#             # %s is a placeholder for any datatype, prevents SQL injection
+#             cursor.execute("""
+#                 INSERT INTO company (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone )
+#                 VALUES (%s, %s, %s, %s, %s, %s, %s)
+#             """, (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone ))
+            
+
+#         return render(request, 'register_comp.html')
+#     else:
+#         return render(request, 'register_comp.html')
         
 
     

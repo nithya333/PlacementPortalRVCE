@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "register_login.apps.RegisterLoginConfig",
+    "student_func.apps.StudentFuncConfig",
 ]
 
 MIDDLEWARE = [
