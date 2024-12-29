@@ -68,7 +68,7 @@
             alt="Student Icon" 
               class="student-icon"
               >
-              Nithyashree
+              {{ request.session.u_name }}
             </a>
           </li>
           <hr>
@@ -96,6 +96,12 @@
               New Offers
             </a>
           </li>
+          <li>
+            <a href="/student/fetchpdf/{{ request.session.u_id|default:'' }}" class="nav-link link-dark">
+                <i class="bi bi-download me-2"></i>
+              Export Resume
+            </a>
+          </li>
           {% comment %} <li>
             <a href="#" class="nav-link link-dark">
                 <i class="bi bi-peoplecircle me-2"></i>
@@ -115,7 +121,7 @@
       <!-- Personal Details Section -->
       <div class="section">
           <h3>Personal Details</h3>
-          <form action="reg_stud_submit" method="post" enctype="multipart/form-data">
+          <form action="/student/profile_submit" method="post" enctype="multipart/form-data">
                
               <div class="container">
                   <div class="row">

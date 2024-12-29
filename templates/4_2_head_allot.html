@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #ffe6cc;
+  }
+
+  .nav-link.active {
+    background-color: #b35c00; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #994f00; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #804200;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/head/home" class="nav-link link-dark" >
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/head/allot_slots"  class="nav-link active" style = "background-color: #b35c00; ">
+                <i class="bi bi-calendar-fill me-2"></i>
+              Allot slots
+            </a>
+          </li>
+          <li>
+            <a href="/head/track_placements" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+             Track Placements
+            </a>
+          </li>
+          <li>
+            <a href="/head/review_feedback" class="nav-link link-dark">
+                <i class="bi bi-search me-2"></i>
+              Review Feedback
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+      <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+      <style>
+        .container {
+          display: flex;
+          gap: 2rem;
+        }
+        .calendar-container, .job-list {
+          width: 50%;
+        }
+        .job-list {
+          border: 1px solid #ccc;
+          padding: 1rem;
+          background-color: #f9f9f9;
+        }
+        .job-item {
+          margin-bottom: 1rem;
+          padding: 0.5rem;
+          border: 1px solid #ddd;
+          background: #fff;
+        }
+        .job-item input {
+          margin: 0.2rem 0;
+        }
+        .allocate-btn {
+          margin-top: 0.5rem;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Placement Head - Allot Slots</h1>
+      <div class="container">
+        <!-- Calendar Section -->
+        <div class="calendar-container">
+          <div id="calendar"></div>
+        </div>
+    
+        <!-- Job List Section -->
+        <div class="job-list">
+          <h3>Upcoming Jobs</h3>
+          {% for job in jobs %}
+          <div class="job-item" data-job-id="{{ job._id }}">
+            <p><strong>Company:</strong> {{ job.company_name }}</p>
+            <p><strong>Role:</strong> {{ job.job_role }}</p>
+            <p><strong>Package:</strong> {{ job.package }}</p>
+            {% comment %} <label for="ppt-{{ job._id }}">PPT Date:</label>
+            <input type="date" id="ppt-{{ job._id }}">
+            <label for="oa-{{ job._id }}">OA Date:</label>
+            <input type="date" id="oa-{{ job._id }}">
+            <label for="interview-{{ job._id }}">Interview Date:</label>
+            <input type="date" id="interview-{{ job._id }}"> {% endcomment %}
+            <button class="allocate-btn" onclick="allocateDates('{{ job._id }}')">Allocate</button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const calendarEl = document.getElementById('calendar');
+          const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: {{ events | safe }},
+          });
+          calendar.render();
+        });
+    
+        function allocateDates(jobId) {
+          const pptDate = document.getElementById(`ppt-${jobId}`).value;
+          const oaDate = document.getElementById(`oa-${jobId}`).value;
+          const interviewDate = document.getElementById(`interview-${jobId}`).value;
+    
+          fetch('/head/allot_slots/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+              job_id: jobId,
+              ppt_date: pptDate,
+              oa_date: oaDate,
+              interview_date: interviewDate,
+            }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Dates allocated successfully!');
+              location.reload(); // Reload to update the calendar
+            } else {
+              alert('Failed to allocate dates. Please try again.');
+            }
+          });
+        }
+      </script>
+</div>
+{% endblock %}

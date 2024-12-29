@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "register_login.apps.RegisterLoginConfig",
     "student_func.apps.StudentFuncConfig",
+    "company_func.apps.CompanyFuncConfig",
+    "admin_func.apps.AdminFuncConfig",
 ]
 
 MIDDLEWARE = [

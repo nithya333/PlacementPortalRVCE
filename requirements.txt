@@ -2,3 +2,4 @@ django
 psycopg2
 pymongo[snappy,gssapi,srv,tls]
 dnspython
+reportlab

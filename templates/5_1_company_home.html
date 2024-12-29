@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #d9f2e5;
+  }
+
+  .nav-link.active {
+    background-color: #3bab71; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #7ad1a4; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2e8558;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/company/home" class="nav-link active" style = "background-color: #3bab71; ">
+                <i class="bi bi-house-door-fill me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/company/postjob" class="nav-link link-dark" >
+                <i class="bi bi-megaphone me-2"></i>
+              Post New Job
+            </a>
+          </li>
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+              Ongoing Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/college_history" class="nav-link link-dark">
+                <i class="bi bi-check-circle me-2"></i>
+              Placement History
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+
+</div>
+{% endblock %}

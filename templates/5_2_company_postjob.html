@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #d9f2e5;
+  }
+
+  .nav-link.active {
+    background-color: #3bab71; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #7ad1a4; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2e8558;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/company/home" class="nav-link link-dark">
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/company/postjob" class="nav-link active"  style = "background-color: #3bab71; ">
+                <i class="bi bi-megaphone-fill me-2"></i>
+              Post New Job
+            </a>
+          </li>
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+              Ongoing Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/college_history" class="nav-link link-dark">
+                <i class="bi bi-check-circle me-2"></i>
+              Placement History
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+        
+<!-- Student Placement Registration Form -->
+<div class="form-container">
+  <div class="register-container">
+
+      
+    <!-- Personal Details Section -->
+      <div class="section">
+          <h3>Job Role Details</h3>
+          <form action="/company/postjob_submit" method="post" enctype="multipart/form-data">
+               
+              <div class="container">
+                  <div class="row">
+                    <div class="col-md-5">  <!-- Adjust column width to control input field size -->
+                      <div class="form-group">
+                        <label for="job_title">Job Title *</label>
+                        <input type="text" class="form-control" id="job_title" name="job_title" required placeholder="Enter your full name">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="job_type">Type *</label>
+                        <select class="form-control" id="job_type" name="job_type" required>
+                          <option value="">Select</option>
+                          <option value="internship">Internship</option>
+                          <option value="full_time">Full-time</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="job_duration">Duration *</label>
+                        <select class="form-control" id="job_duration" name="job_duration" required>
+                          <option value="">Select Job Duration</option>
+                          <option value="2 months">2 months</option>
+                          <option value="3 months">3 months</option>
+                          <option value="6 months">6 months</option>
+                          <option value="12 months">12 months</option>
+                          <option value="Full time">Full time</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-7">  <!-- Adjust column width to control input field size -->
+                      <div class="form-group">
+                          <label for="job_desc">Job Description *</label>
+                          {% comment %} <input type="text" id="job_desc" name="job_desc" required placeholder="Enter your email"> {% endcomment %}
+                          <textarea id="job_desc" name="job_desc" rows="4" cols="50" placeholder="Enter the job description of the offered role."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="job_domain">Job Role Domain </label>
+                        <select class="form-control" id="job_domain" name="job_domain" >
+                          <option value="">Select</option>
+                          <option value="software_development">Software Development</option>
+                          <option value="data_science">Data Science</option>
+                          <option value="networking">Networking</option>
+                          <option value="embedded_systems">Embedded Systems</option>
+                          <option value="automation">Automation</option>
+                          <option value="civil_engineering">Civil Engineering</option>
+                          <option value="mechanical_engineering">Mechanical Engineering</option>
+                          <option value="electronics_design">Electronics Design</option>
+                          <option value="aerospace_engineering">Aerospace Engineering</option>
+                          <option value="biomedical_engineering">Biomedical Engineering</option>
+                          <option value="consulting">Consulting</option>
+                          <option value="management">Management</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="field-container">
+                        <label class="form-label">Job Locations</label>
+                        <div id="job_locations_group">
+                            <input type="text" class="form-control" name="job_locations[]" placeholder="Job locations offered (comma separated)" multiple>
+                        </div>
+                      </div></div>
+
+                      <div class="col-md-5">  <!-- Adjust column width to control input field size -->
+                        <div class="form-group">
+                          <label for="job_salary">Salary offered (in lpa - INR) *</label>
+                          <input type="number" class="form-control" id="job_salary" name="job_salary" step="0.01" required placeholder="Salary offered for this job role">
+                        </div>
+                      </div>
+                  </div>
+                </div>
+          
+          </div>
+
+    {% comment %} SalaryPackage(lpa) {% endcomment %}
+          <div class = "section">
+            <h3>Applicant Criteria Specification</h3>
+            <div class="container">
+              <!-- CGPA Criteria -->
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label for="cgpaCriteria">CGPA Criteria *</label>
+                    <div class="input-group">
+                      <input type="number" step="0.1" min="1" max="10" class="form-control" id="cgpaMin" name = "cgpaMinCriteria" placeholder="Min CGPA" required>
+                      <span class="input-group-text">to</span>
+                      <input type="number" step="0.1" min="1" max="10" class="form-control" id="cgpaMax" name = "cgpaMaxCriteria" placeholder="Max CGPA" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Program Criteria -->
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="degreeCriteria">Degree Criteria *</label>
+                    <select class="form-control" id="degreeCriteria" name="degreeCriteria" required>
+                      <option value="">Select</option>
+                      <option value="ug">UG</option>
+                      <option value="pg">PG</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            
+<!-- Program Criteria -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group">
+      <label for="deptsCriteria">Program Criteria *</label>
+      <div id="deptsCriteria" class="d-flex flex-wrap">
+        {% for dept_code in dept_codes_list %}
+        <div class="form-check me-3">
+          <input type="checkbox" class="form-check-input" id="dept{{dept_code}}" name="deptsCriteria[]" value="{{dept_code}}">
+          <label class="form-check-label" for="dept{{dept_code}}">{{dept_code}}</label>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Year of Passing Criteria -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="yearOfPassingGroup">Year of Passing Criteria *</label>
+          <div id="yearOfPassingGroup" class="d-flex flex-wrap">
+            <div class="form-check me-3">
+              <input type="checkbox" class="form-check-input" id="year2025" name="yearOfPassingCriteria[]" value="2025">
+              <label class="form-check-label" for="year2025">2025</label>
+            </div>
+            <div class="form-check me-3">
+              <input type="checkbox" class="form-check-input" id="year2026" name="yearOfPassingCriteria[]" value="2026">
+              <label class="form-check-label" for="year2026">2026</label>
+            </div>
+            <div class="form-check me-3">
+              <input type="checkbox" class="form-check-input" id="year2027" name="yearOfPassingCriteria[]" value="2027">
+              <label class="form-check-label" for="year2027">2027</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="field-container">
+        <label class="form-label">Skills Preferences</label>
+        <div id="skills_preferences_group">
+            <input type="text" class="form-control" name="skillsPreferences[]" placeholder="Candidate Skill Preferences (comma separated)" multiple>
+        </div>
+      </div></div>
+  </div>
+                
+            
+          </div>
+
+
+      <div class="container mt-4">
+          <div class="row">
+              <div class="form-group">
+                  <button type="submit" class="register-btn" style="background-color: #2e8558;">Post this job opening</button>
+              </div>
+          </div>
+      </div>
+  </form>
+  </div>
+</div>
+    </div>
+</div>
+{% endblock %}

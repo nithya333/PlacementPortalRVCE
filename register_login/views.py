@@ -30,7 +30,7 @@ def reg_common_submit(request):
         try:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    SELECT u_id
+                    SELECT u_id, u_name
                     FROM users
                     WHERE u_email = %s AND u_type = %s AND u_pass = %s
                 """, [useremail, usertype, password])
@@ -41,20 +41,29 @@ def reg_common_submit(request):
                 if result:  # This will be True if a row was fetched
                     u_id = result[0]  # Fetch the `u_id` from the result tuple
                     request.session['u_type'] = usertype
+                    request.session['u_name'] = result[1]
                     request.session['u_id'] = u_id
                     # username = request.session.get('username')
 
                     message = "Login successful!"
                     print(f"Successful login for user ID: {u_id}")
 
+                    dept_codes = Department.objects.values_list('d_abbr_code', flat=True)
+                    dept_codes_list = list(dept_codes)  # Convert to a list if needed
+                    # print(dept_codes_list)
+                    context = {
+                        'dept_codes_list': dept_codes_list
+                    }
+                    
+
                     if usertype == "Student":
-                        return render(request, '1_2_register_stud.html', {'message': message})
+                        return render(request, '1_2_register_stud.html', context)
                     elif usertype == "Coordinator":
-                        return render(request, '1_3_register_fac.html', {'message': message})
+                        return render(request, '1_3_register_fac.html', context)
                     elif usertype == "Company":
-                        return render(request, '1_4_register_comp.html', {'message': message})
+                        return render(request, '1_4_register_comp.html', context)
                     elif usertype == "Admin":
-                        return render(request, 'home_admin.html', {'message': message})
+                        return render(request, '4_1_head_home.html', context)
                 else:
                     message = "Invalid credentials. Please try again."
                     print("Invalid credentials")
@@ -78,7 +87,7 @@ def login_common_submit(request):
         try:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    SELECT u_id
+                    SELECT u_id, u_name
                     FROM users
                     WHERE u_email = %s AND u_type = %s AND u_pass = %s
                 """, [useremail, usertype, password])
@@ -89,6 +98,7 @@ def login_common_submit(request):
                 if result:  # This will be True if a row was fetched
                     u_id = result[0]  # Fetch the `u_id` from the result tuple
                     request.session['u_type'] = usertype
+                    request.session['u_name'] = result[1]
                     request.session['u_id'] = u_id
                     # username = request.session.get('username')
 
@@ -100,9 +110,9 @@ def login_common_submit(request):
                     elif usertype == "Coordinator":
                         return render(request, 'register_fac.html', {'message': message})
                     elif usertype == "Company":
-                        return render(request, 'register_comp.html', {'message': message})
+                        return render(request, '5_1_company_home.html', {'message': message})
                     elif usertype == "Admin":
-                        return render(request, 'home_admin.html', {'message': message})
+                        return render(request, '4_1_head_home.html', {'message': message})
                 else:
                     message = "Invalid credentials. Please try again."
                     print("Invalid credentials")
@@ -335,7 +345,7 @@ def reg_comp_submit(request):
             """, (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone ))
             
 
-        return render(request, 'register_comp.html')
+        return render(request, '5_1_company_home.html')
     else:
         return render(request, 'register_comp.html')
     

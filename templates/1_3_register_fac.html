@@ -95,7 +95,7 @@
                             </select>
                         </div>
                     </div> {% endcomment %}
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="form-group">
                           <label for="UGPG">UG/PG? *</label>
                           <select class="form-control" id="UGPG" name="UGPG" required>
@@ -105,19 +105,14 @@
                           </select>
                         </div>
                       </div>
-                      <div class="col-md-5">
+                      <div class="col-md-6">
                         <div class="form-group">
                           <label for="branch">Branch *</label>
                           <select class="form-control" id="branch" name="branch" required>
                             <option value="">Coordinating which branch?</option>
-                            <option value="CS">CS</option>
-                            <option value="IS">IS</option>
-                            <option value="CD">CD</option>
-                            <option value="CY">CY</option>
-                            <option value="EC">EC</option>
-                            <option value="ME">ME</option>
-                            <option value="MCA">MCA</option>
-                            <option value="MCN">MCN</option>
+                            {% for dept_code in dept_codes_list %}
+                              <option value="{{dept_code}}">{{dept_code}}</option>
+                            {% endfor %}
                           </select>
                         </div>
                       </div>

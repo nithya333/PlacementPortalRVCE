@@ -135,14 +135,16 @@
                           <label for="branch">Branch *</label>
                           <select class="form-control" id="branch" name="branch" required>
                             <option value="">Select Branch</option>
-                            <option value="CS">CS</option>
-                            <option value="IS">IS</option>
+                            {% for dept_code in dept_codes_list %}
+                              <option value="{{dept_code}}">{{dept_code}}</option>
+                            {% endfor %}
+                            {% comment %} <option value="IS">IS</option>
                             <option value="CD">CD</option>
                             <option value="CY">CY</option>
                             <option value="EC">EC</option>
                             <option value="ME">ME</option>
                             <option value="MCA">MCA</option>
-                            <option value="MCN">MCN</option>
+                            <option value="MCN">MCN</option> {% endcomment %}
                           </select>
                         </div>
                       </div>
