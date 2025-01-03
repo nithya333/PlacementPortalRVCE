@@ -9,7 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-from .models import Department, Education, Students, Resumes
+from .models import Company, Department, Resumes
 from pymongo import MongoClient
 import time
 from bson import ObjectId
@@ -58,10 +58,19 @@ def company_postjob_submit(request):
         job_data["skillsPreferences"] = [word.strip() for word in request.POST.get("skillsPreferences[]").split(",")]
         
         job_data["job_enrolledDate"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        job_data["job_pptDate"] = None
+        job_data["job_oaDate"] = None
+        job_data["job_interviewDate"] = None
         job_data["job_status"] = 0 # 0 - upcoming, 1 - ongoing, 2 - closed
         job_data["job_stage"] = 0 # 0 - company_posted, 1 - college alloted, 2 - student application, 3 - OA, 4 - Interview, 5 - Done
         job_data["job_companyId"] = request.session.get('u_id', 0)
-        job_data["job_companyName"] = request.session.get('u_name', 'Guest')
+
+        compId = job_data["job_companyId"]
+        comp = Company.objects.get(cp_id = compId)
+        compName = comp.cp_name
+
+        # job_data["job_companyName"] = request.session.get('u_name', 'Guest')
+        job_data["job_companyName"] = compName
         job_data["job_numStudents"] = 0
         job_data["job_lastUpdated"] = time.strftime("%Y-%m-%d %H:%M:%S")
 

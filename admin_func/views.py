@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import psycopg2
 import base64
 from base64 import b64encode
-# from .models import Department, Education, Students, Resumes
+# from .models import Company
 from pymongo import MongoClient
 import time
 from bson import ObjectId
@@ -16,50 +16,64 @@ from django.http import JsonResponse
 import json
 from pymongo import MongoClient
 
-# MongoDB Connection
-client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-db = client['placement']
-job_collection = db['job']
 
 def head_home(request):
     return render(request, '4_1_head_home.html')
 
 
 def head_allot_slots(request):
-    if request.method == 'GET':
-        # Fetch jobs with status "upcoming"
-        jobs = list(job_collection.find({"status": 0}))
-        # Prepare calendar events
-        events = []
-        all_jobs = job_collection.find()
-        for job in all_jobs:
-            if "PPTdate" in job:
-                events.append({"title": f"{job['company_name']} - PPT", "start": job["PPTdate"]})
-            if "OAdate" in job:
-                events.append({"title": f"{job['company_name']} - OA", "start": job["OAdate"]})
-            if "InterviewDate" in job:
-                events.append({"title": f"{job['company_name']} - Interview", "start": job["InterviewDate"]})
-        print(jobs)
-        return render(request, '4_2_head_allot.html', {"jobs": jobs, "events": events})
-
-    elif request.method == 'POST':
+    if request.method == 'POST':
         # Save allocated dates
-        data = json.loads(request.body)
-        # job_id = data.get('job_id')
-        # ppt_date = data.get('ppt_date')
-        # oa_date = data.get('oa_date')
-        # interview_date = data.get('interview_date')
+        # data = json.loads(request.body)
+        print(request.POST)
+        job_id = request.POST.get('job_id')
+        ppt_date = request.POST.get('ppt_slot')
+        oa_date = request.POST.get('oa_slot')
+        interview_date = request.POST.get('interview_slot')
+        print(job_id, ppt_date, oa_date, interview_date)
+        # MongoDB Connection
+        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
+        db = client['Placement']
+        job_collection = db['job']
+        job_collection.update_one(
+            {"_id": job_id},
+            {"$set": {
+                "job_pptDate": ppt_date,
+                "job_oaDate": oa_date,
+                "job_interviewDate": interview_date,
+                "job_stage": 1,
+                "job_status": 1,
+                "job_lastUpdated": time.strftime('%Y-%m-%d %H:%M:%S')
+            }}
+        )
 
-        # job_collection.update_one(
-        #     {"_id": job_id},
-        #     {"$set": {
-        #         "PPTdate": ppt_date,
-        #         "OAdate": oa_date,
-        #         "InterviewDate": interview_date
-        #     }}
-        # )
-        return JsonResponse({"success": True})
-    return render(request, '4_2_head_allot.html')
+    # if request.method == 'GET':
+
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_status": 0}))
+    # Prepare calendar events
+    events = []
+    pending = []
+    all_jobs = job_collection.find()
+    for job in all_jobs:
+        if "job_pptDate" in job and job["job_pptDate"] is not None:
+            events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
+        if "job_oaDate" in job and job["job_oaDate"] is not None:
+            events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
+        if "job_interviewDate" in job and job["job_interviewDate"] is not None:
+            events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
+        if job["job_pptDate"] is None and job["job_oaDate"] is None and job["job_interviewDate"] is None:
+            pending.append({"id": job["_id"], "compName": f"{job['job_companyName']}", "date_posted": job["job_enrolledDate"][:10], "job_title" : job["job_title"], "job_type" : job["job_type"],"job_duration" : job["job_duration"],"job_desc" : job["job_desc"],"job_domain" : job["job_domain"],"job_salary" : job["job_salary"], "eligible_branches" : ' , '.join(job["deptsCriteria"])})
+    # print(events)
+    # print(pending)
+    # events = [{"id": "111g23u", "compName" : "Google", "start" : "2024-12-02" , "round" : 0}]
+    return render(request, '4_2_head_allot.html', {"pending": pending, "events": events})
+        
 
 def head_track_placements(request):
     return render(request, '4_3_head_track.html')

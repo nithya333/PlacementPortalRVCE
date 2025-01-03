@@ -55,7 +55,7 @@ class Spc(models.Model):
 
 
 class Students(models.Model):
-    st_id = models.OneToOneField('Users', models.CASCADE, primary_key=True)
+    st = models.OneToOneField('Users', models.CASCADE, primary_key=True)
     st_program = models.BooleanField(default=False)
     st_name = models.CharField(max_length=60)
     st_email = models.CharField(max_length=50, blank=True, null=True)
@@ -86,7 +86,7 @@ class Coordinator(models.Model):
         db_table = 'coordinator'
 
 class Company(models.Model):
-    cp_id = models.OneToOneField('Users', models.CASCADE, primary_key=True)
+    cp = models.OneToOneField('Users', models.CASCADE, primary_key=True)
     cp_name = models.CharField(max_length=30)
     cp_type = models.CharField(max_length=40, blank=True, null=True)
     cp_location = models.CharField(max_length=20, blank=True, null=True)

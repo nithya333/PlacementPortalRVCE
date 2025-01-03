@@ -32,7 +32,41 @@
     color: #007bff; /* Highlighted color for student name */
   }
 
+  #calendar {
+    background-color: #f9f9f9;
+    border: 2px solid #cccccc;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none !important;
+    color: black;
+  }
+  #calendar a{
+    text-decoration: none !important;
+    color: black;
+  }
+
+  #accordion button {
+    text-decoration: none !important;
+    font-family: Arial, sans-serif;
+    color: #804200;
+  }
+
+  #accordion table {
+    color: #666666;
+  }
 </style>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include Popper.js (required for Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
 <div class="d-flex">
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
       <ul class="nav nav-pills flex-column mb-auto">
@@ -56,7 +90,7 @@
           <li>
             <a href="/head/allot_slots"  class="nav-link active" style = "background-color: #b35c00; ">
                 <i class="bi bi-calendar-fill me-2"></i>
-              Allot slots
+              Schedule Slots
             </a>
           </li>
           <li>
@@ -76,101 +110,130 @@
       </div>
     <!-- Main Content -->
     <div class="main-content flex-grow-1">
-      <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
-      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
-      <style>
-        .container {
-          display: flex;
-          gap: 2rem;
-        }
-        .calendar-container, .job-list {
-          width: 50%;
-        }
-        .job-list {
-          border: 1px solid #ccc;
-          padding: 1rem;
-          background-color: #f9f9f9;
-        }
-        .job-item {
-          margin-bottom: 1rem;
-          padding: 0.5rem;
-          border: 1px solid #ddd;
-          background: #fff;
-        }
-        .job-item input {
-          margin: 0.2rem 0;
-        }
-        .allocate-btn {
-          margin-top: 0.5rem;
-        }
-      </style>
     </head>
     <body>
-      <h1>Placement Head - Allot Slots</h1>
-      <div class="container">
-        <!-- Calendar Section -->
-        <div class="calendar-container">
-          <div id="calendar"></div>
-        </div>
-    
-        <!-- Job List Section -->
-        <div class="job-list">
-          <h3>Upcoming Jobs</h3>
-          {% for job in jobs %}
-          <div class="job-item" data-job-id="{{ job._id }}">
-            <p><strong>Company:</strong> {{ job.company_name }}</p>
-            <p><strong>Role:</strong> {{ job.job_role }}</p>
-            <p><strong>Package:</strong> {{ job.package }}</p>
-            {% comment %} <label for="ppt-{{ job._id }}">PPT Date:</label>
-            <input type="date" id="ppt-{{ job._id }}">
-            <label for="oa-{{ job._id }}">OA Date:</label>
-            <input type="date" id="oa-{{ job._id }}">
-            <label for="interview-{{ job._id }}">Interview Date:</label>
-            <input type="date" id="interview-{{ job._id }}"> {% endcomment %}
-            <button class="allocate-btn" onclick="allocateDates('{{ job._id }}')">Allocate</button>
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-md-7">
+
+              <div id="calendar" style = " text-decoration: none !important; color: black"></div>
+
           </div>
-          {% endfor %}
+          <div class="col-md-5">
+        
+      <div id="accordion">
+        {% for pending_job in pending %}
+        <div class="card">
+          <div class="card-header" id="heading{{ pending_job.id }}" style="height:3.2rem;">
+            <h5 class="mb-0">
+               
+              <pre><button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ pending_job.id }}" aria-expanded="true" style = "font-weight: 600" aria-controls="collapse{{ pending_job.id }}">{{ pending_job.compName }}      Posted on {{ pending_job.date_posted }}</button></pre>
+            </h5>
+          </div>
+      
+          <div id="collapse{{ pending_job.id }}" class="collapse" aria-labelledby="heading{{ pending_job.id }}" data-parent="#accordion">
+            <div class="card-body">
+              {% comment %} <p>Company Name: {{ pending_job.compName }}</p>
+              <p>Date Posted: {{ pending_job.date_posted }}</p> {% endcomment %}
+              <table width="100%" >
+                <tr>
+                  <td> {{ pending_job.job_title }}</td>
+                  <td> {{ pending_job.job_type }}</td>
+                </tr>
+                <tr>
+                  <td> {{ pending_job.job_duration }}</td>
+                  <td> {{ pending_job.job_domain }}</td>
+                </tr>
+                {% comment %} <tr>
+                  <td colspace = 2> {{ pending_job.job_desc }}</td>
+                </tr> {% endcomment %}
+                  <td>Rs {{ pending_job.job_salary }} lpa</td>
+                  <td> {{ pending_job.eligible_branches }}</td>
+
+                </tr>
+              </table>
+              <hr>
+              <form action="/head/allot_slots" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="job_id" value="{{ pending_job.id }}">
+                    <table width="100%" >
+                      <tr style="font-size: 0.9rem; color: #331a00;">
+                        <th>PPT Slot</th>
+                        <th>OA Slot</th>
+                        <th>Interview Slot</th>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="ppt_slot" name="ppt_slot" value="{{ pending_job.ppt_slot }}">
+                        </td>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="oa_slot" name="oa_slot" value="{{ pending_job.oa_slot }}">
+                        </td>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="interview_slot" name="interview_slot" value="{{ pending_job.interview_slot }}">
+                        </td>
+                      </tr>
+                      </table>
+                      <br>
+                      <button type="submit" style="background-color: #804200; color: white" class="register-btn">Allot Slots</button>
+              </form>
+            </div>
+          </div>
         </div>
+          {% endfor %}
+        {% comment %} <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Collapsible Group Item #1
+              </button>
+            </h5>
+          </div>
+      
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            </div>
+          </div>
+        </div> {% endcomment %}
+        
+
       </div>
-    
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const calendarEl = document.getElementById('calendar');
-          const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: {{ events | safe }},
-          });
-          calendar.render();
-        });
-    
-        function allocateDates(jobId) {
-          const pptDate = document.getElementById(`ppt-${jobId}`).value;
-          const oaDate = document.getElementById(`oa-${jobId}`).value;
-          const interviewDate = document.getElementById(`interview-${jobId}`).value;
-    
-          fetch('/head/allot_slots/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-              job_id: jobId,
-              ppt_date: pptDate,
-              oa_date: oaDate,
-              interview_date: interviewDate,
-            }),
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              alert('Dates allocated successfully!');
-              location.reload(); // Reload to update the calendar
-            } else {
-              alert('Failed to allocate dates. Please try again.');
-            }
-          });
-        }
-      </script>
-</div>
+  </div>
+  <!-- Include FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+      event_colors = ['red', 'blue', 'green'];
+      // Initialize FullCalendar
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth', // Month view
+        events: [
+
+          {% for event in events %}
+          {
+            id: '{{ event.id }}',
+            title: '{{ event.compName }}',
+            start: '{{ event.start }}',
+            backgroundColor: event_colors['{{ event.round }}'],
+          },
+          {% endfor %}
+        ],
+      });
+
+      // Render the calendar
+      calendar.render();
+
+      // Example: Access an event by ID
+      var event = calendar.getEventById('1'); // Replace '1' with the event ID
+      if (event) {
+        console.log('Event Title:', event.title); // Log event details
+        console.log('Event Start Date:', event.start.toISOString());
+      }
+    });
+  </script>
+      
 {% endblock %}
