@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #d9f2e5;
+  }
+
+  .nav-link.active {
+    background-color: #3bab71; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #7ad1a4; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+    margin-right: 5px;
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2e8558;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+  
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card Styles */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+
+/* Button Styles */
+.btn {
+  background-color: #3bab71;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #2e8558;
+  color: white;
+}
+
+/* Timeline Styles */
+    .timeline {
+        position: relative;
+
+        border-left: 3px solid #a3c6dc;
+      }
+      {% comment %} border-left: 3px solid #e0e0e0; {% endcomment %}
+    .timeline p, span{
+        padding-left: 10px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .timeline-item:last-child {
+        margin-bottom: 0;
+    }
+
+    {% comment %} .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -11px;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #e0e0e0;
+        border: 2px solid #fff;
+        z-index: 2;
+    } {% endcomment %}
+
+    {% comment %} .timeline-item.completed::before {
+        background-color: #4caf50;
+    } {% endcomment %}
+
+    .timeline-item span {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .timeline-item.completed span {
+        color: #333;
+        font-weight: bold;
+    }
+
+
+/* Timeline Item - General */
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.timeline-indicator {
+  position: relative;
+  margin-left: 20px;
+  border-left: 2px solid #ddd; /* Default timeline line */
+}
+
+.timeline-content{
+  height: 150px;
+}
+
+/* Completed Stage */
+.timeline-item.completed .timeline-indicator {
+  border-left-color: #198754; /* Green for completed stages */
+}
+
+.timeline-item.completed .card {
+  background-color: #d1e7dd; /* Subtle green background */
+}
+
+/* In Progress Stage */
+.timeline-item.in-progress .timeline-indicator {
+  border-left-color: #ffcc33; /* Yellow for in-progress stages */
+}
+
+.timeline-item.in-progress .card {
+  background-color: #fff3cd; /* Subtle yellow background */
+}
+
+/* Upcoming Stage */
+.timeline-item .timeline-indicator {
+  border-left-color: #b3b3b3; /* Grey for upcoming stages */
+}
+
+.timeline-item .card {
+  background-color: #f8f9fa; /* Light grey background */
+}
+
+.card-body strong{
+  color: #2e8558;
+}
+
+</style>
+<link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/tutorials/timelines/timeline-7/assets/css/timeline-7.css"> 
+
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="{% static 'images/company_icon.png' %}" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/company/home" class="nav-link link-dark" >
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/company/postjob" class="nav-link link-dark" >
+                <i class="bi bi-megaphone me-2"></i>
+              Post New Job
+            </a>
+          </li>
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link active" style = "background-color: #3bab71; ">
+                <i class="bi bi-grid-fill me-2"></i>
+              Ongoing Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/college_history" class="nav-link link-dark">
+                <i class="bi bi-check-circle me-2"></i>
+              Placement History
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+
+      <div class="container my-5">
+        <div class="card shadow border-0" style = "width: 900px;">
+            <div class="card-header text-white" style = "background: #7ad1a4;">
+                <h3 class="card-title mb-0" style = "font-variant: small-caps; color: #152a37; font-weight:bold;">{{ job_details.job_companyName }}'s job offer</h3>
+            </div>
+            <div class="card-body" style = "width: 900px;">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>Job Title:</strong>
+                        <p>{{ job_details.job_title }} </p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Job Type:</strong>
+                        <p>{{ job_details.job_type }}</p>
+                    </div>
+      
+                    <div class="col-md-3">
+                        <strong>Duration:</strong>
+                        <p>{{ job_details.job_duration }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Salary:</strong>
+                        <p>{{ job_details.job_salary }} LPA</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>Job Domain:</strong>
+                        <p>{{ job_details.job_domain }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Job Description:</strong>
+                        <p>{{ job_details.job_desc }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Locations:</strong>
+                        <p>{{ job_details.job_locations }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>CGPA Criteria:</strong>
+                        <p>{{ job_details.cgpaMinCriteria }} - {{ job_details.cgpaMaxCriteria }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>Degree Criteria:</strong>
+                        <p>{{ job_details.job_salary }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Departments:</strong>
+                        <p>{{ job_details.deptsCriteria }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Year of Passing Criteria:</strong>
+                        <p>{{ job_details.yearOfPassingCriteria }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Skills Preferred:</strong>
+                        <p>{{ job_details.skillsPreferences }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <section class="bsb-timeline-7  py-3 py-md-5 py-xl-1">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-10 col-md-12 col-xl-10 col-xxl-9">
+              <h2 style = "font-variant: small-caps; color: #2e8558; font-size: 30px;">Recruitment  Timeline</h2>
+              <ul class="timeline">
+                {% for stage, stage_text, stage_date in stages %}
+              {% if job_details.job_stage > stage %}
+                  <!-- Completed Stage -->
+                  <li class="timeline-item completed">
+                    <div class="timeline-body">
+                      <div class="timeline-meta">
+                        <div class="d-inline-flex flex-column px-2 py-1 text-success-emphasis bg-success-subtle border border-success rounded-2 text-md-end">
+                          <span class="fw-bold">{{ stage_date }}</span>
+                          <span>Stage {{stage}} Completed</span>
+                        </div>
+                      </div>
+                      <div class="timeline-content timeline-indicator">
+                        <div class="card border-0 shadow bg-success-subtle text-success">
+                          <div class="card-body p-xl-1">
+                            <h2 class="card-title mb-1">Stage {{stage}} </h2>
+                            <p class="card-text m-0">{{ stage_text }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  {% elif job_details.job_stage == stage %}
+                  <!-- In Progress Stage -->
+                  <li class="timeline-item in-progress">
+                    <div class="timeline-body">
+                      <div class="timeline-meta">
+                        <div class="d-inline-flex flex-column px-2 py-1 text-warning-emphasis bg-warning-subtle border border-warning rounded-2 text-md-end">
+                          <span class="fw-bold">{{ stage_date }}</span>
+                          <span>Stage {{stage}} In Progress</span>
+                        </div>
+                      </div>
+                      <div class="timeline-content timeline-indicator">
+                        <div class="card border-0 shadow bg-warning-subtle text-warning">
+                          <div class="card-body p-xl-1">
+                            <h2 class="card-title mb-1" style = "color: #e6ac00;">Stage {{stage}} </h2>
+                            <p class="card-text m-0" style = "color: #e6ac00;">{{ stage_text }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+      
+                  {% else %}
+                  <!-- Upcoming Stage -->
+                  <li class="timeline-item">
+                    <div class="timeline-body">
+                      <div class="timeline-meta">
+                        <div class="d-inline-flex flex-column px-2 py-1 text-muted bg-light border border-muted rounded-2 text-md-end">
+                          <span class="fw-bold">{{ stage_date }}</span>
+                          <span>Upcoming Stage {{stage}} </span>
+                        </div>
+                      </div>
+                      <div class="timeline-content timeline-indicator">
+                        <div class="card border-0 shadow">
+                          <div class="card-body p-xl-1">
+                            <h2 class="card-title mb-1">Stage {{stage}} </h2>
+                            <p class="card-text m-0">{{ stage_text }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  {% endif %}
+      
+      
+                {% endfor %}
+      
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+{% endblock %}

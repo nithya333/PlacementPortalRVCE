@@ -47,6 +47,9 @@ def head_allot_slots(request):
             }}
         )
 
+        # Close the connection
+        # client.close()
+
     # if request.method == 'GET':
 
     # MongoDB Connection
@@ -72,6 +75,9 @@ def head_allot_slots(request):
     # print(events)
     # print(pending)
     # events = [{"id": "111g23u", "compName" : "Google", "start" : "2024-12-02" , "round" : 0}]
+
+    # Close the connection
+    # client.close()
     return render(request, '4_2_head_allot.html', {"pending": pending, "events": events})
         
 

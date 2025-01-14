@@ -9,14 +9,48 @@ from django.core.files.storage import FileSystemStorage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-from .models import Company, Department, Resumes
+from .models import Company, Department
 from pymongo import MongoClient
 import time
 from bson import ObjectId
+from datetime import datetime, timedelta
+
 # Create your views here.
 
 def company_home(request):
-    return render(request, '5_1_company_home.html')
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+
+    events = []
+    jobs = list(job_collection.find({"job_companyId": request.session.get('u_id'), "job_stage": 1}))
+    for job in jobs:
+        events.append({"id": job["_id"], "compName": f"PPT - {job['job_type']}", "start": job["job_pptDate"], "round": 0})
+        events.append({"id": job["_id"], "compName": f"OA - {job['job_type']}", "start": job["job_oaDate"], "round": 1})
+        events.append({"id": job["_id"], "compName": f"Interview - {job['job_type']}", "start": job["job_interviewDate"], "round": 2})
+    # print(jobs)  
+
+    comp_id = request.session.get('u_id')
+    company = Company.objects.get(cp_id = comp_id)
+    cp_name = company.cp_name
+    cp_type = company.cp_type
+    cp_location = company.cp_location
+    cp_contact_email = company.cp_contact_email
+    cp_contact_phone = company.cp_contact_phone
+    cp_contact_name = company.cp_contact_name
+    company_details = {
+        "cp_id": comp_id,
+        "cp_name": cp_name,
+        "cp_type": cp_type,
+        "cp_location": cp_location,
+        "cp_contact_email": cp_contact_email,
+        "cp_contact_phone": cp_contact_phone,
+        "cp_contact_name": cp_contact_name
+    }
+
+
+    return render(request, '5_1_company_home.html', {"events": events, "company_details": company_details})
 
 
 def company_postjob(request):
@@ -87,135 +121,167 @@ def company_postjob_submit(request):
 
         return render(request, '5_1_company_home.html')
     
-@csrf_exempt
-def student_profile_submit(request):
-    if request.method == "POST":
-        print(request.POST)
-
-        st_name = request.POST.get('fullName').strip()
-        st_dob = request.POST.get('dob')
-        st_gender = request.POST.get('gender')
-        st_section = request.POST.get('sec')
-        st_email = request.POST.get('email').strip()
-        st_phone = request.POST.get('phone').strip()
-        st_id = request.POST.get('usn').strip()
-        st_year_of_passing = request.POST.get('yearOfGraduation').strip()
-        ug_pg = request.POST.get('UGPG') 
-        if ug_pg == "ug":
-            st_program = bin(0)[2:]
-        else:
-            st_program = bin(1)[2:]
-        is_spc = request.POST.get('spc') 
-        if is_spc == "yes":
-            spc_id = request.POST.get('spc_id')
-            spc_stud_id = st_id
-        dept = request.POST.get('branch')
-        departments = Department.objects.get(d_abbr_code = dept)
-        st_dept_id = departments.d_id
-        # print(departments.d_id)
-
-        e_program = st_program
-        e_student_id = st_id
-        e_cgpa = request.POST.get('cgpa')
-        e_10thmarks = request.POST.get('tenthMarks')
-        e_10thstream = request.POST.get('tenthStream')
-        e_12thmarks = request.POST.get('twelfthMarks')
-        e_12thstream = request.POST.get('twelfthStream')
-        e_backlogs = request.POST.get('backlogs')
-        e_be_cgpa = request.POST.get('be_cgpa') if 'be_cgpa' in request.POST else None
-
-        w_program = st_program
-        w_student_id = st_id
-        w_job_title = request.POST.getlist('w_jobtitle[]') if 'w_jobtitle[]' in request.POST else []
-        w_company_name = request.POST.getlist('w_compname[]') if 'w_compname[]' in request.POST else []
-        w_experience_months = request.POST.getlist('w_jobmonths[]') if 'w_jobmonths[]' in request.POST else []
-
-        sk_student_id = st_id
-        sk_technical = request.POST.getlist('technicalSkills[]') if 'technicalSkills[]' in request.POST else []
-        sk_soft = request.POST.getlist('softSkills[]') if 'softSkills[]' in request.POST else []
-        sk_certifications = request.POST.getlist('certifications[]') if 'certifications[]' in request.POST else []
-        sk_technologies = request.POST.getlist('technologies[]') if 'technologies[]' in request.POST else []
-        sk_achievements = request.POST.getlist('achievements[]') if 'achievements[]' in request.POST else []
-        sk_languages = request.POST.getlist('languages[]') if 'languages[]' in request.POST else []
-        sk_interested_domains = request.POST.getlist('domains[]') if 'domains[]' in request.POST else []
-        sk_project_name = request.POST.getlist('sk_project_name[]') if 'sk_project_name[]' in request.POST else []
-        sk_project_desc = request.POST.getlist('sk_project_desc[]') if 'sk_project_desc[]' in request.POST else []
-
-        a = Resumes(fi_name=st_name, fi_data=request.FILES['resume'])
-        a.save()
-
-        conn = psycopg2.connect(
-        host="localhost",
-        database="placement_sql",
-        user="postgres",
-        password="cse"
-        )
-        cursor = conn.cursor()
-
-        # Fetch the PDF data
-        cursor.execute("SELECT fi_data FROM resumes WHERE fi_id = %s", ('3'))
-        pdf_data = cursor.fetchone()[0]
-
-        # Return the PDF as an HTTP response
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'inline; filename="document_{3}.pdf"'
-        response.write(pdf_data)
-
-        cursor.close()
-        conn.close()
-
-        with connection.cursor() as cursor:
-            # Update students table
-            cursor.execute("""
-                UPDATE students
-                SET st_program = %s, st_name = %s, st_email = %s, st_phone = %s, st_dept_id = %s, st_dob = %s, 
-                    st_year_of_passing = %s, st_section = %s, st_gender = %s
-                WHERE st_id = %s
-            """, (st_program, st_name, st_email, st_phone, st_dept_id, st_dob, st_year_of_passing, st_section, st_gender, st_id))
-
-            # Update education table
-            cursor.execute("""
-                UPDATE education
-                SET e_10thmarks = %s, e_10thstream = %s, e_12thmarks = %s, e_12thstream = %s, e_cgpa = %s, 
-                    e_backlogs = %s, e_be_cgpa = %s, e_program = %s
-                WHERE e_student_id = %s
-            """, (e_10thmarks, e_10thstream, e_12thmarks, e_12thstream, e_cgpa, e_backlogs, e_be_cgpa, e_program, e_student_id))
-
-            # Update skills table
-            cursor.execute("""
-                UPDATE skills
-                SET sk_technical = %s, sk_soft = %s, sk_certifications = %s, sk_technologies = %s, sk_achievements = %s, 
-                    sk_languages = %s, sk_interested_domains = %s, sk_project_name = %s, sk_project_desc = %s
-                WHERE sk_student_id = %s
-            """, (sk_technical, sk_soft, sk_certifications, sk_technologies, sk_achievements, sk_languages, 
-                sk_interested_domains, sk_project_name, sk_project_desc, sk_student_id))
-
-            # Update work_experience table
-            if w_job_title and w_company_name and w_experience_months and len(w_job_title) == len(w_company_name) == len(w_experience_months):
-                for job_title, company, months in zip(w_job_title, w_company_name, w_experience_months):
-                    if job_title and company and months:  # Skip empty rows
-                        cursor.execute("""
-                            UPDATE work_experience
-                            SET w_job_title = %s, w_company_name = %s, w_experience_months = %s, w_program = %s
-                            WHERE w_student_id = %s AND w_job_title = %s
-                        """, (job_title, company, months, w_program, w_student_id, job_title))
-
-            # Update spc table (if applicable)
-            if is_spc == "yes":
-                cursor.execute("""
-                    UPDATE spc
-                    SET spc_stud_id = %s
-                    WHERE spc_id = %s
-                """, (spc_stud_id, spc_id))
-
-
-        return render(request, '2_1_student_home.html')
-    else:
-        return render(request, 'register_stud.html')
-    
-
 def company_ong_recruitments(request):
-    return render(request, '5_2_student_postjo.html')
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_stage": 1, "job_companyId": request.session.get('u_id')}))
+    for job in jobs:
+        job['job_id'] = str(job['_id'])
+    return render(request, '5_3_company_ongoing.html', {"jobs": jobs})
 
 def company_college_history(request):
-    return render(request, '5_2_student_postjo.html')
+    return render(request, '5_3_company_ongoing.html')
+
+@csrf_exempt  
+def company_ong_recruitments_vmore(request, job_id):
+    if request.method == 'GET':
+        # Fetch the job_id from the URL
+        print(job_id)
+
+        # MongoDB Connection
+        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+        db = client['Placement']
+        job_collection = db['job']
+        appl_collection = db['application']
+
+        job = job_collection.find_one({"_id": job_id})
+        job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+        job['job_reglastdate'] = job_reglastdate
+        job_details = job
+
+        applications = list(appl_collection.find({"appl_job_id": job_id}))
+        stages = [[0, "You have posted a job offer", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , ''], [2, "Registrations closed", job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "Recruitment done", '']]
+        return render(request, '5_4_company_ongoing_vmore.html', {"job_details": job_details, "applications" : applications, "stages": stages})
+    else:
+        return render(request, '5_1_company_home.html')
+    
+# @csrf_exempt
+# def student_profile_submit(request):
+#     if request.method == "POST":
+#         print(request.POST)
+
+#         st_name = request.POST.get('fullName').strip()
+#         st_dob = request.POST.get('dob')
+#         st_gender = request.POST.get('gender')
+#         st_section = request.POST.get('sec')
+#         st_email = request.POST.get('email').strip()
+#         st_phone = request.POST.get('phone').strip()
+#         st_id = request.POST.get('usn').strip()
+#         st_year_of_passing = request.POST.get('yearOfGraduation').strip()
+#         ug_pg = request.POST.get('UGPG') 
+#         if ug_pg == "ug":
+#             st_program = bin(0)[2:]
+#         else:
+#             st_program = bin(1)[2:]
+#         is_spc = request.POST.get('spc') 
+#         if is_spc == "yes":
+#             spc_id = request.POST.get('spc_id')
+#             spc_stud_id = st_id
+#         dept = request.POST.get('branch')
+#         departments = Department.objects.get(d_abbr_code = dept)
+#         st_dept_id = departments.d_id
+#         # print(departments.d_id)
+
+#         e_program = st_program
+#         e_student_id = st_id
+#         e_cgpa = request.POST.get('cgpa')
+#         e_10thmarks = request.POST.get('tenthMarks')
+#         e_10thstream = request.POST.get('tenthStream')
+#         e_12thmarks = request.POST.get('twelfthMarks')
+#         e_12thstream = request.POST.get('twelfthStream')
+#         e_backlogs = request.POST.get('backlogs')
+#         e_be_cgpa = request.POST.get('be_cgpa') if 'be_cgpa' in request.POST else None
+
+#         w_program = st_program
+#         w_student_id = st_id
+#         w_job_title = request.POST.getlist('w_jobtitle[]') if 'w_jobtitle[]' in request.POST else []
+#         w_company_name = request.POST.getlist('w_compname[]') if 'w_compname[]' in request.POST else []
+#         w_experience_months = request.POST.getlist('w_jobmonths[]') if 'w_jobmonths[]' in request.POST else []
+
+#         sk_student_id = st_id
+#         sk_technical = request.POST.getlist('technicalSkills[]') if 'technicalSkills[]' in request.POST else []
+#         sk_soft = request.POST.getlist('softSkills[]') if 'softSkills[]' in request.POST else []
+#         sk_certifications = request.POST.getlist('certifications[]') if 'certifications[]' in request.POST else []
+#         sk_technologies = request.POST.getlist('technologies[]') if 'technologies[]' in request.POST else []
+#         sk_achievements = request.POST.getlist('achievements[]') if 'achievements[]' in request.POST else []
+#         sk_languages = request.POST.getlist('languages[]') if 'languages[]' in request.POST else []
+#         sk_interested_domains = request.POST.getlist('domains[]') if 'domains[]' in request.POST else []
+#         sk_project_name = request.POST.getlist('sk_project_name[]') if 'sk_project_name[]' in request.POST else []
+#         sk_project_desc = request.POST.getlist('sk_project_desc[]') if 'sk_project_desc[]' in request.POST else []
+
+#         a = Resumes(fi_name=st_name, fi_data=request.FILES['resume'])
+#         a.save()
+
+#         conn = psycopg2.connect(
+#         host="localhost",
+#         database="placement_sql",
+#         user="postgres",
+#         password="cse"
+#         )
+#         cursor = conn.cursor()
+
+#         # Fetch the PDF data
+#         cursor.execute("SELECT fi_data FROM resumes WHERE fi_id = %s", ('3'))
+#         pdf_data = cursor.fetchone()[0]
+
+#         # Return the PDF as an HTTP response
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = f'inline; filename="document_{3}.pdf"'
+#         response.write(pdf_data)
+
+#         cursor.close()
+#         conn.close()
+
+#         with connection.cursor() as cursor:
+#             # Update students table
+#             cursor.execute("""
+#                 UPDATE students
+#                 SET st_program = %s, st_name = %s, st_email = %s, st_phone = %s, st_dept_id = %s, st_dob = %s, 
+#                     st_year_of_passing = %s, st_section = %s, st_gender = %s
+#                 WHERE st_id = %s
+#             """, (st_program, st_name, st_email, st_phone, st_dept_id, st_dob, st_year_of_passing, st_section, st_gender, st_id))
+
+#             # Update education table
+#             cursor.execute("""
+#                 UPDATE education
+#                 SET e_10thmarks = %s, e_10thstream = %s, e_12thmarks = %s, e_12thstream = %s, e_cgpa = %s, 
+#                     e_backlogs = %s, e_be_cgpa = %s, e_program = %s
+#                 WHERE e_student_id = %s
+#             """, (e_10thmarks, e_10thstream, e_12thmarks, e_12thstream, e_cgpa, e_backlogs, e_be_cgpa, e_program, e_student_id))
+
+#             # Update skills table
+#             cursor.execute("""
+#                 UPDATE skills
+#                 SET sk_technical = %s, sk_soft = %s, sk_certifications = %s, sk_technologies = %s, sk_achievements = %s, 
+#                     sk_languages = %s, sk_interested_domains = %s, sk_project_name = %s, sk_project_desc = %s
+#                 WHERE sk_student_id = %s
+#             """, (sk_technical, sk_soft, sk_certifications, sk_technologies, sk_achievements, sk_languages, 
+#                 sk_interested_domains, sk_project_name, sk_project_desc, sk_student_id))
+
+#             # Update work_experience table
+#             if w_job_title and w_company_name and w_experience_months and len(w_job_title) == len(w_company_name) == len(w_experience_months):
+#                 for job_title, company, months in zip(w_job_title, w_company_name, w_experience_months):
+#                     if job_title and company and months:  # Skip empty rows
+#                         cursor.execute("""
+#                             UPDATE work_experience
+#                             SET w_job_title = %s, w_company_name = %s, w_experience_months = %s, w_program = %s
+#                             WHERE w_student_id = %s AND w_job_title = %s
+#                         """, (job_title, company, months, w_program, w_student_id, job_title))
+
+#             # Update spc table (if applicable)
+#             if is_spc == "yes":
+#                 cursor.execute("""
+#                     UPDATE spc
+#                     SET spc_stud_id = %s
+#                     WHERE spc_id = %s
+#                 """, (spc_stud_id, spc_id))
+
+
+#         return render(request, '2_1_student_home.html')
+#     else:
+#         return render(request, 'register_stud.html')
+    
+

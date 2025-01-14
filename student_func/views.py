@@ -1,3 +1,7 @@
+from datetime import datetime, timedelta
+import random
+import time
+from bson import ObjectId
 from django.db import connection
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -10,11 +14,34 @@ from django.core.files.storage import FileSystemStorage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from django.shortcuts import render
+from django.http import JsonResponse
+import json
+from pymongo import MongoClient
 
 # Create your views here.
 
 def student_home(request):
-    return render(request, '2_1_student_home.html')
+
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+    appl_collection = db['application']
+
+    applied_jobs = []
+    events = []
+    applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
+    for appl in applications:
+        job = job_collection.find_one({"_id": appl["appl_job_id"]})
+        job_details = job
+        job_details.update(appl)
+        applied_jobs.append(job_details)
+        events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
+        events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
+        events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
+        
+    return render(request, '2_1_student_home.html', context = {"events" : events})
 
 
 def student_profile(request):
@@ -149,18 +176,154 @@ def student_profile_submit(request):
     
 
 def student_applied(request):
-    return render(request, '2_3_student_applied.html')
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+    appl_collection = db['application']
 
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_stage": 1}))
+
+    # print(jobs)
+    # Prepare calendar events
+    # events = []
+    # pending = []
+    # all_jobs = job_collection.find()
+    applied_jobs = []
+    applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
+    for appl in applications:
+        job = job_collection.find_one({"_id": appl["appl_job_id"]})
+        job_details = job
+        job_details.update(appl)
+        applied_jobs.append(job_details)
+
+    # print(applied_jobs)
+    # print(applications)
+    # Close the connection
+    # client.close()
+    return render(request, '2_3_student_applied.html', {"applied": applied_jobs, "applications": applications})
 
 def student_new(request):
-    return render(request, '2_4_student_new.html')
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    db = client['Placement']
+    job_collection = db['job']
+    appl_collection = db['application']
 
-@csrf_exempt  # Temporarily bypass CSRF for testing; remove or configure properly in production.
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_stage": 1}))
+
+    # print(jobs)
+    # Prepare calendar events
+    # events = []
+    # pending = []
+    # all_jobs = job_collection.find()
+    eligible_jobs = []
+    for job in jobs:
+        # Check if student has not applied for this job id already
+        if appl_collection.find_one({"appl_student_id": request.session.get('u_id'), "appl_job_id": job["_id"]}) is not None: 
+            continue
+
+
+        degreeCriteria = job["degreeCriteria"]
+        deptsCriteria = job["deptsCriteria"]
+        yearOfPassingCriteria = job["yearOfPassingCriteria"]
+        cgpaMinCriteria = job["cgpaMinCriteria"]
+        cgpaMaxCriteria = job["cgpaMaxCriteria"]
+        
+        st_usn = request.session.get('u_id')
+        student = Students.objects.get(st_id = st_usn)
+        st_dept_id = student.st_dept_id
+        st_degree = 'pg' if student.st_program else 'ug'
+        st_dept_d_abbr_code = Department.objects.get(d_id = st_dept_id).d_abbr_code
+        st_year_of_passing = student.st_year_of_passing
+        st_cgpa = Education.objects.get(e_student_id = st_usn).e_cgpa
+        st_backlogs = Education.objects.get(e_student_id = st_usn).e_backlogs
+        # departments = Department.objects.get(d_id = st_dept_id)
+        # st_dept_d_abbr_code = departments.d_abbr_code
+        print(st_usn, st_degree, st_dept_d_abbr_code, st_year_of_passing, st_cgpa, st_backlogs)
+        job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+        job['job_reglastdate'] = job_reglastdate
+
+        # Convert job_reglastdate to datetime object
+        reg_last_date = datetime.strptime(job['job_reglastdate'], "%Y-%m-%d")
+        current_date = datetime.now()
+
+        if st_degree == degreeCriteria and st_dept_d_abbr_code in deptsCriteria and st_year_of_passing in yearOfPassingCriteria and st_cgpa >= cgpaMinCriteria and st_cgpa <= cgpaMaxCriteria and st_backlogs == 0 and reg_last_date > current_date:
+            job["eligible"] = True
+            # print(job)
+            job["job_id"] = str(job["_id"])
+            eligible_jobs.append(job)
+
+    #     if "job_pptDate" in job and job["job_pptDate"] is not None:
+    #         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
+    #     if "job_oaDate" in job and job["job_oaDate"] is not None:
+    #         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
+    #     if "job_interviewDate" in job and job["job_interviewDate"] is not None:
+    #         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
+    #     if job["job_pptDate"] is None and job["job_oaDate"] is None and job["job_interviewDate"] is None:
+    #         pending.append({"id": job["_id"], "compName": f"{job['job_companyName']}", "date_posted": job["job_enrolledDate"][:10], "job_title" : job["job_title"], "job_type" : job["job_type"],"job_duration" : job["job_duration"],"job_desc" : job["job_desc"],"job_domain" : job["job_domain"],"job_salary" : job["job_salary"], "eligible_branches" : ' , '.join(job["deptsCriteria"])})
+    # print(events)
+    # print(pending)
+    # events = [{"id": "111g23u", "compName" : "Google", "start" : "2024-12-02" , "round" : 0}]
+
+    # Close the connection
+    # client.close()
+    return render(request, '2_4_student_newoffer.html', {"newoffers": eligible_jobs})
+
+def student_new_apply(request, job_id):
+    # MongoDB Connection
+    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
+    db = client['Placement']
+    job_collection = db['job']
+    job_collection.update_one(
+        {"_id": job_id},
+        {"$inc": {"job_numStudents": 1}}
+    )
+
+    appl_collection = db['application']
+    appl_data = {}
+    appl_data['appl_id'] = str(ObjectId())  # Generate a new ObjectId
+    appl_data["appl_date"] = time.strftime('%Y-%m-%d %H:%M:%S')
+    appl_data["appl_student_id"] = request.session.get('u_id')
+    appl_data["appl_job_id"] = job_id
+    appl_data["appl_status"] = 0 # 0: Ongoing, 1: Shortlisted, 2: Rejected
+    appl_data["appl_stage"] = 1
+    appl_data["appl_lastUpdated"] = time.strftime('%Y-%m-%d %H:%M:%S')
+
+
+    # Insert into MongoDB
+    result = appl_collection.insert_one(appl_data)
+
+    # Close the connection
+    # client.close()
+    return render(request, '2_1_student_home.html')
+
+@csrf_exempt  
 def student_applied_vmore(request, job_id):
     if request.method == 'GET':
         # Fetch the job_id from the URL
         print(job_id)
-        return render(request, '2_5_student_applied_vmore.html')
+
+        # MongoDB Connection
+        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+        db = client['Placement']
+        job_collection = db['job']
+        appl_collection = db['application']
+
+        job = job_collection.find_one({"_id": job_id})
+        job_details = job
+
+        appl = list(appl_collection.find({"appl_student_id": request.session.get('u_id'), "appl_job_id": job_id}))
+        job_details.update(appl[0])
+        job_reglastdate = (datetime.strptime(job_details['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+        job_details['job_reglastdate'] = job_reglastdate
+
+        # print(job_details)
+        # "stages" : [1,2,3,4,5,6,7], "stages_text" : ["Applied", "Applications Closed", "Shortlisted", "PPT", "OA", "Interview", "Recruited"]
+        stages = [[1, "You have registered", job_details['appl_date']], [2, "Applications Closed" , job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT from the recruiter", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "You are recruited", '']]
+        return render(request, '2_5_student_applied_vmore.html', {"job_details": job_details, "stages": stages})
     else:
         return render(request, '2_1_student_home.html')
     

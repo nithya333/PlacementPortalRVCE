@@ -4,35 +4,37 @@
 <!-- Main Layout -->
 <style>
   body {
-    font-family: Arial, sans-serif;
-    background-color: #dae8f1;
-}
+      font-family: Arial, sans-serif;
+      background-color: #d9f2e5;
+  }
 
-.nav-link.active {
-  background-color: #3f7fa6; /* Replace with your desired color */
-  color: white; /* Adjust text color for better contrast */
-}
+  .nav-link.active {
+    background-color: #3bab71; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
 
-.nav-link.active:hover {
-  background-color: #7eafce; /* Slightly darker shade for hover */
-}
+  .nav-link.active:hover {
+    background-color: #7ad1a4; /* Slightly darker shade for hover */
+  }
 
-.student-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 60%; /* Makes it circular */
-  object-fit: cover; /* Ensures proper scaling of image */
-}
-.welcome-text {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #23465c;
-  text-decoration: none;
-}
-.student-name {
-  color: #007bff; /* Highlighted color for student name */
-}
+  .student-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+    margin-right: 5px;
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2e8558;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
 
+  
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -62,7 +64,6 @@
   margin-bottom: 20px;
   color: #333;
 }
-
 
 /* Timeline Styles */
     .timeline {
@@ -112,10 +113,9 @@
         font-weight: bold;
     }
 
-
 /* Button Styles */
 .btn {
-  background-color: #3f7fa6;
+  background-color: #3bab71;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -129,81 +129,78 @@
 }
 
 .btn:hover {
-  background-color: #2a556f;
+  background-color: #2e8558;
   color: white;
 }
+
 </style>
-    <div class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
-            <ul class="nav nav-pills flex-column mb-auto">
-              <li class="nav-item">
-                <a href="#" class="welcome-text" aria-current="page">
-                  <img 
-                  src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
-                  alt="Student Icon" 
-                    class="student-icon"
-                    >
-                    {{ request.session.u_name }}
-                  </a>
-                </li>
-                <hr>
-              <li class="nav-item">
-                <a href="/student/home" class="nav-link link-dark" >
-                    <i class="bi bi-house-door me-2"></i>
-                    Home
-                </a>
-              </li>
-              <li>
-                <a href="/student/profile" class="nav-link link-dark">
-                    <i class="bi bi-person me-2"></i>
-                  Profile
-                </a>
-              </li>
-              <li>
-                <a href="/student/applied" class="nav-link active"  style = "background-color: #3f7fa6; ">
-                    <i class="bi bi-grid-fill me-2"></i>
-                  Applied Jobs
-                </a>
-              </li>
-              <li>
-                <a href="/student/new" class="nav-link link-dark">
-                    <i class="bi bi-megaphone me-2"></i>
-                  New Offers
-                </a>
-              </li>
-              <li>
-                <a href="/student/fetchpdf/{{ request.session.u_id|default:'' }}" class="nav-link link-dark">
-                    <i class="bi bi-download me-2"></i>
-                  Export Resume
-                </a>
-              </li>
-              {% comment %} <li>
-                <a href="#" class="nav-link link-dark">
-                    <i class="bi bi-peoplecircle me-2"></i>
-                  Customers
-                </a>
-              </li> {% endcomment %}
-            </ul>
-            <hr>
-          </div>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="{% static 'images/company_icon.png' %}" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/company/home" class="nav-link link-dark" >
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/company/postjob" class="nav-link link-dark" >
+                <i class="bi bi-megaphone me-2"></i>
+              Post New Job
+            </a>
+          </li>
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link active" style = "background-color: #3bab71; ">
+                <i class="bi bi-grid-fill me-2"></i>
+              Ongoing Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/college_history" class="nav-link link-dark">
+                <i class="bi bi-check-circle me-2"></i>
+              Placement History
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
     <!-- Main Content -->
     <div class="main-content flex-grow-1">
       <div class="container">
         <!-- Card 1 -->
         {% comment %} [{'_id': ObjectId('67791dea9fd67f9b094e0983'), 'job_title': 'Testing', 'job_type': 'full_time', 'job_duration': 'Full time', 'job_desc': 'Testing appl', 'job_domain': 'software_development', 'job_salary': 9.25, 'cgpaMinCriteria': 7.5, 'cgpaMaxCriteria': 10, 'degreeCriteria': 'pg', 'job_locations': ['Bengaluru'], 'deptsCriteria': ['MCA', 'MCN', 'MCS'], 'yearOfPassingCriteria': [2026, 2027], 'skillsPreferences': ['Web dev', 'app dev'], 'job_enrolledDate': '2025-01-03 18:51:32', 'job_pptDate': '2025-01-05', 'job_oaDate': '2025-01-08', 'job_interviewDate': '2025-01-14', 'job_status': 1, 'job_stage': 1, 'job_companyId': 'C001', 'job_companyName': 'Google', 'job_numStudents': 2, 'job_lastUpdated': '2025-01-03 18:51:32', 'appl_id': '67791dea9fd67f9b094e0982', 'appl_date': '2025-01-04 17:09:22', 'appl_student_id': '1RV24MCN016', 'appl_job_id': '6777e45c7a803a745491da5f', 'appl_status': 0, 'appl_stage': 1, 'appl_lastUpdated': '2025-01-04 17:09:22'}] {% endcomment %}
-        {% for appl in applied %}
+        {% for job in jobs %}
         <div class="card">
-            <h3>Recruiter: {{ appl.job_companyName }}</h3>
+            <h3>Recruiter: {{ job.job_companyName }}</h3>
             <div class="timeline">
-              {% if appl.appl_stage >= 1 %}
+              {% if job.job_stage >= 0 %}
+              <div class="timeline-item completed">
+            {% else %}
+              <div class="timeline-item">
+            {% endif %}
+                  <span>Posted job offer</span> 
+              </div>
+
+              {% if job.job_stage >= 1 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
               {% endif %}
-                    <span>Registered</span> 
+                    <span>College has scheduled slots</span> 
                 </div>
 
-                {% if appl.appl_stage >= 2 %}
+                {% if job.job_stage >= 2 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
@@ -211,7 +208,7 @@
                     <span>Applications closed</span>
                 </div>
 
-                {% if appl.appl_stage >= 3 %}
+                {% if job.job_stage >= 3 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
@@ -220,7 +217,7 @@
                 </div>
 
 
-                {% if appl.appl_stage >= 4 %}
+                {% if job.job_stage >= 4 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
@@ -228,7 +225,7 @@
                     <span>PPT</span>
                 </div>
                 
-                {% if appl.appl_stage >= 5 %}
+                {% if job.job_stage >= 5 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
@@ -236,7 +233,7 @@
                   <span>OA</span>
               </div>
 
-                {% if appl.appl_stage >= 6 %}
+                {% if job.job_stage >= 6 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
@@ -244,16 +241,16 @@
                   <span>Interview</span>
               </div>
 
-              {% if appl.appl_stage >= 7 %}
+              {% if job.job_stage >= 7 %}
                 <div class="timeline-item completed">
               {% else %}
                 <div class="timeline-item">
               {% endif %}
-                <span>Recruited</span>
+                <span>Recruitment Done</span>
             </div>
             </div>
             <br>
-            <a href="/student/applied/vmore/{{ appl.appl_job_id }}" class="card-link"><button class="btn">View More</button></a>
+            <a href="/company/ong_recruitments/vmore/{{ job.job_id }}" class="card-link"><button class="btn">View More</button></a>
             <br></div>
           {% endfor %}
         {% comment %} <div class="card">
@@ -278,7 +275,7 @@
         </div> {% endcomment %}
 
         
+      </div>
     </div>
-    </div>
-</div>
+
 {% endblock %}

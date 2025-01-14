@@ -60,7 +60,35 @@
 .card h3 {
   font-size: 1.2rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #1c384a;
+}
+
+
+.deadline {
+  color: #d9534f; /* Red color for urgency */
+  font-size: 1rem;
+
+}
+
+.job-details-table {
+  width: 100%;
+  border-collapse: separate; /* Use separate borders for spacing */
+  border-spacing: 3px; /* Adds spacing between cells */
+  margin-top: 5px;
+}
+
+/* Body Styling */
+.card p, td {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: black;
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.card b, th {
+  font-size: 0.87rem;
+  color: #2a556f;
 }
 
 
@@ -76,7 +104,7 @@
 
     .timeline-item {
         position: relative;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .timeline-item:last-child {
@@ -160,14 +188,14 @@
                 </a>
               </li>
               <li>
-                <a href="/student/applied" class="nav-link active"  style = "background-color: #3f7fa6; ">
-                    <i class="bi bi-grid-fill me-2"></i>
+                <a href="/student/applied" class="nav-link link-dark">
+                    <i class="bi bi-grid me-2"></i>
                   Applied Jobs
                 </a>
               </li>
               <li>
-                <a href="/student/new" class="nav-link link-dark">
-                    <i class="bi bi-megaphone me-2"></i>
+                <a href="/student/new" class="nav-link active"  style = "background-color: #3f7fa6; ">
+                    <i class="bi bi-megaphone-fill me-2"></i>
                   New Offers
                 </a>
               </li>
@@ -189,95 +217,71 @@
     <!-- Main Content -->
     <div class="main-content flex-grow-1">
       <div class="container">
-        <!-- Card 1 -->
-        {% comment %} [{'_id': ObjectId('67791dea9fd67f9b094e0983'), 'job_title': 'Testing', 'job_type': 'full_time', 'job_duration': 'Full time', 'job_desc': 'Testing appl', 'job_domain': 'software_development', 'job_salary': 9.25, 'cgpaMinCriteria': 7.5, 'cgpaMaxCriteria': 10, 'degreeCriteria': 'pg', 'job_locations': ['Bengaluru'], 'deptsCriteria': ['MCA', 'MCN', 'MCS'], 'yearOfPassingCriteria': [2026, 2027], 'skillsPreferences': ['Web dev', 'app dev'], 'job_enrolledDate': '2025-01-03 18:51:32', 'job_pptDate': '2025-01-05', 'job_oaDate': '2025-01-08', 'job_interviewDate': '2025-01-14', 'job_status': 1, 'job_stage': 1, 'job_companyId': 'C001', 'job_companyName': 'Google', 'job_numStudents': 2, 'job_lastUpdated': '2025-01-03 18:51:32', 'appl_id': '67791dea9fd67f9b094e0982', 'appl_date': '2025-01-04 17:09:22', 'appl_student_id': '1RV24MCN016', 'appl_job_id': '6777e45c7a803a745491da5f', 'appl_status': 0, 'appl_stage': 1, 'appl_lastUpdated': '2025-01-04 17:09:22'}] {% endcomment %}
-        {% for appl in applied %}
+        <!-- Card 2 -->
+        {% for job in newoffers %}
         <div class="card">
-            <h3>Recruiter: {{ appl.job_companyName }}</h3>
-            <div class="timeline">
-              {% if appl.appl_stage >= 1 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                    <span>Registered</span> 
-                </div>
+            <h3>Recruiter: {{ job.job_companyName }}</h3>
+            <h6><span style = "color: #d9534f; margin: 0; padding: 0;">Deadline: </span>{{ job.job_reglastdate }}</h6>
+            <div id="companyInfo">
+              {% comment %} <p><b>Role:</b>
+                {{ job.job_title }}</p>
+                <p><b>Type:</b>
+                {{ job.job_type }}</p>
+                <p><b>Duration:</b>
+                {{ job.job_duration }}</p>
+                <p><b>Domain:</b>
+                {{ job.job_domain }}</p>
+                <p><b>Job Description:</b>
+                {{ job.job_desc }}</p>
+                <p><b>Salary:</b>
+                Rs {{ job.job_salary }} lpa</p>
+                <p><b>PPT Date:</b>
+                {{ job.job_pptDate }}</p>
+                <p><b>Posted on </b>
+                {{ job.job_enrolledDate }}</p> {% endcomment %}
 
-                {% if appl.appl_stage >= 2 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                    <span>Applications closed</span>
-                </div>
-
-                {% if appl.appl_stage >= 3 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                    <span>Shortlisted at college level</span>
-                </div>
-
-
-                {% if appl.appl_stage >= 4 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                    <span>PPT</span>
-                </div>
+                  <table class="job-details-table">
+                    <tr>
+                      <th>Role</th>
+                      <td>{{ job.job_title }}</td>
+                    </tr>
+                    <tr>
+                      <th>Type</th>
+                      <td>{{ job.job_type }}</td>
+                    </tr>
+                    <tr>
+                      <th>Duration</th>
+                      <td>{{ job.job_duration }}</td>
+                    </tr>
+                    <tr>
+                      <th>Domain</th>
+                      <td>{{ job.job_domain }}</td>
+                    </tr>
+                    <tr>
+                      <th>JD</th>
+                      <td>{{ job.job_desc }}</td>
+                    </tr>
+                    <tr>
+                      <th>Salary</th>
+                      <td>Rs {{ job.job_salary }} LPA</td>
+                    </tr>
+                    <tr>
+                      <th>PPT Date</th>
+                      <td>{{ job.job_pptDate }}</td>
+                    </tr>
+                    <tr>
+                      <th>Posted On</th>
+                      <td>{{ job.job_enrolledDate }}</td>
+                    </tr>
+                  </table>
                 
-                {% if appl.appl_stage >= 5 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                  <span>OA</span>
-              </div>
-
-                {% if appl.appl_stage >= 6 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                  <span>Interview</span>
-              </div>
-
-              {% if appl.appl_stage >= 7 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                <span>Recruited</span>
-            </div>
             </div>
             <br>
-            <a href="/student/applied/vmore/{{ appl.appl_job_id }}" class="card-link"><button class="btn">View More</button></a>
-            <br></div>
-          {% endfor %}
-        {% comment %} <div class="card">
-            <h3>Company Name: ABC Corp</h3>
-            <div class="timeline">
-                <div class="timeline-item completed">
-                    <span>Accepted at CG</span>
-                </div>
-                <div class="timeline-item completed">
-                    <span>Round 1</span>
-                </div>
-                <div class="timeline-item">
-                    <span>Round 2</span>
-                </div>
-                <div class="timeline-item">
-                    <span>Accepted</span>
-                </div>
-            </div>
-            <br>
-            <a href="/student/applied/vmore/154" class="card-link"><button class="btn">View More</button></a>
-
-        </div> {% endcomment %}
-
-        
+            <a href="/student/apply/{{ job.job_id }}" class="card-link"><button class="btn">Enroll / Apply</button></a>
+          </div>
+              {% endfor %}
+            
+    
     </div>
     </div>
 </div>

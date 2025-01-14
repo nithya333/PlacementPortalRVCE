@@ -31,7 +31,7 @@ class Department(models.Model):
 
 class Education(models.Model):
     e_program = models.BooleanField(default=False)
-    e_student_id = models.OneToOneField('Students', models.DO_NOTHING, primary_key=True)
+    e_student = models.OneToOneField('Students', models.DO_NOTHING, primary_key=True)
     e_cgpa = models.FloatField(blank=True, null=True)
     e_10thmarks = models.FloatField(blank=True, null=True)
     e_12thmarks = models.FloatField(blank=True, null=True)
@@ -60,7 +60,7 @@ class Students(models.Model):
     st_name = models.CharField(max_length=60)
     st_email = models.CharField(max_length=50, blank=True, null=True)
     st_phone = models.BigIntegerField(blank=True, null=True)
-    st_dept_id = models.ForeignKey(Department, models.DO_NOTHING)
+    st_dept = models.ForeignKey(Department, models.DO_NOTHING)
     st_section = models.CharField(max_length=5, blank=True, null=True)
     st_year_of_passing = models.BigIntegerField(blank=True, null=True)
     st_dob = models.DateField(blank=True, null=True)

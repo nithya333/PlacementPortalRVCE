@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block body_here %}
 <!-- Main Layout -->
 <style>
@@ -17,10 +18,11 @@
   }
 
   .student-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 60%; /* Makes it circular */
+    width: 35px;
+    height: 35px;
+    border-radius: 10%; /* Makes it circular */
     object-fit: cover; /* Ensures proper scaling of image */
+    margin-right: 5px;
   }
   .welcome-text {
     font-size: 1.2rem;
@@ -39,7 +41,8 @@
         <li class="nav-item">
           <a href="#" class="welcome-text" aria-current="page">
             <img 
-            src="https://img.freepik.com/premium-vector/boy-student-graduate-cap-icon-sign-logo-color-isolated-image-circle-isolated-vector-illustration_619989-1110.jpg" 
+            src="{% static 'images/company_icon.png' %}" 
+
             alt="Student Icon" 
               class="student-icon"
               >
