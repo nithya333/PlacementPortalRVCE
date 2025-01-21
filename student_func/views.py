@@ -3,7 +3,7 @@ import random
 import time
 from bson import ObjectId
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Department, Education, Students, Resumes
@@ -170,7 +170,8 @@ def student_profile_submit(request):
                 """, (spc_stud_id, spc_id))
 
 
-        return render(request, '2_1_student_home.html')
+        # return render(request, '2_1_student_home.html')
+        return redirect('/student/home')
     else:
         return render(request, 'register_stud.html')
     
@@ -182,6 +183,47 @@ def student_applied(request):
     job_collection = db['job']
     appl_collection = db['application']
 
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_stage": 1}))
+    for job in jobs:
+        job['job_id'] = str(job['_id'])
+        job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+        job['job_reglastdate'] = job_reglastdate
+        reg_last_date = datetime.strptime(job['job_reglastdate'], "%Y-%m-%d")
+        current_date = datetime.now()
+        if reg_last_date < current_date:
+            # Update the ob_stage in the job collection to 2
+            job_collection.update_one(
+                {"_id": job["_id"]},
+                {"$set": {"job_stage": 2}}
+            )
+            # Set all applicants appl_stage to 2
+            appl_collection = db['application']
+            appl_collection.update_many(
+                {"appl_job_id": job["_id"]},
+                {"$set": {"appl_stage": 2}}
+            )
+            print(f"Job {job['_id']} has been moved to stage 2")
+    
+    jobs_3 = list(job_collection.find({"job_stage": 3}))
+    for job in jobs_3:
+        current_date = datetime.now()
+        if job['job_pptDate'] is not None:
+            ppt_date = datetime.strptime(job['job_pptDate'], "%Y-%m-%d")
+            if ppt_date < current_date:
+                # Update the ob_stage in the job collection to 4
+                job_collection.update_one(
+                    {"_id": job["_id"]},
+                    {"$set": {"job_stage": 4}}
+                )
+                # Set all applicants appl_stage to 2
+                appl_collection = db['application']
+                appl_collection.update_many(
+                    {"appl_job_id": job["_id"]},
+                    {"$set": {"appl_stage": 4}}
+                )
+                print(f"Job {job['_id']} has been moved to stage 4")
+            
     # Fetch jobs with status "upcoming"
     jobs = list(job_collection.find({"job_stage": 1}))
 
@@ -252,9 +294,22 @@ def student_new(request):
 
         if st_degree == degreeCriteria and st_dept_d_abbr_code in deptsCriteria and st_year_of_passing in yearOfPassingCriteria and st_cgpa >= cgpaMinCriteria and st_cgpa <= cgpaMaxCriteria and st_backlogs == 0 and reg_last_date > current_date:
             job["eligible"] = True
-            # print(job)
             job["job_id"] = str(job["_id"])
             eligible_jobs.append(job)
+        elif reg_last_date < current_date:
+            # Update the ob_stage in the job collection to 2
+            job_collection.update_one(
+                {"_id": job["_id"]},
+                {"$set": {"job_stage": 2}}
+            )
+            # Set all applicants appl_stage to 2
+            appl_collection_2 = db['application']
+            appl_collection_2.update_many(
+                {"appl_job_id": job["_id"]},
+                {"$set": {"appl_stage": 2}}
+            )
+            print(f"Job {job['_id']} has been moved to stage 2")
+
 
     #     if "job_pptDate" in job and job["job_pptDate"] is not None:
     #         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
@@ -298,7 +353,8 @@ def student_new_apply(request, job_id):
 
     # Close the connection
     # client.close()
-    return render(request, '2_1_student_home.html')
+    # return render(request, '2_1_student_home.html')
+    return redirect('/student/home')
 
 @csrf_exempt  
 def student_applied_vmore(request, job_id):
@@ -322,7 +378,8 @@ def student_applied_vmore(request, job_id):
 
         # print(job_details)
         # "stages" : [1,2,3,4,5,6,7], "stages_text" : ["Applied", "Applications Closed", "Shortlisted", "PPT", "OA", "Interview", "Recruited"]
-        stages = [[1, "You have registered", job_details['appl_date']], [2, "Applications Closed" , job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT from the recruiter", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "You are recruited", '']]
+        # stages = [[1, "You have registered", job_details['appl_date']], [2, "Applications Closed" , job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT from the recruiter", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "You are recruited", '']]
+        stages = [[0, "", "", ""], [1, "You have registered", job_details['appl_date'], 0], [2, "Applications Closed, Waiting for college shortlists" , job_details['job_reglastdate'], 1], [3, "Shortlisted at college level", '', 2], [4, "PPT from the recruiter", job_details['job_pptDate'], 3], [5, "OA - Round 1", job_details['job_oaDate'], 4], [6, "Interview - Round 2", job_details['job_interviewDate'], 5], [7, "You are recruited", '', 6]]
         return render(request, '2_5_student_applied_vmore.html', {"job_details": job_details, "stages": stages})
     else:
         return render(request, '2_1_student_home.html')

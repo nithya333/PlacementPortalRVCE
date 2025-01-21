@@ -68,16 +68,16 @@
 
 /* Button Styles */
 .btn {
-  background-color: #3bab71;
+  background-color: #349864;
   color: #fff;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
+  padding: 8px 20px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
   display: block;
-  margin: 0 auto;
+  margin: 0 15px;
   text-align: center;
 }
 
@@ -149,7 +149,7 @@
 }
 
 .timeline-content{
-  height: 150px;
+  height: 180px;
 }
 
 /* Completed Stage */
@@ -276,7 +276,7 @@
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <strong>Degree Criteria:</strong>
-                        <p>{{ job_details.job_salary }}</p>
+                        <p>{{ job_details.degreeCriteria }}</p>
                     </div>
                     <div class="col-md-3">
                         <strong>Departments:</strong>
@@ -294,6 +294,269 @@
             </div>
         </div>
       </div>
+      <div class="container my-5">
+        <div class="card shadow border-0" style = "width: 900px;">
+            <div class="card-header text-white" style = "background: #7ad1a4;">
+                <h3 class="card-title mb-0" style = "font-variant: small-caps; color: #152a37; font-weight:bold;">Current Status</h3>
+            </div>
+            <div class="card-body" style = "width: 900px;">
+                <div class="row mb-3">
+                  {% if job_details.job_stage == 0 %}
+                    <div class="col-md-3">
+                        <strong>Stage:</strong>
+                        <p>{{ stages.0.0 }} </p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Stage Info:</strong>
+                        <p>{{ stages.0.1 }}</p>
+                    </div>
+                  </div>
+
+                  {% elif job_details.job_stage == 1 %}
+                  <div class="row mb-3">
+                    <strong style = "font-size: 20px;">Congratulations! Your job offer has been allotted slots by the college placement head. </strong>
+                    <strong style = "font-size: 20px;">RVCE is honoured to welcome you as a recruiter. </strong>
+                  </div>
+                  
+                  <div class="row mb-3">
+                  <div class="col-md-3">
+                        <strong>Stage:</strong>
+                        <p>{{ stages.1.0 }} </p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Stage Info:</strong>
+                        <p>{{ stages.1.1 }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <strong>No of students enrolled:</strong>
+                      <p>{{ job_details.job_numStudents }}*</p>
+                  </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <strong>Registration last date:</strong>
+                      <p>{{ job_details.job_reglastdate }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>PPT is scheduled on:</strong>
+                        <p>{{ job_details.job_pptDate }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <strong>OA is scheduled on:</strong>
+                      <p>{{ job_details.job_oaDate }}*</p>
+                  </div>
+                  <div class="col-md-3">
+                    <strong>Interview is on:</strong>
+                    <p>{{ job_details.job_interviewDate }} </p>
+                </div>
+
+                </div> 
+
+                  {% elif job_details.job_stage == 2 %}
+                  {% comment %} <div class="row mb-3">
+                    <strong style = "font-size: 20px;">Congratulations! Your job offer has been allotted slots by the college placement head. </strong>
+                  </div> {% endcomment %}
+                  
+                  <div class="row mb-3">
+                  <div class="col-md-3">
+                        <strong>Stage:</strong>
+                        <p>{{ stages.2.0 }} </p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Stage Info:</strong>
+                        <p>{{ stages.2.1 }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <strong>No of students enrolled:</strong>
+                      <p>{{ job_details.job_numStudents }}</p>
+                  </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>PPT is scheduled on:</strong>
+                        <p>{{ job_details.job_pptDate }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <strong>OA is scheduled on:</strong>
+                      <p>{{ job_details.job_oaDate }}*</p>
+                  </div>
+                  <div class="col-md-4">
+                    <strong>Interview is scheduled on:</strong>
+                    <p>{{ job_details.job_interviewDate }} </p>
+                </div>
+
+                </div> 
+
+                  {% elif job_details.job_stage == 3 %}
+                   <div class="row mb-3">
+                    <strong style = "font-size: 20px;">RVCE invites you for the PPT on {{ job_details.job_pptDate }}! </strong>
+                  </div> 
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                          <strong>Stage:</strong>
+                          <p>{{ stages.3.0 }} </p>
+                      </div>
+                      <div class="col-md-3">
+                          <strong>Stage Info:</strong>
+                          <p>{{ stages.3.1 }}</p>
+                      </div>
+                      <div class="col-md-3">
+                        <strong>No of students enrolled:</strong>
+                        <p>{{ job_details.job_numStudents }}</p>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                        <strong>PPT is scheduled on:</strong>
+                        <p>{{ job_details.job_pptDate }}</p>
+                    </div>
+                    <div class="col-md-3">
+                      <strong>OA is scheduled on:</strong>
+                      <p>{{ job_details.job_oaDate }}*</p>
+                  </div>
+                  <div class="col-md-4">
+                    <strong>Interview is scheduled on:</strong>
+                    <p>{{ job_details.job_interviewDate }} </p>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <strong>Applicants in Stage {{ stages.3.0 }}:</strong>
+                    <button onclick="exportTableToCSV('Applicants_Info_{{ job_details.job_title }}.csv')" style ="display: inline;" class="btn btn-info">Export as CSV</button>
+
+                    <br>
+                    <div style="overflow-x: auto; white-space: nowrap; margin-top: 15px;">
+                      <table class="table table-striped table-bordered" style="min-width: 600px;">
+                       
+                      <thead>
+                        <tr>
+                          <th>Student ID</th>
+                          <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Year of Passing</th>
+                            <th>CGPA</th>
+                            <th>10th Marks</th>
+                            <th>12th Marks</th>
+                            <th>Backlogs</th>
+                            <th>Application ID</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for applicant in applicants %}
+                            <tr>
+                              <td>{{ applicant.st_id }}</td>
+                              <td>{{ applicant.st_name }}</td>
+                              <td>{{ applicant.st_section }}</td>
+                              <td>{{ applicant.st_email }}</td>
+                              <td>{{ applicant.st_year_of_passing }}</td>
+                              <td>{{ applicant.e_cgpa }}</td>
+                              <td>{{ applicant.e_10thmarks }}</td>
+                              <td>{{ applicant.e_12thmarks }}</td>
+                              <td>{{ applicant.e_backlogs }}</td>
+                              <td>{{ applicant.appl_id }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                </div> 
+
+                {% elif job_details.job_stage == 4 %}
+                   <div class="row mb-3">
+                    <strong style = "font-size: 20px;">Please conduct OA on {{ job_details.job_oaDate }}! </strong>
+                  </div> 
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                          <strong>Stage:</strong>
+                          <p>{{ stages.4.0 }} </p>
+                      </div>
+                      <div class="col-md-3">
+                          <strong>Stage Info:</strong>
+                          <p>{{ stages.4.1 }}</p>
+                      </div>
+                      <div class="col-md-3">
+                        <strong>No of students enrolled:</strong>
+                        <p>{{ job_details.job_numStudents }}</p>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <strong>OA is scheduled on:</strong>
+                      <p>{{ job_details.job_oaDate }}*</p>
+                    </div>
+                    <div class="col-md-4">
+                      <strong>Interview is scheduled on:</strong>
+                      <p>{{ job_details.job_interviewDate }} </p>
+                  </div>
+
+                  <div class="row mb-8">
+                    <div class="col-md-12">
+                      <strong>Provide the link for OA:</strong>
+                      <form action="/company/oa_link" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="text" name="oa_link" id="oa_link" placeholder="Enter the URL" style="width: 50%; margin-right: 10px;" />
+                        <button type="submit" style="display: inline;" class="btn btn-success">Submit</button>
+                      </form>
+                    </div>
+                  </div>
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                    <br>
+                    <strong>Applicants in Stage {{ stages.4.0 }}:</strong>
+                    <button onclick="exportTableToCSV('Applicants_Info_{{ job_details.job_title }}.csv')" style ="display: inline;" class="btn btn-info">Export as CSV</button>
+
+                    <br>
+                    <div style="overflow-x: auto; white-space: nowrap; margin-top: 15px;">
+                      <table class="table table-striped table-bordered" style="min-width: 600px;">
+                       
+                      <thead>
+                        <tr>
+                          <th>Student ID</th>
+                          <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Year of Passing</th>
+                            <th>CGPA</th>
+                            <th>10th Marks</th>
+                            <th>12th Marks</th>
+                            <th>Backlogs</th>
+                            <th>Application ID</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for applicant in applicants %}
+                            <tr>
+                              <td>{{ applicant.st_id }}</td>
+                              <td>{{ applicant.st_name }}</td>
+                              <td>{{ applicant.st_section }}</td>
+                              <td>{{ applicant.st_email }}</td>
+                              <td>{{ applicant.st_year_of_passing }}</td>
+                              <td>{{ applicant.e_cgpa }}</td>
+                              <td>{{ applicant.e_10thmarks }}</td>
+                              <td>{{ applicant.e_12thmarks }}</td>
+                              <td>{{ applicant.e_backlogs }}</td>
+                              <td>{{ applicant.appl_id }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                </div> 
+
+                  {% endif %}
+    
+                
+                </div>
+            </div>
+        </div>
+
       <section class="bsb-timeline-7  py-3 py-md-5 py-xl-1">
         <div class="container">
           <div class="row justify-content-center">
@@ -375,5 +638,40 @@
       </section>
 
     </div>
+<script>
+  function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
 
+    // CSV file
+    csvFile = new Blob([csv], { type: "text/csv" });
+    // Download link
+    downloadLink = document.createElement("a");
+    // File name
+    downloadLink.download = filename;
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    // Hide download link
+    downloadLink.style.display = "none";
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+    // Click download link
+    downloadLink.click();
+}
+
+  function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    for (var i = 0; i < rows.length; i++) {
+        var row = [],
+            cols = rows[i].querySelectorAll("td, th");
+        for (var j = 0; j < cols.length; j++) {
+            row.push(cols[j].innerText);
+        }
+        csv.push(row.join(","));
+    }
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+  }
+  </script>
 {% endblock %}

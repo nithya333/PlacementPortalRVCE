@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #ffddcc;
+  }
+
+  .nav-link.active {
+    background-color: #cc4400; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #993300; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #993300;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="{% static 'images/coordinator_icon.png' %}" 
+            alt="Coord Icon" 
+              class="student-icon" >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/coordinator/home"  class="nav-link link-dark">
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/coordinator/shortlist" class="nav-link active" style = "background-color: #b33c00; ">
+                <i class="bi bi-calendar-fill me-2"></i>
+              Shortlist Students
+            </a>
+          </li>
+          <li>
+            <a href="/coordinator/track" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+             Track Placements
+            </a>
+          </li>
+          
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+
+</div>
+{% endblock %}

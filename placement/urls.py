@@ -24,6 +24,7 @@ urlpatterns = [
     path('student/', include('student_func.urls')),
     path('head/', include('admin_func.urls')),
     path('company/', include('company_func.urls')),
+    path('coordinator/', include('coordinator_func.urls')),
     path("admin/", admin.site.urls),
 ]
 

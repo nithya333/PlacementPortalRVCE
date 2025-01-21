@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #ffddcc;
+  }
+
+  .nav-link.active {
+    background-color: #cc4400; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #993300; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #993300;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+  #accordion button {
+    text-decoration: none !important;
+    font-family: Arial, sans-serif;
+    color: #804200;
+  }
+
+  #accordion table {
+    color: #666666;
+  }
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="{% static 'images/coordinator_icon.png' %}" 
+            alt="Coord Icon" 
+              class="student-icon" >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/coordinator/home"  class="nav-link link-dark">
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/coordinator/shortlist" class="nav-link active" style = "background-color: #b33c00; ">
+                <i class="bi bi-calendar-fill me-2"></i>
+              Shortlist Students
+            </a>
+          </li>
+          <li>
+            <a href="/coordinator/track" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+             Track Placements
+            </a>
+          </li>
+          
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+      <div id="accordion">
+        {% for pending_job in pending %}
+        <div class="card">
+          <div class="card-header" id="heading{{ pending_job.id }}" style="height:3.2rem;">
+            <h5 class="mb-0">
+               
+              <pre><button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ pending_job.id }}" aria-expanded="true" style = "font-weight: 600" aria-controls="collapse{{ pending_job.id }}">{{ pending_job.compName }}      Posted on {{ pending_job.date_posted }}</button></pre>
+            </h5>
+          </div>
+      
+          <div id="collapse{{ pending_job.id }}" class="collapse" aria-labelledby="heading{{ pending_job.id }}" data-parent="#accordion">
+            <div class="card-body">
+              {% comment %} <p>Company Name: {{ pending_job.compName }}</p>
+              <p>Date Posted: {{ pending_job.date_posted }}</p> {% endcomment %}
+              <table width="100%" >
+                <tr>
+                  <td> {{ pending_job.job_title }}</td>
+                  <td> {{ pending_job.job_type }}</td>
+                </tr>
+                <tr>
+                  <td> {{ pending_job.job_duration }}</td>
+                  <td> {{ pending_job.job_domain }}</td>
+                </tr>
+                {% comment %} <tr>
+                  <td colspace = 2> {{ pending_job.job_desc }}</td>
+                </tr> {% endcomment %}
+                  <td>Rs {{ pending_job.job_salary }} lpa</td>
+                  <td> {{ pending_job.eligible_branches }}</td>
+
+                </tr>
+              </table>
+              <hr>
+              <form action="/head/allot_slots" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="job_id" value="{{ pending_job.id }}">
+                    <table width="100%" >
+                      <tr style="font-size: 0.9rem; color: #331a00;">
+                        <th>PPT Slot</th>
+                        <th>OA Slot</th>
+                        <th>Interview Slot</th>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="ppt_slot" name="ppt_slot" value="{{ pending_job.ppt_slot }}">
+                        </td>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="oa_slot" name="oa_slot" value="{{ pending_job.oa_slot }}">
+                        </td>
+                        <td>
+                          <input required style="width: 80%; padding: 3px; font-size: 0.8rem;" type="date" id="interview_slot" name="interview_slot" value="{{ pending_job.interview_slot }}">
+                        </td>
+                      </tr>
+                      </table>
+                      <br>
+                      <button type="submit" style="background-color: #804200; color: white" class="register-btn">Allot Slots</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+</div>
+{% endblock %}

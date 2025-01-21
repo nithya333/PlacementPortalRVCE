@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "student_func.apps.StudentFuncConfig",
     "company_func.apps.CompanyFuncConfig",
     "admin_func.apps.AdminFuncConfig",
+    "coordinator_func.apps.CoordinatorFuncConfig",
 ]
 
 MIDDLEWARE = [

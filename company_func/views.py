@@ -1,5 +1,5 @@
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import psycopg2
@@ -9,11 +9,12 @@ from django.core.files.storage import FileSystemStorage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-from .models import Company, Department
+from .models import Company, Department, Education, Students
 from pymongo import MongoClient
 import time
 from bson import ObjectId
 from datetime import datetime, timedelta
+
 
 # Create your views here.
 
@@ -119,7 +120,8 @@ def company_postjob_submit(request):
         # Close the connection
         client.close()
 
-        return render(request, '5_1_company_home.html')
+        # return render(request, '5_1_company_home.html')
+        return redirect('/company/home')
     
 def company_ong_recruitments(request):
     client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
@@ -127,9 +129,46 @@ def company_ong_recruitments(request):
     job_collection = db['job']
 
     # Fetch jobs with status "upcoming"
-    jobs = list(job_collection.find({"job_stage": 1, "job_companyId": request.session.get('u_id')}))
+    jobs = list(job_collection.find({"job_companyId": request.session.get('u_id')}))
     for job in jobs:
         job['job_id'] = str(job['_id'])
+        if (job['job_stage'] == 1):
+            job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+            job['job_reglastdate'] = job_reglastdate
+            reg_last_date = datetime.strptime(job['job_reglastdate'], "%Y-%m-%d")
+            current_date = datetime.now()
+            if reg_last_date < current_date:
+                # Update the ob_stage in the job collection to 2
+                job_collection.update_one(
+                    {"_id": job["_id"]},
+                    {"$set": {"job_stage": 2}}
+                )
+                # Set all applicants appl_stage to 2
+                appl_collection = db['application']
+                appl_collection.update_many(
+                    {"appl_job_id": job["_id"]},
+                    {"$set": {"appl_stage": 2}}
+                )
+                print(f"Job {job['_id']} has been moved to stage 2")
+                return redirect('/company/ong_recruitments')
+        elif (job['job_stage'] == 3):
+            current_date = datetime.now()
+            ppt_date = datetime.strptime(job['job_pptDate'], "%Y-%m-%d")
+            if ppt_date < current_date:
+                # Update the ob_stage in the job collection to 4
+                job_collection.update_one(
+                    {"_id": job["_id"]},
+                    {"$set": {"job_stage": 4}}
+                )
+                # Set all applicants appl_stage to 2
+                appl_collection = db['application']
+                appl_collection.update_many(
+                    {"appl_job_id": job["_id"]},
+                    {"$set": {"appl_stage": 4}}
+                )
+                print(f"Job {job['_id']} has been moved to stage 4")
+                return redirect('/company/ong_recruitments')
+
     return render(request, '5_3_company_ongoing.html', {"jobs": jobs})
 
 def company_college_history(request):
@@ -148,13 +187,53 @@ def company_ong_recruitments_vmore(request, job_id):
         appl_collection = db['application']
 
         job = job_collection.find_one({"_id": job_id})
-        job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
-        job['job_reglastdate'] = job_reglastdate
+        if job['job_stage'] == 0:
+            job['job_reglastdate'] = ''
+        else:
+            job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
+            job['job_reglastdate'] = job_reglastdate
         job_details = job
 
         applications = list(appl_collection.find({"appl_job_id": job_id}))
-        stages = [[0, "You have posted a job offer", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , ''], [2, "Registrations closed", job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "Recruitment done", '']]
-        return render(request, '5_4_company_ongoing_vmore.html', {"job_details": job_details, "applications" : applications, "stages": stages})
+        # print(applications)
+        applicants = []
+        for applicantion in applications:
+            # comp_id = request.session.get('u_id')
+            stud_details = Students.objects.get(st_id = applicantion["appl_student_id"])
+            applicant = applicantion
+            applicant["st_id"] = stud_details.st_id
+            applicant["st_name"] = stud_details.st_name
+            applicant["st_email"] = stud_details.st_email
+            applicant["st_section"] = stud_details.st_section
+            applicant["st_year_of_passing"] = stud_details.st_year_of_passing
+
+            stud_edu_details = Education.objects.get(e_student_id = applicantion["appl_student_id"])
+            applicant["e_cgpa"] = stud_edu_details.e_cgpa
+            applicant["e_10thmarks"] = stud_edu_details.e_10thmarks
+            applicant["e_10thstream"] = stud_edu_details.e_10thstream
+            applicant["e_12thmarks"] = stud_edu_details.e_12thmarks
+            applicant["e_12thstream"] = stud_edu_details.e_12thstream
+            applicant["e_backlogs"] = stud_edu_details.e_backlogs
+
+            applicants.append(applicant)
+            # cp_name = company.cp_name
+            # cp_type = company.cp_type
+            # cp_location = company.cp_location
+            # cp_contact_email = company.cp_contact_email
+            # cp_contact_phone = company.cp_contact_phone
+            # cp_contact_name = company.cp_contact_name
+            # company_details = {
+            #     "cp_id": comp_id,
+            #     "cp_name": cp_name,
+            #     "cp_type": cp_type,
+            #     "cp_location": cp_location,
+            #     "cp_contact_email": cp_contact_email,
+            #     "cp_contact_phone": cp_contact_phone,
+            #     "cp_contact_name": cp_contact_name
+            # }
+        print(applicants)
+        stages = [[0, "You have posted a job offer, Waiting for college approval", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , job_reglastdate], [2, "Applications closed, Waiting for college shortlists", ''], [3, "Shortlisted at college level", ''], [4, "PPT done", job_details['job_pptDate']], [5, "OA - Round 1 done", job_details['job_oaDate']], [6, "Interview - Round 2 done", job_details['job_interviewDate']], [7, "Recruitment done", '']]
+        return render(request, '5_4_company_ongoing_vmore.html', {"job_details": job_details, "applicants" : applicants, "stages": stages})
     else:
         return render(request, '5_1_company_home.html')
     

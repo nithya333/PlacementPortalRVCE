@@ -1,5 +1,5 @@
 from django.db import connection
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Department, Education, Students, Resumes
@@ -63,7 +63,9 @@ def reg_common_submit(request):
                     elif usertype == "Company":
                         return render(request, '1_4_register_comp.html', context)
                     elif usertype == "Admin":
-                        return render(request, '4_1_head_home.html', context)
+                        # return render(request, '4_1_head_home.html', context)
+                        return redirect('/head/home')
+                    
                 else:
                     message = "Invalid credentials. Please try again."
                     print("Invalid credentials")
@@ -106,13 +108,17 @@ def login_common_submit(request):
                     print(f"Successful login for user ID: {u_id}")
 
                     if usertype == "Student":
-                        return render(request, '2_1_student_home.html', {'message': message})
+                        # return render(request, '2_1_student_home.html', {'message': message})
+                        return redirect('/student/home')
                     elif usertype == "Coordinator":
-                        return render(request, 'register_fac.html', {'message': message})
+                        # return render(request, 'register_fac.html', {'message': message})
+                        return redirect('/coordinator/home')
                     elif usertype == "Company":
-                        return render(request, '5_1_company_home.html', {'message': message})
+                        # return render(request, '5_1_company_home.html', {'message': message})
+                        return redirect('/company/home')
                     elif usertype == "Admin":
-                        return render(request, '4_1_head_home.html', {'message': message})
+                        # return render(request, '4_1_head_home.html', {'message': message})
+                        return redirect('/head/home')
                 else:
                     message = "Invalid credentials. Please try again."
                     print("Invalid credentials")
@@ -247,7 +253,9 @@ def reg_stud_submit(request):
                 """, (spc_id, spc_stud_id))
             
 
-        return render(request, '2_1_student_home.html')
+        # return render(request, '2_1_student_home.html')
+        return redirect('/student/home')
+    
     else:
         return render(request, 'register_stud.html')
     
@@ -319,7 +327,8 @@ def reg_fac_submit(request):
             """, (cd_name, cd_id, cd_email, cd_phone, cd_program, cd_dept_id))
             
 
-        return render(request, 'register_fac.html')
+        # return render(request, 'register_fac.html')
+        return redirect('/coordinator/home')
     else:
         return render(request, 'register_fac.html')
         
@@ -345,7 +354,8 @@ def reg_comp_submit(request):
             """, (cp_id, cp_name, cp_type, cp_location, cp_contact_name, cp_contact_email, cp_contact_phone ))
             
 
-        return render(request, '5_1_company_home.html')
+        # return render(request, '5_1_company_home.html')
+        return redirect('/company/home')
     else:
         return render(request, 'register_comp.html')
     

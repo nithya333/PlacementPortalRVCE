@@ -168,6 +168,15 @@
   background-color: #fff3cd; /* Subtle yellow background */
 }
 
+/* Rejected Stage */
+.timeline-item.rejected .timeline-indicator {
+  border-left-color: #ff3333; /* Yellow for rejected stages */
+}
+
+.timeline-item.rejected .card {
+  background-color: #ffb3b3; /* Subtle yellow background */
+}
+
 /* Upcoming Stage */
 .timeline-item .timeline-indicator {
   border-left-color: #b3b3b3; /* Grey for upcoming stages */
@@ -371,7 +380,7 @@
           <div class="row mb-3">
               <div class="col-md-3">
                   <strong>Degree Criteria:</strong>
-                  <p>{{ job_details.job_salary }}</p>
+                  <p>{{ job_details.deptsCriteria }}</p>
               </div>
               <div class="col-md-3">
                   <strong>Departments:</strong>
@@ -388,15 +397,108 @@
           </div>
       </div>
   </div>
+  <div class="card shadow border-0" style = "width: 900px;">
+    <div class="card-header text-white" style = "background: #7eafce;">
+        <h3 class="card-title mb-0" style = "font-variant: small-caps; color: #152a37; font-weight:bold;">Current Status</h3>
+    </div>
+    <div class="card-body" style = "width: 900px;">
+        <div class="row mb-3">
+          {% if job_details.appl_stage < job_details.job_stage %}
+          <div class="row mb-3">
+            <strong style = "font-size: 20px;">Sorry! You have been rejected at Stage {{ job_details.appl_stage|add:1 }} </strong>
+          </div>
+
+          {% elif job_details.appl_stage == 1 %}
+          
+          <div class="row mb-3">
+          <div class="col-md-3">
+                <strong>Stage:</strong>
+                <p>{{ stages.1.0 }} </p>
+            </div>
+            <div class="col-md-3">
+                <strong>Stage Info:</strong>
+                <p>{{ stages.1.1 }}</p>
+            </div>
+            <div class="col-md-3">
+              <strong>No of students enrolled:</strong>
+              <p>{{ job_details.job_numStudents }}*</p>
+          </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3">
+                <strong>PPT is scheduled on:</strong>
+                <p>{{ job_details.job_pptDate }}</p>
+            </div>
+            <div class="col-md-3">
+              <strong>OA is scheduled on:</strong>
+              <p>{{ job_details.job_oaDate }}*</p>
+          </div>
+          <div class="col-md-4">
+            <strong>Interview is scheduled on:</strong>
+            <p>{{ job_details.job_interviewDate }} </p>
+        </div>
+
+        </div> 
+
+          {% elif job_details.appl_stage == 2 %}
+          {% comment %} <div class="row mb-3">
+            <strong style = "font-size: 20px;">Congratulations! Your job offer has been allotted slots by the college placement head. </strong>
+          </div> {% endcomment %}
+          
+          <div class="row mb-3">
+          <div class="col-md-3">
+                <strong>Stage:</strong>
+                <p>{{ stages.2.0 }} </p>
+            </div>
+            <div class="col-md-3">
+                <strong>Stage Info:</strong>
+                <p>{{ stages.2.1 }}</p>
+            </div>
+            <div class="col-md-3">
+              <strong>No of students enrolled:</strong>
+              <p>{{ job_details.job_numStudents }}</p>
+          </div>
+          </div>
+
+        </div> 
+
+        {% elif job_details.appl_stage == 3 %}
+          <div class="row mb-3">
+            <strong style = "font-size: 20px;">Congratulations! You are shortlisted at college level. </strong>
+          </div> 
+          
+          <div class="row mb-3">
+          <div class="col-md-3">
+                <strong>Stage:</strong>
+                <p>{{ stages.3.0 }} </p>
+            </div>
+            <div class="col-md-3">
+                <strong>Stage Info:</strong>
+                <p>{{ stages.3.1 }}</p>
+            </div>
+            <div class="col-md-3">
+              <strong>No of students enrolled:</strong>
+              <p>{{ job_details.job_numStudents }}</p>
+          </div>
+          </div>
+
+        </div> 
+          {% endif %}
+
+        
+        </div>
+    </div>
 </div>
+
+  
 <section class="bsb-timeline-7  py-3 py-md-5 py-xl-1">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-10 col-md-12 col-xl-10 col-xxl-9">
         <h2 style = "font-variant: small-caps; color: #316381;">Application Timeline</h2>
         <ul class="timeline">
-          {% for stage, stage_text, stage_date in stages %}
-        {% if job_details.appl_stage > stage %}
+          {% for stage, stage_text, stage_date, prev_stage in stages|slice:"1:" %}
+        {% if job_details.appl_stage >= stage %}
             <!-- Completed Stage -->
             <li class="timeline-item completed">
               <div class="timeline-body">
@@ -411,6 +513,26 @@
                     <div class="card-body p-xl-1">
                       <h2 class="card-title mb-1">Stage {{stage}} </h2>
                       <p class="card-text m-0">{{ stage_text }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% elif job_details.appl_stage == prev_stage and job_details.job_stage >= stage %}
+            <!-- In Progress Stage -->
+            <li class="timeline-item rejected">
+              <div class="timeline-body">
+                <div class="timeline-meta">
+                  <div class="d-inline-flex flex-column px-2 py-1 text-danger-emphasis bg-danger-subtle border border-danger rounded-2 text-md-end">
+                    <span class="fw-bold">{{ stage_date }}</span>
+                    <span>Stage {{stage}} In Progress</span>
+                  </div>
+                </div>
+                <div class="timeline-content timeline-indicator">
+                  <div class="card border-0 shadow bg-danger-subtle text-danger">
+                    <div class="card-body p-xl-1">
+                      <h2 class="card-title mb-1" style = "color: #ff3333;">Stage {{stage}} </h2>
+                      <p class="card-text m-0" style = "color: #ff3333;">{{ stage_text }}</p>
                     </div>
                   </div>
                 </div>
