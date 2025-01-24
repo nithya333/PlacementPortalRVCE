@@ -18,6 +18,23 @@ def login_common_view(request):
     return render(request, 'index.html')
 
 @csrf_exempt
+def submit_feedback(request):
+    print(request.POST)
+    feedback_userType = request.POST["feedback_userType"]
+    feedback_rating = request.POST["feedback_rating"]
+    feedback_suggestion = request.POST["feedback_suggestion"]
+    with connection.cursor() as cursor:
+        # %s is a placeholder for any datatype, prevents SQL injection
+        cursor.execute("""
+            INSERT INTO feedback (f_usertype, f_rating, f_suggestion)
+            VALUES (%s, %s, %s)
+        """, (feedback_userType, feedback_rating, feedback_suggestion))
+
+
+    # Redirect back to the same page
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@csrf_exempt
 def reg_common_submit(request):
     if request.method == "POST":
         usertype = request.POST.get('usertype')

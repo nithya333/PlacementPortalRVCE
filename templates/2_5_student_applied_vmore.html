@@ -191,6 +191,8 @@
 }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/tutorials/timelines/timeline-7/assets/css/timeline-7.css"> 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
 <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
             <ul class="nav nav-pills flex-column mb-auto">
@@ -220,7 +222,13 @@
               <li>
                 <a href="/student/applied" class="nav-link active"  style = "background-color: #3f7fa6; ">
                     <i class="bi bi-grid-fill me-2"></i>
-                  Applied Jobs
+                  Active Applications
+                </a>
+              </li>
+              <li>
+                <a href="/student/past_applied" class="nav-link link-dark">
+                    <i class="bi bi-archive me-2"></i>
+                  Past Applications
                 </a>
               </li>
               <li>
@@ -483,6 +491,77 @@
           </div>
 
         </div> 
+
+          {% elif job_details.appl_stage == 4 %}
+          <div class="row mb-3">
+            <strong style = "font-size: 20px;">Good luck for your OA scheduled on {{ job_details.job_oaDate }} </strong>
+          </div> 
+          
+          <div class="row mb-3">
+          <div class="col-md-3">
+                <strong>Stage:</strong>
+                <p>{{ stages.4.0 }} </p>
+            </div>
+            <div class="col-md-3">
+                <strong>Stage Info:</strong>
+                <p>{{ stages.4.1 }}</p>
+            </div>
+          </div>
+
+          {% if job_details.oa_link != '' %}
+          <div class="row mb-3">
+            <strong>OA Link:</strong>
+            <a href="{{ job_details.oa_link }}" target="_blank">Click here to give OA</a>
+          </div>
+          {% else %}
+          <div class="row mb-3">
+            <strong>OA Link:</strong>
+            <p>Link will be provided soon by the recruiter</p>
+          </div>
+          {% endif %}
+
+        </div> 
+
+        {% elif job_details.appl_stage == 5 %}
+          <div class="row mb-3">
+            <strong style = "font-size: 20px;">Congratulations! You made it throuh the OA! </strong>
+            <strong style = "font-size: 20px;">Good luck for your interview scheduled on {{ job_details.job_oaDate }} </strong>
+          </div> 
+          
+          <div class="row mb-3">
+          <div class="col-md-3">
+                <strong>Stage:</strong>
+                <p>{{ stages.5.0 }} </p>
+            </div>
+            <div class="col-md-3">
+                <strong>Stage Info:</strong>
+                <p>{{ stages.5.1 }}</p>
+            </div>
+          </div>
+
+          {% if job_details.interview_link != '' %}
+          <div class="row mb-3">
+            <strong>Interview Link:</strong>
+            <a href="{{ job_details.interview_link }}">Click here to give Interview</a>
+          </div>
+          {% else %}
+          <div class="row mb-3">
+            <strong>Interview Link:</strong>
+            <p>Link will be provided soon by the recruiter</p>
+          </div>
+          {% endif %}
+
+        </div> 
+
+        {% elif job_details.appl_stage == 6 %}
+          <div class="row mb-3">
+            <strong style = "font-size: 20px;">Congratulations! You have been recruited at {{job_details.job_companyName}}! </strong>
+          <p> You cannot participate in any more interviews. Thanks for taking part in the recruitment process. </p>   
+          </div> 
+
+        </div> 
+
+        
           {% endif %}
 
         
@@ -593,4 +672,59 @@
 
     </div>
 </div>
+<script>
+  if ({{job_details.job_stage}} == 6)
+  {
+
+    var end = Date.now() + (5 * 1000);
+  
+  // go Buckeyes!
+  // var colors = ['#bb0000', '#ffffff'];
+  {% comment %} var colors = [
+  '#FF5733',  // Bright Orange
+  '#33FF57',  // Bright Green
+  '#3357FF',  // Bright Blue
+  '#FFC300',  // Bright Yellow
+  '#DAF7A6',  // Soft Green
+  '#FF33A1',  // Pink
+  '#6F42C1',  // Purple
+  '#17A2B8',  // Cyan
+  '#DC3545',  // Red
+  '#FFC107',  // Gold
+  '#28A745',  // Green
+  '#20C997',  // Teal
+  '#007BFF',  // Blue
+  '#F8F9FA',  // Light Gray
+  '#343A40'   // Dark Gray
+  ]; {% endcomment %}
+  
+  
+  var colors = ['#FF7F50',  // Coral (Warm contrast)
+                '#FFD700',  // Gold (Bright and cheerful)
+                '#FFFFFF',  // White (Neutral and crisp)
+                '#32CD32',  // Lime Green (Fresh contrast)
+                '#1E90FF'];  // Dodger Blue (Deeper analogous shade)
+  
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors
+    });
+  
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+  }
+</script>
 {% endblock %}

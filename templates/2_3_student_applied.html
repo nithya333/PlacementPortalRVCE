@@ -168,12 +168,33 @@
                   Profile
                 </a>
               </li>
+              {% if stat == 1 %}
               <li>
                 <a href="/student/applied" class="nav-link active"  style = "background-color: #3f7fa6; ">
                     <i class="bi bi-grid-fill me-2"></i>
-                  Applied Jobs
+                  Active Applications
                 </a>
               </li>
+              <li>
+                <a href="/student/past_applied" class="nav-link link-dark">
+                    <i class="bi bi-archive me-2"></i>
+                  Past Applications
+                </a>
+              </li>
+              {% else %}
+              <li>
+                <a href="/student/applied" class="nav-link link-dark" >
+                    <i class="bi bi-grid me-2"></i>
+                  Active Applications
+                </a>
+              </li>
+              <li>
+                <a href="/student/past_applied" class="nav-link active"  style = "background-color: #3f7fa6; ">
+                    <i class="bi bi-archive-fill me-2"></i>
+                  Past Applications
+                </a>
+              </li>
+              {% endif %}
               <li>
                 <a href="/student/new" class="nav-link link-dark">
                     <i class="bi bi-megaphone me-2"></i>
@@ -277,17 +298,6 @@
                   <span>Interview</span>
               </div>
 
-              {% if appl.job_stage >= 7 and appl.appl_stage == 6 %}
-              <div class="timeline-item rejected">
-              {% elif appl.job_stage >= 7 and appl.appl_stage < 7 %}
-              <div class="timeline-item rejected_progress">
-              {% elif appl.job_stage >= 7 and appl.appl_stage >= 7 %}
-              <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                <span>Recruited</span>
-              </div>
             </div>
             <br>
             <a href="/student/applied/vmore/{{ appl.appl_job_id }}" class="card-link"><button class="btn">View More</button></a>

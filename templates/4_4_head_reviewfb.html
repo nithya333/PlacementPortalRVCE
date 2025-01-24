@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_here %}
+<!-- Main Layout -->
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #ffe6cc;
+  }
+
+  .nav-link.active {
+    background-color: #b35c00; /* Replace with your desired color */
+    color: white; /* Adjust text color for better contrast */
+  }
+
+  .nav-link.active:hover {
+    background-color: #994f00; /* Slightly darker shade for hover */
+  }
+
+  .student-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%; /* Makes it circular */
+    object-fit: cover; /* Ensures proper scaling of image */
+  }
+  .welcome-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #804200;
+    text-decoration: none;
+  }
+  .student-name {
+    color: #007bff; /* Highlighted color for student name */
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 20px;
+}
+.tabs {
+    display: flex;
+    background-color: #ffb566;
+    color: #4d2800;
+}
+.tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    color: #4d2800;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.tab:hover {
+    background-color: #ff9c33;
+}
+.tab.active {
+    background-color: #b35c00;
+    font-weight: bold;
+    color: white;
+}
+.feedback-list {
+    padding: 20px;
+}
+.feedback-item {
+    background-color: #f9f9f9;
+    border-left: 5px solid #3498db;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+.feedback-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.rating {
+    color: #f1c40f;
+    font-size: 1.4em;
+}
+.suggestion {
+    margin-top: 10px;
+    font-style: italic;
+    color: #7f8c8d;
+}
+.student { border-left-color: #e74c3c; }
+.company { border-left-color: #2ecc71; }
+.coordinator { border-left-color: #9b59b6; }
+
+</style>
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="welcome-text" aria-current="page">
+            <img 
+            src="{% static 'images/head_icon.png' %}" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
+              {{ request.session.u_name }}
+            </a>
+          </li>
+          <hr>
+          <li class="nav-item">
+            <a href="/head/home" class="nav-link link-dark"  >
+                <i class="bi bi-house-door me-2"></i>
+                Home
+            </a>
+          </li>
+          <li>
+            <a href="/head/allot_slots" class="nav-link link-dark" >
+                <i class="bi bi-calendar me-2"></i>
+              Schedule Slots
+            </a>
+          </li>
+          <li>
+            <a href="/head/track_placements" class="nav-link link-dark">
+                <i class="bi bi-grid me-2"></i>
+             Track Placements
+            </a>
+          </li>
+          <li>
+            <a href="/head/review_feedback" class="nav-link active" style = "background-color: #b35c00; ">
+                <i class="bi bi-search-fill me-2"></i>
+              Review Feedback
+            </a>
+          </li>
+        </ul>
+        <hr>
+      </div>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+      {% comment %} <div class="container"> {% endcomment %}
+        <div style="width: 900px;">
+        <h3>Feedback Overview</h3>
+        <div class="tabs">
+            <div class="tab active" data-usertype="all">All Feedback</div>
+            <div class="tab" data-usertype="Student">Student</div>
+            <div class="tab" data-usertype="Company">Company</div>
+            <div class="tab" data-usertype="Coordinator">Coordinator</div>
+        </div>
+        <div class="feedback-list">
+            {% for feedback in feedbacks %}
+            <div class="feedback-item {{ feedback.f_usertype|lower }}" data-usertype="{{ feedback.f_usertype }}">
+                <div class="rating">
+                  {% for i in "12345" %}
+                    {% if i <= feedback.f_rating|stringformat:"d" %}
+                        ★
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
+                </div>
+                <div class="suggestion">"{{ feedback.f_suggestion }}"</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.tab');
+      const feedbackItems = document.querySelectorAll('.feedback-item');
+
+      tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+              const userType = this.getAttribute('data-usertype');
+              
+              tabs.forEach(t => t.classList.remove('active'));
+              this.classList.add('active');
+
+              feedbackItems.forEach(item => {
+                  if (userType === 'all' || item.getAttribute('data-usertype') === userType) {
+                      item.style.display = 'block';
+                  } else {
+                      item.style.display = 'none';
+                  }
+              });
+          });
+      });
+  });
+</script>
+{% endblock %}

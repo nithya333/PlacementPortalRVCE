@@ -16,9 +16,38 @@ from django.http import JsonResponse
 import json
 from pymongo import MongoClient
 
+from admin_func.models import Department, Education, Feedback, Students, Users
+from db import get_db
+from django.db.models import F
 
 def head_home(request):
-    return render(request, '4_1_head_home.html')
+    head_id = request.session.get('u_id')
+    head = Users.objects.get(u_id = head_id)
+    head_name = head.u_name
+    head_email = head.u_email
+
+    dept_codes_all = Department.objects.values_list('d_abbr_code', flat=True)
+
+    # dept_codes_ug = Department.objects.filter(d_program=0).values_list('d_abbr_code', flat=True)
+    # dept_codes_pg = Department.objects.filter(d_program=1).values_list('d_abbr_code', flat=True)
+    
+    dept_codes_all_list = list(dept_codes_all)
+
+    
+    dept_codes_ug_list = [d for d in dept_codes_all_list if len(d) == 2]
+    dept_codes_pg_list = [d for d in dept_codes_all_list if len(d) == 3]
+    
+
+    head_details = {
+        "head_role" : "Placement Head of RVCE",
+        "head_name" : head_name,
+        "head_email" : head_email,
+        "ug_num" : len(dept_codes_ug_list),
+        "ug_list": dept_codes_ug_list,
+        "pg_num" : len(dept_codes_pg_list),
+        "pg_list": dept_codes_pg_list,
+    }
+    return render(request, '4_1_head_home.html', {"head_details" : head_details})
 
 
 def head_allot_slots(request):
@@ -32,8 +61,10 @@ def head_allot_slots(request):
         interview_date = request.POST.get('interview_slot')
         print(job_id, ppt_date, oa_date, interview_date)
         # MongoDB Connection
-        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
-        db = client['Placement']
+        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
+        # db = client['Placement']
+        db = get_db()  # Reuse the shared MongoDB connection
+
         job_collection = db['job']
         job_collection.update_one(
             {"_id": job_id},
@@ -53,8 +84,9 @@ def head_allot_slots(request):
     # if request.method == 'GET':
 
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
     # Fetch jobs with status "upcoming"
@@ -82,17 +114,100 @@ def head_allot_slots(request):
         
 
 def head_track_placements(request):
-    return render(request, '4_3_head_track.html')
-
-def head_review_feedback(request):
-    return render(request, '4_4_head_reviewfb.html')
-
-def head_postjob(request):
-    # Context dictionary
     dept_codes = Department.objects.values_list('d_abbr_code', flat=True)
     dept_codes_list = list(dept_codes)  # Convert to a list if needed
     # print(dept_codes_list)
-    context = {
-        'dept_codes_list': dept_codes_list
-    }
-    return render(request, '5_2_company_postjob.html', context=context)
+
+    db = get_db()  # Reuse the shared MongoDB connection
+
+    job_collection = db['job']
+    appl_collection = db['application']
+    oa_collection = db['oa_interview']
+
+    # Find all jobs
+    jobs = list(job_collection.find())
+    # job = job_collection.find_one({"_id": job_id})
+    jobs_list = []
+    for job in jobs:
+        job_details = {}
+        # job_details = job
+        job_details['job_id'] = str(job['_id'])
+        job_id = job_details['job_id']
+
+        job_details['job_title'] = job['job_title'] or ''
+        job_details['job_type'] = job['job_type'] or ''
+        # job_details['job_duration'] = job['job_duration'] or ''
+        # job_details['job_desc'] = job['job_desc'] or ''
+        job_details['job_salary'] = job['job_salary'] or ''
+        # job_details['cgpaMinCriteria'] = job['cgpaMinCriteria'] or ''
+        # job_details['cgpaMaxCriteria'] = job['cgpaMaxCriteria'] or ''
+        job_details['degreeCriteria'] = job['degreeCriteria'] or ''
+        # job_details['job_locations'] = job['job_locations'] or ''
+        job_details['deptsCriteria'] = job['deptsCriteria'] or ''
+        # job_details['yearOfPassingCriteria'] = job['yearOfPassingCriteria'] or ''
+        # job_details['job_enrolledDate'] = job['job_enrolledDate'] or ''
+        # job_details['job_pptDate'] = job['job_pptDate'] or ''
+        # job_details['job_oaDate'] = job['job_oaDate'] or ''
+        # job_details['job_interviewDate'] = job['job_interviewDate'] or ''
+        job_details['job_stage'] = job['job_stage'] or ''
+        # job_details['job_companyId'] = job['job_companyId'] or ''
+        job_details['job_companyName'] = job['job_companyName'] or ''
+        job_details['job_id'] = job_id or ''
+
+        applications = list(appl_collection.find({"appl_job_id": job_id, "appl_stage": job_details['job_stage']}))
+        # print(applications)
+        applicants = []
+        
+        for application in applications:
+            # comp_id = request.session.get('u_id')
+            stud_details = Students.objects.get(st_id = application["appl_student_id"])
+            applicant = {}
+            applicant['appl_id'] = application['appl_id']
+            applicant["st_id"] = stud_details.st_id
+            applicant["st_name"] = stud_details.st_name
+            applicant["st_email"] = stud_details.st_email
+            applicant["st_section"] = stud_details.st_section
+            # applicant["st_year_of_passing"] = stud_details.st_year_of_passing
+
+            stud_edu_details = Education.objects.get(e_student_id = application["appl_student_id"])
+            applicant["e_cgpa"] = stud_edu_details.e_cgpa
+            applicant["e_10thmarks"] = stud_edu_details.e_10thmarks
+            applicant["e_12thmarks"] = stud_edu_details.e_12thmarks
+            # applicant["e_backlogs"] = stud_edu_details.e_backlogs
+
+            applicants.append(applicant)
+            # cp_name = company.cp_name
+            # cp_type = company.cp_type
+            # cp_location = company.cp_location
+            # cp_contact_email = company.cp_contact_email
+            # cp_contact_phone = company.cp_contact_phone
+            # cp_contact_name = company.cp_contact_name
+            # company_details = {
+            #     "cp_id": comp_id,
+            #     "cp_name": cp_name,
+            #     "cp_type": cp_type,
+            #     "cp_location": cp_location,
+            #     "cp_contact_email": cp_contact_email,
+            #     "cp_contact_phone": cp_contact_phone,
+            #     "cp_contact_name": cp_contact_name
+            # }
+        # print(applicants)
+        job_details["applicants"] = applicants
+        jobs_list.append(job_details)
+
+    # stages = [[0, "You have posted a job offer, Waiting for college approval", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , job_reglastdate], [2, "Applications closed, Waiting for college shortlists", ''], [3, "Shortlisted at college level", ''], [4, "PPT done", job_details['job_pptDate']], [5, "OA - Round 1 done", job_details['job_oaDate']], [6, "Interview - Round 2 done", job_details['job_interviewDate']]]
+    # print(jobs_list)   
+    return render(request, '4_3_head_track.html', {"jobs_list": jobs_list, "dept_list": dept_codes_list})
+
+def head_review_feedback(request):
+    all_fb = Feedback.objects.all()
+    feedbacks = []
+    for fb in all_fb:
+        f_rating = fb.f_rating
+        f_suggestion = fb.f_suggestion
+        f_usertype = fb.f_usertype
+        fb_dict = {"f_rating": f_rating, "f_suggestion": f_suggestion, "f_usertype": f_usertype}
+        feedbacks.append(fb_dict)
+    # print(feedbacks)
+    return render(request, '4_4_head_reviewfb.html', {"feedbacks": feedbacks})
+

@@ -33,12 +33,116 @@
     color: #007bff; /* Highlighted color for student name */
   }
 
+  .match-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .gif-container {
+    flex: 0 0 auto;
+    width: 300px;
+  }
+
+  .button-container {
+    flex: 0 0 auto;
+    position: relative;
+  }
+
+  .fancy-button {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(45deg, #387194, #5ca0c3);
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fancy-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .fancy-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .arrow-container {
+    position: absolute;
+    top: 80%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+
+  .arrow {
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    margin-right: 5px;
+    position: relative;
+  }
+
+  .arrow::before,
+  .arrow::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    background-color: #fff;
+    right: -2px;
+  }
+
+  .arrow::before {
+    top: -3px;
+    transform: rotate(45deg);
+  }
+
+  .arrow::after {
+    bottom: -3px;
+    transform: rotate(-45deg);
+  }
+
+  .arrow:nth-child(1) {
+    animation: arrow-move 1.5s infinite;
+  }
+
+  .arrow:nth-child(2) {
+    animation: arrow-move 1.5s infinite 0.2s;
+  }
+
+  .arrow:nth-child(3) {
+    animation: arrow-move 1.5s infinite 0.4s;
+  }
+
+  @keyframes arrow-move {
+    0% {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+  }
+
 </style>
 <div class="d-flex">
     <!-- Side Panel -->
     <!-- <div class="side-panel">
         <a href="#">Profile</a>
-        <a href="#">Track Applied Jobs</a>
+        <a href="#">Track Active Applications</a>
         <a href="#">Check New Offers</a>
     </div> -->
     {% comment %} <div class="card" >
@@ -88,7 +192,13 @@
           <li>
             <a href="/student/applied" class="nav-link link-dark">
                 <i class="bi bi-grid me-2"></i>
-              Applied Jobs
+              Active Applications
+            </a>
+          </li>
+          <li>
+            <a href="/student/applied" class="nav-link link-dark">
+                <i class="bi bi-archive me-2"></i>
+              Past Applications
             </a>
           </li>
           <li>
@@ -118,9 +228,30 @@
 <!-- Student Placement Registration Form -->
 <div class="form-container">
   <div class="register-container">
+    <h2 class="fancy-heading">Find your perfect match</h2>
 
+<div class="match-container">
+  <div class="gif-container">
+    <img class="card-img-top" src="{% static 'images/graduate.gif' %}" alt="Graduate">
+  </div>
+  
+  <div class="button-container">
+    <a href="/student/parse_resume/" class="fancy-button">
+      Click here
+      <span class="arrow-container">
+        <span class="arrow"></span>
+        <span class="arrow"></span>
+        <span class="arrow"></span>
+      </span>
+    </a>
+  </div>
+</div>
+
+<br>
+<hr style="border: 1px solid #387194;">
       <!-- Personal Details Section -->
       <div class="section">
+          <h2 class="fancy-heading"> Update your profile </h2>
           <h3>Personal Details</h3>
           <form action="/student/profile_submit" method="post" enctype="multipart/form-data">
                

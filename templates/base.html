@@ -84,7 +84,254 @@
             border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* Main Content Styles */
+        .main-content {
+            width: 80%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .content-section h2 {
+            color: #3f7fa6;
+            border-bottom: 2px solid #3f7fa6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .content-section h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 1.8rem;
+        }
+        .content-section p {
+            color: #34495e;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 400px;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .carousel-control.prev { left: 10px; }
+        .carousel-control.next { right: 10px; }
+
+        /* Fancy Headings */
+        .fancy-heading {
+            font-size: 2.5rem;
+            color: #3f7fa6;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .fancy-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #3f7fa6;
+        }
+
+        /* Additional Styling */
+        .highlight-box {
+            background-color: #e8f4f8;
+            border-left: 5px solid #3f7fa6;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+
+.main-timeline5{overflow:hidden;position:relative}
+.main-timeline5 .timeline{position:relative;margin-top:-79px}
+.main-timeline5 .timeline:first-child{margin-top:0}
+.main-timeline5 .timeline-icon,.main-timeline5 .year{margin:auto;position:absolute;top:0;left:0;bottom:0;right:0}
+.main-timeline5 .timeline:after,.main-timeline5 .timeline:before{content:"";display:block;width:100%;clear:both}
+.main-timeline5 .timeline:before{content:"";width:100%;height:100%;box-shadow:-8px 0 5px -5px rgba(0,0,0,.5) inset;position:absolute;top:0;right:0;z-index:2}
+.main-timeline5 .timeline-icon{width:210px;height:210px;border-radius:50%;border:25px solid transparent;border-top-color:#f44556;border-right-color:#f44556;z-index:1;transform:rotate(45deg)}
+.main-timeline5 .year{display:block;width:110px;height:110px;line-height:110px;border-radius:50%;background:#fff;box-shadow:0 0 20px rgba(0,0,0,.4);font-size:30px;font-weight:700;color:#f44556;text-align:center;transform:rotate(-45deg)}
+.main-timeline5 .timeline-content{width:35%;float:right;background:#f44556;padding:30px 20px;margin:50px 0;z-index:1;position:relative}
+.main-timeline5 .timeline-content:before{content:"";width:20%;height:15px;background:#f44556;position:absolute;top:50%;left:-20%;z-index:-1;transform:translateY(-50%)}
+.main-timeline5 .title{font-size:20px;font-weight:700;color:#fff;margin:0 0 10px}
+.main-timeline5 .description{font-size:16px;color:#fff;line-height:24px;margin:0}
+.main-timeline5 .timeline:nth-child(2n):before{box-shadow:8px 0 5px -5px rgba(0,0,0,.5) inset}
+.main-timeline5 .timeline:nth-child(2n) .timeline-icon{transform:rotate(-135deg);border-top-color:#e97e2e;border-right-color:#e97e2e}
+.main-timeline5 .timeline:nth-child(2n) .year{transform:rotate(135deg);color:#e97e2e}
+.main-timeline5 .timeline:nth-child(2n) .timeline-content{float:left}
+.main-timeline5 .timeline:nth-child(2n) .timeline-content:before{left:auto;right:-20%}
+.main-timeline5 .timeline:nth-child(2n) .timeline-content,.main-timeline5 .timeline:nth-child(2n) .timeline-content:before{background:#e97e2e}
+.main-timeline5 .timeline:nth-child(3n) .timeline-icon{border-top-color:#13afae;border-right-color:#13afae}
+.main-timeline5 .timeline:nth-child(3n) .year{color:#13afae}
+.main-timeline5 .timeline:nth-child(3n) .timeline-content,.main-timeline5 .timeline:nth-child(3n) .timeline-content:before{background:#13afae}
+.main-timeline5 .timeline:nth-child(4n) .timeline-icon{border-top-color:#105572;border-right-color:#105572}
+.main-timeline5 .timeline:nth-child(4n) .year{color:#105572}
+.main-timeline5 .timeline:nth-child(4n) .timeline-content,.main-timeline5 .timeline:nth-child(4n) .timeline-content:before{background:#105572}
+@media only screen and (max-width:1199px){.main-timeline5 .timeline{margin-top:-103px}
+.main-timeline5 .timeline-content:before{left:-18%}
+.main-timeline5 .timeline:nth-child(2n) .timeline-content:before{right:-18%}
+}
+@media only screen and (max-width:990px){.main-timeline5 .timeline{margin-top:-127px}
+.main-timeline5 .timeline-content:before{left:-2%}
+.main-timeline5 .timeline:nth-child(2n) .timeline-content:before{right:-2%}
+}
+@media only screen and (max-width:767px){.main-timeline5 .timeline{margin-top:0;overflow:hidden}
+.main-timeline5 .timeline:before,.main-timeline5 .timeline:nth-child(2n):before{box-shadow:none}
+.main-timeline5 .timeline-icon,.main-timeline5 .timeline:nth-child(2n) .timeline-icon{margin-top:-30px;margin-bottom:20px;position:relative;transform:rotate(135deg)}
+.main-timeline5 .timeline:nth-child(2n) .year,.main-timeline5 .year{transform:rotate(-135deg)}
+.main-timeline5 .timeline-content,.main-timeline5 .timeline:nth-child(2n) .timeline-content{width:100%;float:none;border-radius:0 0 20px 20px;text-align:center;padding:25px 20px;margin:0 auto}
+.main-timeline5 .timeline-content:before,.main-timeline5 .timeline:nth-child(2n) .timeline-content:before{width:15px;height:25px;position:absolute;top:-22px;left:50%;z-index:-1;transform:translate(-50%,0)}
+
+}
+
+
+
+/* Stage 0 (Red) */
+.main-timeline5 .timeline:nth-child(1) .timeline-icon {
+    border-top-color: #f44556;  /* Red */
+    border-right-color: #f44556;
+}
+.main-timeline5 .timeline:nth-child(1) .year {
+    color: #f44556; /* Red */
+}
+.main-timeline5 .timeline:nth-child(1) .timeline-content {
+    background: #f44556; /* Red */
+}
+.main-timeline5 .timeline:nth-child(1) .timeline-content:before {
+    background: #f44556; /* Red */
+}
+
+/* Stage 1 (Orange) */
+.main-timeline5 .timeline:nth-child(2) .timeline-icon {
+    border-top-color: #e97e2e;  /* Orange */
+    border-right-color: #e97e2e;
+}
+.main-timeline5 .timeline:nth-child(2) .year {
+    color: #e97e2e; /* Orange */
+}
+.main-timeline5 .timeline:nth-child(2) .timeline-content {
+    background: #e97e2e; /* Orange */
+}
+.main-timeline5 .timeline:nth-child(2) .timeline-content:before {
+    background: #e97e2e; /* Orange */
+}
+
+/* Stage 2 (Yellow) */
+.main-timeline5 .timeline:nth-child(3) .timeline-icon {
+    border-top-color: #f1c40f;  /* Yellow */
+    border-right-color: #f1c40f;
+}
+.main-timeline5 .timeline:nth-child(3) .year {
+    color: #f1c40f; /* Yellow */
+}
+.main-timeline5 .timeline:nth-child(3) .timeline-content {
+    background: #f1c40f; /* Yellow */
+}
+.main-timeline5 .timeline:nth-child(3) .timeline-content:before {
+    background: #f1c40f; /* Yellow */
+}
+
+/* Stage 3 (Teal) */
+.main-timeline5 .timeline:nth-child(4) .timeline-icon {
+    border-top-color: #13afae;  /* Teal */
+    border-right-color: #13afae;
+}
+.main-timeline5 .timeline:nth-child(4) .year {
+    color: #13afae; /* Teal */
+}
+.main-timeline5 .timeline:nth-child(4) .timeline-content {
+    background: #13afae; /* Teal */
+}
+.main-timeline5 .timeline:nth-child(4) .timeline-content:before {
+    background: #13afae; /* Teal */
+}
+
+/* Stage 4 (Blue) */
+.main-timeline5 .timeline:nth-child(5) .timeline-icon {
+    border-top-color: #3498db;  /* Blue */
+    border-right-color: #3498db;
+}
+.main-timeline5 .timeline:nth-child(5) .year {
+    color: #3498db; /* Blue */
+}
+.main-timeline5 .timeline:nth-child(5) .timeline-content {
+    background: #3498db; /* Blue */
+}
+.main-timeline5 .timeline:nth-child(5) .timeline-content:before {
+    background: #3498db; /* Blue */
+}
+
+/* Stage 5 (Dark Blue) */
+.main-timeline5 .timeline:nth-child(6) .timeline-icon {
+    border-top-color: #105572;  /* Dark Blue */
+    border-right-color: #105572;
+}
+.main-timeline5 .timeline:nth-child(6) .year {
+    color: #105572; /* Dark Blue */
+}
+.main-timeline5 .timeline:nth-child(6) .timeline-content {
+    background: #105572; /* Dark Blue */
+}
+.main-timeline5 .timeline:nth-child(6) .timeline-content:before {
+    background: #105572; /* Dark Blue */
+}
+
+/* Stage 6 (Purple) */
+.main-timeline5 .timeline:nth-child(7) .timeline-icon {
+    border-top-color: #8e44ad;  /* Purple */
+    border-right-color: #8e44ad;
+}
+.main-timeline5 .timeline:nth-child(7) .year {
+    color: #8e44ad; /* Purple */
+}
+.main-timeline5 .timeline:nth-child(7) .timeline-content {
+    background: #8e44ad; /* Purple */
+}
+.main-timeline5 .timeline:nth-child(7) .timeline-content:before {
+    background: #8e44ad; /* Purple */
+}
     </style>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
     <!-- Top Bar -->
@@ -99,17 +346,319 @@
 
     <!-- Tool Bar -->
     <div class="tool-bar">
-        <a href="#">Home</a>
-        <a href="#">Goals</a>
-        <a href="#">Recruitment Process</a>
-        <a href="#">Important Documents</a>
-        <a href="#">Contact Us</a>
-        <a href="#">Statistics</a>
+        <a href="#"  data-bs-toggle="modal" data-bs-target="#homeModal">Home</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#goalModal">Goals</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#recprocessModal">Recruitment Process</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#feedbackModal">Feedback</a>
     </div>
 
     {% block body_here %} {% endblock %}
+    
+  
+  <!-- Modal -->
+  <div class="modal fade" id="homeModal" tabindex="-1" aria-labelledby="homeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="homeModalLabel">Home</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="home" class="content-section">
+                <h2 class="fancy-heading">Welcome to Charitham</h2>
+                
+                <div class="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active"><img src="{% static 'images/rv_img_4.jpeg' %}" alt="Campus Life"></div>
+                        <div class="carousel-item"><img src="{% static 'images/rv_img_3.png' %}" alt="Campus Life"></div>
+                        <div class="carousel-item"><img src="{% static 'images/rv_img_2.JPG' %}" alt="Campus Life"></div>
+                    </div>
+                    {% comment %} <a href="#" class="carousel-control prev" onclick="moveCarousel(-1)">❮</a>
+                    <a href="#" class="carousel-control next" onclick="moveCarousel(1)">❯</a> {% endcomment %}
+                    <a href="#" class="carousel-control prev" onclick="moveCarousel(-1)"><</a>
+                    <a href="#" class="carousel-control next" onclick="moveCarousel(1)">></a>
+                </div>
+          
+                <p>Established in 1963 with three engineering branches, we now offer 15 undergraduate programs and 14 master's programs. Charitham is not just a placement portal but a vision to nurture talent and foster excellence.</p>
+                <div class="highlight-box">
+                    <p>We believe that every student possesses unique potential, and our platform is dedicated to connecting them with opportunities that match their aspirations.</p>
+                </div>
+                <p>From resume-building tools to interview preparation resources, Charitham is your partner in every step of your career journey.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="modal fade" id="goalModal" tabindex="-1" aria-labelledby="goalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="goalModalLabel">Goals</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="goals" class="content-section">
+                <h2 class="fancy-heading">Our Vision, Mission, and Goals</h2>
+                <h3>Vision</h3>
+                <p>Our vision is to empower students by bridging the gap between academia and industry, fostering a world where every graduate has access to opportunities that align with their skills and aspirations.</p>
+                <h3>Mission</h3>
+                <p>Our mission is to create a platform that not only connects students with the best job opportunities but also provides them with the tools and guidance they need to excel in their careers.</p>
+                <h3>Goals</h3>
+                <div class="highlight-box">
+                    <p>The goal of Charitham is to empower students with the right resources and guidance to navigate their professional journeys with confidence.</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="recprocessModal" tabindex="-1" aria-labelledby="recprocessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="recprocessModalLabel">Recruitment Process</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="recruitment" class="content-section">
+                <h2 class="fancy-heading">Recruitment Process</h2>
+                <div class="container">
+                    <h4>RVCE Recruitment Process</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="main-timeline5">
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">0</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 0</h3>
+                                        <p class="description">
+                                            Company posted a new job offer, awaiting college approval for slots.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">1</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 1</h3>
+                                        <p class="description">
+                                            College scheduled slots, student registrations are now open.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">2</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 2</h3>
+                                        <p class="description">
+                                            Applications closed, waiting for college shortlists to release.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">3</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 3</h3>
+                                        <p class="description">
+                                            Placement coordinators shortlisted candidates at the college level for next steps.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">4</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 4</h3>
+                                        <p class="description">
+                                            PPT session conducted to introduce company culture and roles.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">5</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 5</h3>
+                                        <p class="description">
+                                            OA - Round 1 completed, awaiting results for next round.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="timeline">
+                                    <div class="timeline-icon"><span class="year">6</span></div>
+                                    <div class="timeline-content">
+                                        <h3 class="title">Stage 6</h3>
+                                        <p class="description">
+                                            Interview - Round 2 done, final assessment for shortlisted candidates.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <p>Our algorithms match students with opportunities across various industries, ensuring you find the perfect fit for your career goals.</p>
+                </div>
+                <h3>1. Registration and Profile Creation</h3>
+                <p>The recruitment process begins with students registering on the Charitham platform. Upon registration, students create their profiles by filling in essential details such as academic qualifications, skills, interests, and career aspirations. A well-crafted profile enables recruiters to easily identify the most suitable candidates for their requirements.</p>
+                <h3>2. Personalized Job Recommendations</h3>
+                <p>Once the profile is complete, the platform provides personalized job recommendations based on the student's qualifications, skills, and interests. These recommendations are generated through advanced algorithms that match students with opportunities across various industries. Students can explore and apply for jobs that align with their career goals.</p>
+                <h3>3. Application Process</h3>
+                <p>After reviewing job opportunities, students can apply directly through the Charitham platform. The application process typically involves submitting a resume, cover letter, and any relevant documents such as certifications or portfolios. Some positions may also require students to take assessments or answer pre-interview questions as part of the application.</p>
+                <h3>4. Interview and Assessment</h3>
+                <p>If shortlisted, students are invited for interviews. The interview process may include a combination of technical and behavioral interviews, depending on the role. In some cases, recruiters may also conduct technical assessments or online tests to evaluate the student's skills. The Charitham platform ensures that students are prepared with resources such as interview tips, mock interviews, and industry insights.</p>
+                <h3>5. Offer and Selection</h3>
+                <p>Based on interview performance and assessment results, students who meet the criteria are selected for job offers. The offer typically includes details such as the job title, compensation package, job location, and other relevant terms. Charitham provides a seamless platform for students to review and accept job offers.</p>
+            
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contactModalLabel">Contact Us</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="contact" class="content-section">
+                <h2 class="fancy-heading">Contact Us</h2>
+                <p>For inquiries, reach out to us at:</p>
+                <ul>
+                    <li><strong>Email:</strong> info@rvce.edu</li>
+                    <li><strong>Phone:</strong> +91-80-1234-5678</li>
+                    <li><strong>Address:</strong> Mysore Road, Bangalore, India</li>
+                </ul>
+                <div class="highlight-box">
+                    <p>We're here to assist you with any questions or concerns you may have about our placement services, career guidance, or any other aspect of Charitham.</p>
+                </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="feedbackModalLabel">Please give your feedback</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="feedback" class="content-section">
+                <h2 class="fancy-heading">Feedback Form</h2>
+                <form id="feedbackForm" action="/submit_feedback/" method="POST">
+                    <div class="highlight-box">
+                        <p>Your feedback is anonymous.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback_userType">Type of User:</label>
+                        <select id="feedback_userType" name="feedback_userType" required>
+                            <option value="">Select user type</option>
+                            <option value="Student">Student</option>
+                            <option value="Coordinator">Placement Coordinator</option>
+                            <option value="Company">Company</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Rate your experience:</label>
+                        <div class="feedback_rating">
+                            <input type="radio" id="star5" name="feedback_rating" value="5" required/>
+                            <label for="star5" title="Excellent">😄</label>
+                            <input type="radio" id="star4" name="feedback_rating" value="4" />
+                            <label for="star4" title="Good">🙂</label>
+                            <input type="radio" id="star3" name="feedback_rating" value="3" />
+                            <label for="star3" title="Average">😐</label>
+                            <input type="radio" id="star2" name="feedback_rating" value="2" />
+                            <label for="star2" title="Poor">🙁</label>
+                            <input type="radio" id="star1" name="feedback_rating" value="1" />
+                            <label for="star1" title="Terrible">😞</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback_suggestion">Suggestions for improvement:</label>
+                        <textarea id="feedback_suggestion" name="feedback_suggestion" rows="2" cols="50" placeholder="Please share your thoughts on how we can improve the placement process"></textarea>
+                    </div>
+                    
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script>
+    
+
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+}
+
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-item');
+const totalSlides = slides.length;
+
+
+function moveCarousel(direction) {
+    // Remove the active class from the current slide
+    slides[currentSlide].classList.remove('active');
+
+    // Update currentSlide index
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+
+    // Add the active class to the new slide
+    slides[currentSlide].classList.add('active');
+}
+
+// Auto-advance carousel
+setInterval(() => moveCarousel(1), 5000);
+</script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>

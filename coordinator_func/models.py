@@ -77,12 +77,12 @@ class Students(models.Model):
         db_table = 'students'
 
 class Coordinator(models.Model):
-    cd_id = models.OneToOneField('Users', models.CASCADE, primary_key=True)
+    cd = models.OneToOneField('Users', models.CASCADE, primary_key=True)
     cd_program = models.BooleanField(default=False)
     cd_name = models.CharField(max_length=40, blank=True, null=True)
     cd_email = models.CharField(max_length=30, blank=True, null=True)
     cd_phone = models.BigIntegerField(blank=True, null=True)
-    cd_dept_id = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
+    cd_dept = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False

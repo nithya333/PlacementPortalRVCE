@@ -6,7 +6,7 @@ from django.db import connection
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Department, Education, Students, Resumes
+from .models import Department, Education, Spc, Students, Resumes
 import psycopg2
 import base64
 from base64 import b64encode
@@ -15,17 +15,64 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from django.shortcuts import render
-from django.http import JsonResponse
 import json
 from pymongo import MongoClient
+from db import get_db
+import PyPDF2
 
-# Create your views here.
+import os
+import pickle
+from django.http import JsonResponse
+import pandas as pd
+from .utils import AccurateResumeParser  # Move the class to a utility module for reuse.
+
+# Path to the model file
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'ml_models', 'resume_parser_model.pkl')
+
+# Load job listings once
+JOBS_DF = pd.read_csv(os.path.join(os.path.dirname(__file__), 'ml_models', 'job_listings.csv'))
+
+# Load the trained model
+parser = AccurateResumeParser(MODEL_PATH)
+
+@csrf_exempt
+def parse_resume(request):
+    if request.method == 'POST':
+        try:
+            # Handle file upload
+            if 'resume_file' in request.FILES:
+                resume_file = request.FILES['resume_file']
+                pdf_reader = PyPDF2.PdfReader(resume_file)
+                resume_text = "".join(page.extract_text() for page in pdf_reader.pages)
+            else:
+                resume_text = request.POST.get('resume_text', '')
+
+
+            if not resume_text:
+                return JsonResponse({'error': 'No resume text provided'}, status=400)
+
+            # Predict job matches
+            matches = parser.predict_job_match(resume_text, JOBS_DF)
+
+            # Return the matches as a JSON response
+            # return JsonResponse({'matches': matches}, status=200)
+            return render(request, "2_8_student_job_parse.html", {'matches': matches})
+
+        except Exception as e:
+            # return JsonResponse({'error': str(e)}, status=500)
+            print(e)
+            return redirect('/student/home')
+    else:
+        return render(request, "2_8_student_job_parse.html")
+        
+    # return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 def student_home(request):
-
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
     appl_collection = db['application']
 
@@ -40,8 +87,15 @@ def student_home(request):
         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
         events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
+
         
-    return render(request, '2_1_student_home.html', context = {"events" : events})
+    spc_qs = Spc.objects.filter(spc_stud_id = request.session.get('u_id'))
+    if spc_qs.exists():
+        spc_details = spc_qs.first()
+        spc_id = spc_details.spc_id
+    else:
+        spc_id = ''
+    return render(request, '2_1_student_home.html', context = {"events" : events, "spc_id" : spc_id})
 
 
 def student_profile(request):
@@ -178,8 +232,10 @@ def student_profile_submit(request):
 
 def student_applied(request):
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
+
     job_collection = db['job']
     appl_collection = db['application']
 
@@ -223,6 +279,7 @@ def student_applied(request):
                     {"$set": {"appl_stage": 4}}
                 )
                 print(f"Job {job['_id']} has been moved to stage 4")
+
             
     # Fetch jobs with status "upcoming"
     jobs = list(job_collection.find({"job_stage": 1}))
@@ -233,7 +290,7 @@ def student_applied(request):
     # pending = []
     # all_jobs = job_collection.find()
     applied_jobs = []
-    applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
+    applications = appl_collection.find({"appl_student_id": request.session.get('u_id'), "appl_status": {"$in": [0, 1]}})
     for appl in applications:
         job = job_collection.find_one({"_id": appl["appl_job_id"]})
         job_details = job
@@ -244,14 +301,41 @@ def student_applied(request):
     # print(applications)
     # Close the connection
     # client.close()
-    return render(request, '2_3_student_applied.html', {"applied": applied_jobs, "applications": applications})
+    return render(request, '2_3_student_applied.html', {"applied": applied_jobs, "applications": applications, "stat": 1})
+
+def student_past_applied(request):
+    # MongoDB Connection
+    # client = MongoClient('mongodb+srv://nithya3169:
+    db = get_db()  # Reuse the shared MongoDB connection
+    job_collection = db['job']
+    appl_collection = db['application']
+
+    applied_jobs = []
+    applications = appl_collection.find({"appl_student_id": request.session.get('u_id'), "appl_status": 2})
+    for appl in applications:
+        job = job_collection.find_one({"_id": appl["appl_job_id"]})
+        job_details = job
+        job_details.update(appl)
+        applied_jobs.append(job_details)
+
+    # print(applied_jobs)
+    # print(applications)
+    # Close the connection
+    # client.close()
+    return render(request, '2_3_student_applied.html', {"applied": applied_jobs, "applications": applications, "stat": 0})
 
 def student_new(request):
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
+
     job_collection = db['job']
     appl_collection = db['application']
+    final_rec_collection = db['final_recruits']
+    if final_rec_collection.find_one({"student_id": request.session.get('u_id')}):
+        rec_data = final_rec_collection.find_one({"student_id": request.session.get('u_id')})
+        return redirect(f'/student/applied/vmore/{rec_data["job_id"]}')
 
     # Fetch jobs with status "upcoming"
     jobs = list(job_collection.find({"job_stage": 1}))
@@ -329,8 +413,10 @@ def student_new(request):
 
 def student_new_apply(request, job_id):
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
+
     job_collection = db['job']
     job_collection.update_one(
         {"_id": job_id},
@@ -363,23 +449,42 @@ def student_applied_vmore(request, job_id):
         print(job_id)
 
         # MongoDB Connection
-        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        db = client['Placement']
+        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+        # db = client['Placement']
+        db = get_db()  # Reuse the shared MongoDB connection
+
         job_collection = db['job']
         appl_collection = db['application']
+        oa_collection = db['oa_interview']
 
         job = job_collection.find_one({"_id": job_id})
         job_details = job
+        job_details['job_id'] = str(job_details['_id'])
 
         appl = list(appl_collection.find({"appl_student_id": request.session.get('u_id'), "appl_job_id": job_id}))
         job_details.update(appl[0])
         job_reglastdate = (datetime.strptime(job_details['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
         job_details['job_reglastdate'] = job_reglastdate
-
+        if oa_collection.find_one({"job_id": job_details['job_id']}):
+            oa_details = oa_collection.find_one({"job_id": job_details['job_id']})
+            job_details['oa_link'] = oa_details['oa_link']
+            job_details['oa_date'] = oa_details['oa_date']
+            if 'interview_link' in oa_details:
+                job_details['interview_link'] = oa_details['interview_link']
+                job_details['interview_date'] = oa_details['interview_date']
+            else:
+                job_details['interview_link'] = ''
+                job_details['interview_date'] = ''
+        else:
+            job_details['oa_link'] = ''
+            job_details['oa_date'] = ''
+            job_details['interview_link'] = ''
+            job_details['interview_date'] = ''
+        # print(job_details)
         # print(job_details)
         # "stages" : [1,2,3,4,5,6,7], "stages_text" : ["Applied", "Applications Closed", "Shortlisted", "PPT", "OA", "Interview", "Recruited"]
         # stages = [[1, "You have registered", job_details['appl_date']], [2, "Applications Closed" , job_details['job_reglastdate']], [3, "Shortlisted at college level", ''], [4, "PPT from the recruiter", job_details['job_pptDate']], [5, "OA - Round 1", job_details['job_oaDate']], [6, "Interview - Round 2", job_details['job_interviewDate']], [7, "You are recruited", '']]
-        stages = [[0, "", "", ""], [1, "You have registered", job_details['appl_date'], 0], [2, "Applications Closed, Waiting for college shortlists" , job_details['job_reglastdate'], 1], [3, "Shortlisted at college level", '', 2], [4, "PPT from the recruiter", job_details['job_pptDate'], 3], [5, "OA - Round 1", job_details['job_oaDate'], 4], [6, "Interview - Round 2", job_details['job_interviewDate'], 5], [7, "You are recruited", '', 6]]
+        stages = [[0, "", "", ""], [1, "You have registered", job_details['appl_date'], 0], [2, "Applications Closed, Waiting for college shortlists" , job_details['job_reglastdate'], 1], [3, "Shortlisted at college level", '', 2], [4, "PPT done, waiting for OA", job_details['job_pptDate'], 3], [5, "OA - Round 1 done", job_details['job_oaDate'], 4], [6, "Interview - Round 2 done", job_details['job_interviewDate'], 5]]
         return render(request, '2_5_student_applied_vmore.html', {"job_details": job_details, "stages": stages})
     else:
         return render(request, '2_1_student_home.html')
@@ -496,3 +601,114 @@ def export_student_resume(request, u_id):
         cursor.close()
         conn.close()
         return HttpResponse(f"An error occurred: {e}", status=500)
+    
+    
+def spc_shortlist(request):
+    # MongoDB Connection
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
+
+    job_collection = db['job']
+
+    # Fetch jobs with status "upcoming"
+    jobs = list(job_collection.find({"job_stage": 2}))
+    for job in jobs:
+        job["job_id"] = job["_id"]
+    return render(request, '2_6_spc_shortlist.html', {"jobs": jobs})
+
+ 
+
+@csrf_exempt  
+def spc_shortlist_vmore(request, job_id):
+    db = get_db()  # Reuse the shared MongoDB connection
+
+    job_collection = db['job']
+    appl_collection = db['application']
+    oa_collection = db['oa_interview']
+
+    job = job_collection.find_one({"_id": job_id})
+    job_details = job
+    job_details['job_id'] = str(job_details['_id'])
+    
+    applications = list(appl_collection.find({"appl_job_id": job_id, "appl_stage": job_details['job_stage']}))
+    applicants = []
+    for applicantion in applications:
+        stud_details = Students.objects.get(st_id = applicantion["appl_student_id"])
+        applicant = applicantion
+        applicant["st_id"] = stud_details.st_id
+        applicant["st_name"] = stud_details.st_name
+        applicant["st_email"] = stud_details.st_email
+        applicant["st_section"] = stud_details.st_section
+        applicant["st_year_of_passing"] = stud_details.st_year_of_passing
+
+        stud_edu_details = Education.objects.get(e_student_id = applicantion["appl_student_id"])
+        applicant["e_cgpa"] = stud_edu_details.e_cgpa
+        applicant["e_10thmarks"] = stud_edu_details.e_10thmarks
+        applicant["e_10thstream"] = stud_edu_details.e_10thstream
+        applicant["e_12thmarks"] = stud_edu_details.e_12thmarks
+        applicant["e_12thstream"] = stud_edu_details.e_12thstream
+        applicant["e_backlogs"] = stud_edu_details.e_backlogs
+
+        applicants.append(applicant)
+       
+    print(applicants)
+       
+    return render(request, '2_7_spc_shortlist_vmore.html', {"job_details" : job_details, "applicants" : applicants})
+# MongoDB Connection
+# client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+# db = client['Placement']
+# job_collection = db['job']
+# appl_collection = db['application']
+
+# applied_jobs = []
+# events = []
+# applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
+# for appl in applications:
+#     job = job_collection.find_one({"_id": appl["appl_job_id"]})
+#     job_details = job
+#     job_details.update(appl)
+#     applied_jobs.append(job_details)
+#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
+#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
+#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
+    
+# return render(request, '2_1_student_home.html', context = {"events" : events})
+
+@csrf_exempt
+def spc_shortlist_selected(request):
+    if request.method == 'POST':
+        db = get_db()
+        job_collection = db['job']
+        appl_collection = db['application']
+        spc_qs = Spc.objects.filter(spc_stud_id = request.session.get('u_id'))
+        spc_details = spc_qs.first()
+        spc_id = spc_details.spc_id
+
+        job_id = request.POST.get('job_id')
+        job_collection.update_one(
+                {"_id": job_id},
+                {"$set": {"job_stage": 3, "job_shortlisted_by": spc_id}}
+            )
+        # print(request.POST)
+        for key in request.POST:
+            if key.startswith("appl_id_"):
+                appl_id = key[8:]
+                appl_result = request.POST.getlist(key)
+                print(appl_result)
+                if "on" in appl_result:
+                    print(f"{appl_id} is selected")
+                    appl_collection.update_one(
+                        {"appl_id": appl_id},
+                        {"$set": {"appl_stage": 3}}
+                    )
+                else:
+                    print(f"{appl_id} is not selected")
+                    appl_collection.update_one(
+                        {"appl_id": appl_id},
+                        {"$set": {"appl_status": 2}}
+                    )
+
+        return redirect('/student/spc_shortlist')
+        # MongoDB Connection
+        # client = MongoClient('mongodb+srv://nithya3169:

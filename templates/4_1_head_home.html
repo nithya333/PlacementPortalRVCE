@@ -75,8 +75,70 @@
         </ul>
         <hr>
       </div>
-    <!-- Main Content -->
-    <div class="main-content flex-grow-1">
+<!-- Main Content -->
+<div class="main-content flex-grow-1">
+  <div class="row">
+  <div class="card shadow border-0" style = "width: 300px; padding: 10px;">
+    <div class="card-header text-white" style = "background: #ffaa80; ">
+        <h5 class="card-title mb-0" style = "font-variant: small-caps; color: #152a37; ">Dean Profile</h5>
+    </div>
+    <div class="card-body" style = "width: 300px;">
+        <div class="row mb-2">
+            <div class="col-md-11">
+                <strong>Role</strong>
+                <p>{{ head_details.head_role }}</p>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-11">
+                <strong>Name</strong>
+                <p>{{ head_details.head_name }}</p>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-11">
+                <strong>Email</strong>
+                <p>{{ head_details.head_email }}</p>
+            </div>
+        </div>
+        
+      </div>
+  </div>
+  <div class="col-md-4" style = "background: transparent;">
+  <img class="card-img-top" style = "background: transparent !important;" src="{% static 'images/head_gif.gif' %}"  alt="Card image cap">
+  </div>  
 
+<div class="card shadow border-0" style = "width: 300px; padding: 10px;">
+<div class="card-header text-white" style = "background: #ffaa80; ">
+  <h5 class="card-title mb-0" style = "font-variant: small-caps; color: #152a37; "> Department Profile</h5>
 </div>
+<div class="card-body" style = "width: 300px;">
+
+<div class="row mb-2">
+    <div class="col-md-11">
+        <strong>No of UG departments:</strong>
+        <p>{{ head_details.ug_num }}</p>
+    </div>
+</div>
+<div class="row mb-2">
+  <div class="col-md-11">
+      <strong>UG departments:</strong>
+      <p>{{ head_details.ug_list }}</p>
+  </div>
+</div>
+<div class="row mb-2">
+<div class="col-md-11">
+<strong>No of PG departments:</strong>
+<p>{{ head_details.pg_num }}</p>
+</div>
+</div>
+<div class="row mb-2">
+<div class="col-md-11">
+<strong>PG departments:</strong>
+<p>{{ head_details.pg_list }}</p>
+</div>
+</div>
+</div>
+</div>
+<div>
 {% endblock %}

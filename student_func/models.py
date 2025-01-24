@@ -46,7 +46,7 @@ class Education(models.Model):
 
 class Spc(models.Model):
     spc_id = models.CharField(primary_key=True)
-    spc_stud_id = models.OneToOneField('Students', models.DO_NOTHING)
+    spc_stud = models.OneToOneField('Students', models.DO_NOTHING)
     spc_activity_count = models.BigIntegerField(default=0)
 
     class Meta:

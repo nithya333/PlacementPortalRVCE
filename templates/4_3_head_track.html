@@ -5,16 +5,16 @@
 <style>
   body {
       font-family: Arial, sans-serif;
-      background-color: #ffddcc;
+      background-color: #ffe6cc;
   }
 
   .nav-link.active {
-    background-color: #cc4400; /* Replace with your desired color */
+    background-color: #b35c00; /* Replace with your desired color */
     color: white; /* Adjust text color for better contrast */
   }
 
   .nav-link.active:hover {
-    background-color: #993300; /* Slightly darker shade for hover */
+    background-color: #994f00; /* Slightly darker shade for hover */
   }
 
   .student-icon {
@@ -26,115 +26,166 @@
   .welcome-text {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #993300;
-    text-decoration: none;
+    color: #804200;
+    text-decoration: '';
   }
   .student-name {
     color: #007bff; /* Highlighted color for student name */
   }
 
-  .stage-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    width: 950px;
-    overflow: hidden;
-}
-.stage-header {
-    background-color: #ffc180;
-    color: #4d2800;
-    padding: 10px 15px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.stage-content {
-    display: none;
-    padding: 15px;
-    overflow-x: auto;
-}
-.stage-content.active {
-    display: block;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff5e6;
-    min-width: 1000px;
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #ffdb99;
-    position: sticky;
-    top: 0;
-}
-.table-container {
-    overflow-x: auto;
-    max-width: 100%;
-}
-select {
-    margin-bottom: 20px;
-    padding: 5px;
-}
 
-#accordion button {
-  text-decoration: none !important;
-  font-family: Arial, sans-serif;
-  color: #804200;
-}
+    .nav-pills .nav-link.active {
+        background-color: #b35c00 !important; /* Replace with your desired color */
+        color: white !important; /* Optional: Change text color to ensure readability */
+    }
+    
+    /* Optional: Hover effect for other tabs */
+    .nav-pills .nav-link:hover {
+        background-color: #804200; /* Replace with your desired hover color */
+        color: #000; /* Replace with your desired hover text color */
+    }
+    .stage-card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      width: 950px;
+      overflow: hidden;
+  }
+  .stage-header {
+      background-color: #ffc180;
+      color: #4d2800;
+      padding: 10px 15px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  .stage-content {
+      display: none;
+      padding: 15px;
+      overflow-x: auto;
+  }
+  .stage-content.active {
+      display: block;
+  }
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff5e6;
+      min-width: 1000px;
+  }
+  th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+  }
+  th {
+      background-color: #ffdb99;
+      position: sticky;
+      top: 0;
+  }
+  .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+  }
+  select {
+      margin-bottom: 20px;
+      padding: 5px;
+  }
 
-#accordion table {
-  color: #666666;
-}
+  #accordion button {
+    text-decoration: none !important;
+    font-family: Arial, sans-serif;
+    color: #804200;
+  }
+
+  #accordion table {
+    color: #666666;
+  }
 </style>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include Popper.js (required for Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Include Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+
 <div class="d-flex">
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
           <a href="#" class="welcome-text" aria-current="page">
             <img 
-            src="{% static 'images/coordinator_icon.png' %}" 
-            alt="Coord Icon" 
-              class="student-icon" >
+            src="{% static 'images/head_icon.png' %}" 
+            alt="Student Icon" 
+              class="student-icon"
+              >
               {{ request.session.u_name }}
             </a>
           </li>
           <hr>
           <li class="nav-item">
-            <a href="/coordinator/home"  class="nav-link link-dark">
+            <a href="/head/home" class="nav-link link-dark" >
                 <i class="bi bi-house-door me-2"></i>
                 Home
             </a>
           </li>
           <li>
-            <a href="/coordinator/shortlist" class="nav-link link-dark" >
-                <i class="bi bi-grid me-2"></i>
-              Shortlist Students
+            <a href="/head/allot_slots" class="nav-link link-dark" >
+                <i class="bi bi-calendar me-2"></i>
+              Schedule Slots
             </a>
           </li>
           <li>
-            <a href="/coordinator/track" class="nav-link active" style = "background-color: #b33c00; ">
-                <i class="bi bi-people-fill me-2"></i>
+            <a href="/head/track_placements" class="nav-link active" style = "background-color: #b35c00; ">
+                <i class="bi bi-grid-fill me-2"></i>
              Track Placements
             </a>
           </li>
-          
+          <li>
+            <a href="/head/review_feedback" class="nav-link link-dark">
+                <i class="bi bi-search me-2"></i>
+              Review Feedback
+            </a>
+          </li>
         </ul>
         <hr>
       </div>
     <!-- Main Content -->
-    <div class="main-content flex-grow-1">
-      <div class="container my-5" >
-          <div id="stages-container"></div>
+    <div>
+      <br>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <label for="degree">Select Degree:</label>
+        <select id="degree" style="width: 250px; margin-right: 50px;">
+          <option value="ug">Undergraduate</option>
+          <option value="pg">Postgraduate</option>
+        </select>
+        
+        <label for="department">Select Department:</label>
+        <select id="department" style="width: 250px;">
+          {% for dept in dept_list %}
+          <option value="{{dept}}">{{dept}}</option>
+          {% endfor %}
+        </select>
       </div>
-</div>
+      <br>
+      <div class="container my-5" >
+        {% comment %} <div class="card shadow border-0" > {% endcomment %}
 
+          <div id="stages-container"></div>
+        {% comment %} </div> {% endcomment %}
+      </div>
+
+  </div>
+  
+</div>
 <script>
   {% comment %} fetch('/head/head_track_placements/')
     .then(response => response.json())
@@ -156,22 +207,21 @@ select {
         [6, "Interview - Round 2 done"]
     ];
 
-    // const degreeDropdown = document.getElementById('degree');
-    // const departmentDropdown = document.getElementById('department');
+    const degreeDropdown = document.getElementById('degree');
+    const departmentDropdown = document.getElementById('department');
     const stagesContainer = document.getElementById('stages-container');
 
     function filterAndDisplayJobs() {
         // Get selected degree and department
-        // const selectedDegree = degreeDropdown.value;
-        // const selectedDepartment = departmentDropdown.value;
-// 
-        // // Filter jobs based on selected criteria
-        // const filteredJobs = jobData.filter(job =>
-        //     job.degreeCriteria === selectedDegree &&
-        //     job.deptsCriteria.includes(selectedDepartment)
-        // );
+        const selectedDegree = degreeDropdown.value;
+        const selectedDepartment = departmentDropdown.value;
 
-        filteredJobs = jobData
+        // Filter jobs based on selected criteria
+        const filteredJobs = jobData.filter(job =>
+            job.degreeCriteria === selectedDegree &&
+            job.deptsCriteria.includes(selectedDepartment)
+        );
+
         // Generate table for each stage
         stages.forEach(stage => {
             const stageNumber = stage[0];
@@ -261,6 +311,10 @@ select {
       content.classList.toggle('active');
       icon.textContent = content.classList.contains('active') ? '▲' : '▼';
   }
+
+    // Add event listeners
+    degreeDropdown.addEventListener('change', filterAndDisplayJobs);
+    departmentDropdown.addEventListener('change', filterAndDisplayJobs);
 
     // Initial display
     filterAndDisplayJobs();

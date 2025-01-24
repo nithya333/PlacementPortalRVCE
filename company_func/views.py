@@ -1,3 +1,4 @@
+import csv
 from django.db import connection
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
@@ -9,19 +10,23 @@ from django.core.files.storage import FileSystemStorage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+
+from db import get_db
 from .models import Company, Department, Education, Students
 from pymongo import MongoClient
 import time
 from bson import ObjectId
 from datetime import datetime, timedelta
+from django import forms
 
 
 # Create your views here.
 
 def company_home(request):
     # MongoDB Connection
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
     events = []
@@ -110,26 +115,28 @@ def company_postjob_submit(request):
         job_data["job_lastUpdated"] = time.strftime("%Y-%m-%d %H:%M:%S")
 
         # Connect to MongoDB
-        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        db = client['Placement']  # Database name
+        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+        # db = client['Placement']  # Database name
+        db = get_db()  # Reuse the shared MongoDB connection
         job_collection = db['job']  # Collection name
         
         # Insert into MongoDB
         result = job_collection.insert_one(job_data)
         
         # Close the connection
-        client.close()
+        # client.close()
 
         # return render(request, '5_1_company_home.html')
         return redirect('/company/home')
     
 def company_ong_recruitments(request):
-    client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    db = client['Placement']
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
     # Fetch jobs with status "upcoming"
-    jobs = list(job_collection.find({"job_companyId": request.session.get('u_id')}))
+    jobs = list(job_collection.find({"job_companyId": request.session.get('u_id'), "job_status": {"$in": [0, 1]}}))
     for job in jobs:
         job['job_id'] = str(job['_id'])
         if (job['job_stage'] == 1):
@@ -169,10 +176,20 @@ def company_ong_recruitments(request):
                 print(f"Job {job['_id']} has been moved to stage 4")
                 return redirect('/company/ong_recruitments')
 
-    return render(request, '5_3_company_ongoing.html', {"jobs": jobs})
+    return render(request, '5_3_company_ongoing.html', {"jobs": jobs, "stat": 1})
 
-def company_college_history(request):
-    return render(request, '5_3_company_ongoing.html')
+   
+def company_past_recruitments(request):
+    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+    # db = client['Placement']
+    db = get_db()  # Reuse the shared MongoDB connection
+    job_collection = db['job']
+
+    jobs = list(job_collection.find({"job_companyId": request.session.get('u_id'), "job_status": 2}))
+    for job in jobs:
+        job['job_id'] = str(job['_id'])
+    return render(request, '5_3_company_ongoing.html', {"jobs": jobs, "stat": 0})
+
 
 @csrf_exempt  
 def company_ong_recruitments_vmore(request, job_id):
@@ -181,10 +198,13 @@ def company_ong_recruitments_vmore(request, job_id):
         print(job_id)
 
         # MongoDB Connection
-        client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        db = client['Placement']
+        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
+        # db = client['Placement']
+        db = get_db()  # Reuse the shared MongoDB connection
+
         job_collection = db['job']
         appl_collection = db['application']
+        oa_collection = db['oa_interview']
 
         job = job_collection.find_one({"_id": job_id})
         if job['job_stage'] == 0:
@@ -193,8 +213,16 @@ def company_ong_recruitments_vmore(request, job_id):
             job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
             job['job_reglastdate'] = job_reglastdate
         job_details = job
+        job_details['job_id'] = str(job_details['_id'])
+        if oa_collection.find_one({"job_id": job_id}):
+            oa_details = oa_collection.find_one({"job_id": job_id})
+            job_details['oa_link'] = oa_details['oa_link']
+            job_details['oa_date'] = oa_details['oa_date']
+            if 'interview_link' in oa_details:
+                job_details['interview_link'] = oa_details['interview_link']
+                job_details['interview_date'] = oa_details['interview_date']
 
-        applications = list(appl_collection.find({"appl_job_id": job_id}))
+        applications = list(appl_collection.find({"appl_job_id": job_id, "appl_stage": job_details['job_stage']}))
         # print(applications)
         applicants = []
         for applicantion in applications:
@@ -232,11 +260,148 @@ def company_ong_recruitments_vmore(request, job_id):
             #     "cp_contact_name": cp_contact_name
             # }
         print(applicants)
-        stages = [[0, "You have posted a job offer, Waiting for college approval", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , job_reglastdate], [2, "Applications closed, Waiting for college shortlists", ''], [3, "Shortlisted at college level", ''], [4, "PPT done", job_details['job_pptDate']], [5, "OA - Round 1 done", job_details['job_oaDate']], [6, "Interview - Round 2 done", job_details['job_interviewDate']], [7, "Recruitment done", '']]
+        stages = [[0, "You have posted a job offer, Waiting for college approval", job_details['job_enrolledDate']], [1, "College has scheduled slots, registrations open" , job_reglastdate], [2, "Applications closed, Waiting for college shortlists", ''], [3, "Shortlisted at college level", ''], [4, "PPT done", job_details['job_pptDate']], [5, "OA - Round 1 done", job_details['job_oaDate']], [6, "Interview - Round 2 done", job_details['job_interviewDate']]]
         return render(request, '5_4_company_ongoing_vmore.html', {"job_details": job_details, "applicants" : applicants, "stages": stages})
     else:
         return render(request, '5_1_company_home.html')
-    
+
+@csrf_exempt
+def company_oa_int_link(request):
+    if request.method == "POST":
+        print(request.POST)
+        job_id = request.POST.get('job_id')
+        conduct_link = request.POST.get('conduct_link')
+        conduct_date = request.POST.get('conduct_date')
+        job_stage = request.POST.get('job_stage')
+
+        # MongoDB Connection
+        # client = MongoClient('mongodb://localhost:27017/')  # Update with your MongoDB connection string
+        # db = client['Placement']
+        db = get_db()
+        oa = db['oa_interview']
+
+        if job_stage == "4":
+            oa_data = {
+                "job_id": job_id,
+                "oa_link": conduct_link,
+                "oa_date": conduct_date
+            }
+            result = oa.insert_one(oa_data)
+        else:
+            result = oa.update_one(
+                {"job_id": job_id},
+                {"$set": {"interview_link": conduct_link, "interview_date": conduct_date}}
+            )
+        return redirect('/company/ong_recruitments')
+
+@csrf_exempt
+def company_results(request):
+    if request.method == "POST":
+        job_id = request.POST.get('job_id')
+        stage = (int)(request.POST.get('stage'))
+        result_file = request.FILES["result_file"]
+        # Read and decode the file
+        decoded_file = result_file.read().decode("utf-8").splitlines()
+        reader = csv.reader(decoded_file)
+        header = next(reader)  
+        # Find which column is "Application ID" and which column is "Result"
+        print(header)
+        appl_id_index = -1
+        st_id_index = -1
+        result_index = -1
+        
+        # Check for "Application ID"
+        if "Application ID" in header:
+            appl_id_index = header.index("Application ID")
+        elif "ApplicationID" in header:
+            appl_id_index = header.index("ApplicationID")
+        elif "Application_ID" in header:
+            appl_id_index = header.index("Application_ID")
+
+        # Check for "Student ID"
+        if "Student ID" in header:
+            st_id_index = header.index("Student ID")
+        elif "StudentID" in header:
+            st_id_index = header.index("StudentID")
+        elif "Student_ID" in header:
+            st_id_index = header.index("Student_ID")
+        if "Result" in header:
+            result_index = header.index("Result")
+        if appl_id_index == -1 or result_index == -1 or st_id_index == -1:
+            return redirect('/company/ong_recruitments')
+        
+        results = []
+        for row in reader:
+
+            # Assuming CSV columns: Student ID, Name, Result
+            results.append({
+                "Application ID": row[appl_id_index],
+                "Student ID": row[st_id_index],
+                "Result": row[result_index]
+            })
+        
+        # MongoDB Connection
+        # client = MongoClient('mongodb://localhost:27017/')  # Update with your MongoDB connection string
+        # db = client['Placement']
+        db = get_db()
+        appl_collection = db['application']
+        job_collection = db['job']
+        stage_name = ""
+        next_stage = stage
+        if stage == 4:
+            stage_name = "oa"
+            next_stage = 5
+        elif stage == 5:
+            stage_name = "interview"
+            next_stage = 6
+        for result in results:
+            print(result)
+            # Update the result in the application collection
+            if result["Result"] == "Select":
+                if stage == 4:
+                    appl_collection.update_one(
+                        {"appl_id": result["Application ID"]},
+                        {"$set": {f"appl_{stage_name}_result": result["Result"], "appl_stage": next_stage}}
+                    )
+                else:
+                    appl_collection.update_one(
+                        {"appl_id": result["Application ID"]},
+                        {"$set": {f"appl_{stage_name}_result": result["Result"], "appl_stage": next_stage, "appl_status": 1}}
+                    )
+                    final_rec_collection = db['final_recruits']
+                    final_rec_data = {
+                        "job_id": job_id,
+                        "appl_id": result["Application ID"],
+                        "student_id": result["Student ID"],
+                    }
+                    final_rec_collection.insert_one(final_rec_data)
+            else:
+                if stage == 4:
+                    appl_collection.update_one(
+                        {"appl_id": result["Application ID"]},
+                        {"$set": {f"appl_{stage_name}_result": result["Result"]}}
+                    )
+                else:
+                    appl_collection.update_one(
+                        {"appl_id": result["Application ID"]},
+                        {"$set": {f"appl_{stage_name}_result": result["Result"], "appl_status": 2}}
+                    )
+        if stage == 4:
+            job_collection.update_one(
+                {"_id": job_id},
+                {"$set": {"job_stage": next_stage}}
+            )
+        else:
+            job_collection.update_one(
+                    {"_id": job_id},
+                    {"$set": {"job_stage": next_stage, "job_status": 2}}
+                )
+        # print(results)
+        # csv_file = forms.FileField(label="Upload CSV File")
+        # print(csv_file)
+        return redirect('/company/ong_recruitments')
+
+
 # @csrf_exempt
 # def student_profile_submit(request):
 #     if request.method == "POST":

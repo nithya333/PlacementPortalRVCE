@@ -184,8 +184,8 @@
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/tutorials/timelines/timeline-7/assets/css/timeline-7.css"> 
-
 <div class="d-flex">
     <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 20%;">
       <ul class="nav nav-pills flex-column mb-auto">
@@ -212,18 +212,34 @@
               Post New Job
             </a>
           </li>
+          {% if stat == 1 %}
           <li>
-            <a href="/company/ong_recruitments" class="nav-link active" style = "background-color: #3bab71; ">
+            <a href="/company/ong_recruitments" class="nav-link active"  style = "background-color: #3bab71; ">
                 <i class="bi bi-grid-fill me-2"></i>
-              Ongoing Recruitments
+              Active Recruitments
             </a>
           </li>
           <li>
-            <a href="/company/college_history" class="nav-link link-dark">
+            <a href="/company/past_recruitments" class="nav-link link-dark">
                 <i class="bi bi-check-circle me-2"></i>
-              Placement History
+              Past Recruitments
             </a>
           </li>
+          {% else %}
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link link-dark" >
+                <i class="bi bi-grid me-2"></i>
+              Active Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/past_recruitments" class="nav-link active"  style = "background-color: #3bab71; ">
+                <i class="bi bi-archive-fill me-2"></i>
+              Past Recruitments
+            </a>
+          </li>
+          {% endif %}
+ 
         </ul>
         <hr>
       </div>
@@ -496,13 +512,18 @@
                   <div class="row mb-8">
                     <div class="col-md-12">
                       <strong>Provide the link for OA:</strong>
-                      <form action="/company/oa_link" method="POST" style="display: inline;">
+                      <form action="/company/oa_int_link" method="POST" >
                         {% csrf_token %}
-                        <input type="text" name="oa_link" id="oa_link" placeholder="Enter the URL" style="width: 50%; margin-right: 10px;" />
+                        <input type="text" name="conduct_link" id="conduct_link" placeholder="{{ job_details.oa_link }}" style="width: 80%; margin-right: 10px;" />
+                        <input type="hidden" name="job_id" id="job_id" value = "{{job_details.job_id }}"></input>
+                        <input type="hidden" name="job_stage" id="job_stage" value = "{{job_details.job_stage }}"></input>
+                        <input type="hidden" name="conduct_date" id="conduct_date" value = "{{job_details.job_oaDate }}"></input>
                         <button type="submit" style="display: inline;" class="btn btn-success">Submit</button>
                       </form>
                     </div>
+                    <br>
                   </div>
+                  <br>
                   
                   <div class="row mb-3">
                     <div class="col-md-12">
@@ -547,15 +568,192 @@
                       </tbody>
                     </table>
                     </div>
+                    <br>
+                    <hr>
                   </div>
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                      <strong>Upload results:</strong>
+                      <p> The CSV should contain the columns Application ID, Result [Select/Reject]</p> 
+                    </div>
+                  </div>
+                  <form method="POST" enctype="multipart/form-data" action="/company/results">
+                    {% csrf_token %}
+                    <input type="hidden" name="job_id" id="job_id" value = "{{job_details.job_id }}"></input>
+                    <input type="hidden" name="stage" id="stage" value = "{{job_details.job_stage }}"></input>
+                    <input type="file" name="result_file" id="result_file" style="width: 70%; margin-right: 10px;" />
+                    <button class="btn" type="submit" style = "display:inline;">Upload Results</button>
+                </form>
                 </div> 
 
+                {% elif job_details.job_stage == 5 %}
+                   <div class="row mb-3">
+                    <strong style = "font-size: 20px;">Please conduct Interview on {{ job_details.job_interviewDate }}! </strong>
+                  </div> 
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                          <strong>Stage:</strong>
+                          <p>{{ stages.5.0 }} </p>
+                      </div>
+                      <div class="col-md-3">
+                          <strong>Stage Info:</strong>
+                          <p>{{ stages.5.1 }}</p>
+                      </div>
+                  </div>
+
+                  <div class="row mb-8">
+                    <div class="col-md-12">
+                      <strong>Provide the link for interview:</strong>
+                      <form action="/company/oa_int_link" method="POST" >
+                        {% csrf_token %}
+                        <input type="text" name="conduct_link" id="conduct_link" placeholder="{{ job_details.interview_link }}" style="width: 80%; margin-right: 10px;" />
+                        <input type="hidden" name="job_id" id="job_id" value = "{{job_details.job_id }}"></input>
+                        <input type="hidden" name="job_stage" id="job_stage" value = "{{job_details.job_stage }}"></input>
+                        <input type="hidden" name="conduct_date" id="conduct_date" value = "{{job_details.job_interviewDate }}"></input>
+                        <button type="submit" style="display: inline;" class="btn btn-success">Submit</button>
+                      </form>
+                    </div>
+                    <br>
+                  </div>
+                  <br>
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                    <br>
+                    <strong>Applicants in Stage {{ stages.5.0 }}:</strong>
+                    <button onclick="exportTableToCSV('Applicants_Info_{{ job_details.job_title }}.csv')" style ="display: inline;" class="btn btn-info">Export as CSV</button>
+
+                    <br>
+                    <div style="overflow-x: auto; white-space: nowrap; margin-top: 15px;">
+                      <table class="table table-striped table-bordered" style="min-width: 600px;">
+                       
+                      <thead>
+                        <tr>
+                          <th>Student ID</th>
+                          <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Year of Passing</th>
+                            <th>CGPA</th>
+                            <th>10th Marks</th>
+                            <th>12th Marks</th>
+                            <th>Backlogs</th>
+                            <th>Application ID</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for applicant in applicants %}
+                            <tr>
+                              <td>{{ applicant.st_id }}</td>
+                              <td>{{ applicant.st_name }}</td>
+                              <td>{{ applicant.st_section }}</td>
+                              <td>{{ applicant.st_email }}</td>
+                              <td>{{ applicant.st_year_of_passing }}</td>
+                              <td>{{ applicant.e_cgpa }}</td>
+                              <td>{{ applicant.e_10thmarks }}</td>
+                              <td>{{ applicant.e_12thmarks }}</td>
+                              <td>{{ applicant.e_backlogs }}</td>
+                              <td>{{ applicant.appl_id }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                    <br>
+                    <hr>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                      <strong>Upload results:</strong>
+                      <p> The CSV should contain the columns Application ID, Result [Select/Reject]</p> 
+                    </div>
+                  </div>
+                  <form method="POST" enctype="multipart/form-data" action="/company/results">
+                    {% csrf_token %}
+                    <input type="hidden" name="job_id" id="job_id" value = "{{job_details.job_id }}"></input>
+                    <input type="hidden" name="stage" id="stage" value = "{{job_details.job_stage }}"></input>
+                    <input type="file" name="result_file" id="result_file" style="width: 70%; margin-right: 10px;" />
+                    <button class="btn" type="submit" style = "display:inline;">Upload Results</button>
+                </form>
+                </div> 
+
+                {% elif job_details.job_stage == 6 %}
+                   <div class="row mb-3">
+                    <strong style = "font-size: 20px;">Thank you, Your recruitment is done! </strong>
+                  </div> 
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                          <strong>Stage:</strong>
+                          <p>{{ stages.6.0 }} </p>
+                      </div>
+                      <div class="col-md-3">
+                          <strong>Stage Info:</strong>
+                          <p>{{ stages.6.1 }}</p>
+                      </div>
+                  </div>
+
+                  
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                    <br>
+                    <strong>Final Recruits :</strong>
+                    <button onclick="exportTableToCSV('Applicants_Info_{{ job_details.job_title }}.csv')" style ="display: inline;" class="btn btn-info">Export as CSV</button>
+
+                    <br>
+                    <div style="overflow-x: auto; white-space: nowrap; margin-top: 15px;">
+                      <table class="table table-striped table-bordered" style="min-width: 600px;">
+                       
+                      <thead>
+                        <tr>
+                          <th>Student ID</th>
+                          <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Year of Passing</th>
+                            <th>CGPA</th>
+                            <th>10th Marks</th>
+                            <th>12th Marks</th>
+                            <th>Backlogs</th>
+                            <th>Application ID</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for applicant in applicants %}
+                            <tr>
+                              <td>{{ applicant.st_id }}</td>
+                              <td>{{ applicant.st_name }}</td>
+                              <td>{{ applicant.st_section }}</td>
+                              <td>{{ applicant.st_email }}</td>
+                              <td>{{ applicant.st_year_of_passing }}</td>
+                              <td>{{ applicant.e_cgpa }}</td>
+                              <td>{{ applicant.e_10thmarks }}</td>
+                              <td>{{ applicant.e_12thmarks }}</td>
+                              <td>{{ applicant.e_backlogs }}</td>
+                              <td>{{ applicant.appl_id }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+                    <br>
+                    <hr>
+                  </div>
+                  
+                </div> 
                   {% endif %}
+
     
                 
                 </div>
             </div>
         </div>
+        <div id="confetti-container">
+          <div id="confetti-div"></div>
+      </div>
 
       <section class="bsb-timeline-7  py-3 py-md-5 py-xl-1">
         <div class="container">
@@ -673,5 +871,62 @@
     // Download CSV file
     downloadCSV(csv.join("\n"), filename);
   }
+
+    if ({{job_details.job_stage}} == 6)
+    {
+
+      var end = Date.now() + (5 * 1000);
+    
+    // go Buckeyes!
+    // var colors = ['#bb0000', '#ffffff'];
+    {% comment %} var colors = [
+    '#FF5733',  // Bright Orange
+    '#33FF57',  // Bright Green
+    '#3357FF',  // Bright Blue
+    '#FFC300',  // Bright Yellow
+    '#DAF7A6',  // Soft Green
+    '#FF33A1',  // Pink
+    '#6F42C1',  // Purple
+    '#17A2B8',  // Cyan
+    '#DC3545',  // Red
+    '#FFC107',  // Gold
+    '#28A745',  // Green
+    '#20C997',  // Teal
+    '#007BFF',  // Blue
+    '#F8F9FA',  // Light Gray
+    '#343A40'   // Dark Gray
+    ]; {% endcomment %}
+    
+    var colors =  ['#FFD700', // Gold (Bright contrast)
+              '#FFFFFF',      // White (Neutral contrast)
+              '#FF4500',      // Orange-Red (Warm complement)
+              '#1E90FF',      // Dodger Blue (Cool contrast)
+              '#ADFF2F'];      // Green-Yellow (Analogous accent)
+    
+    
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors
+      });
+    
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+    }
+     
   </script>
+
+  
 {% endblock %}

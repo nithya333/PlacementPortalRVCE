@@ -160,18 +160,35 @@
               Post New Job
             </a>
           </li>
+          {% if stat == 1 %}
           <li>
-            <a href="/company/ong_recruitments" class="nav-link active" style = "background-color: #3bab71; ">
+            <a href="/company/ong_recruitments" class="nav-link active"  style = "background-color: #3bab71; ">
                 <i class="bi bi-grid-fill me-2"></i>
-              Ongoing Recruitments
+              Active Recruitments
             </a>
           </li>
           <li>
-            <a href="/company/college_history" class="nav-link link-dark">
+            <a href="/company/past_recruitments" class="nav-link link-dark">
                 <i class="bi bi-check-circle me-2"></i>
-              Placement History
+              Past Recruitments
             </a>
           </li>
+          {% else %}
+          <li>
+            <a href="/company/ong_recruitments" class="nav-link link-dark" >
+                <i class="bi bi-grid me-2"></i>
+              Active Recruitments
+            </a>
+          </li>
+          <li>
+            <a href="/company/past_recruitments" class="nav-link active"  style = "background-color: #3bab71; ">
+                <i class="bi bi-archive-fill me-2"></i>
+              Past Recruitments
+            </a>
+          </li>
+          {% endif %}
+          
+ 
         </ul>
         <hr>
       </div>
@@ -241,13 +258,7 @@
                   <span>Interview Done</span>
               </div>
 
-              {% if job.job_stage >= 7 %}
-                <div class="timeline-item completed">
-              {% else %}
-                <div class="timeline-item">
-              {% endif %}
-                <span>Recruitment Done</span>
-            </div>
+              
             </div>
             <br>
             <a href="/company/ong_recruitments/vmore/{{ job.job_id }}" class="card-link"><button class="btn">View More</button></a>
