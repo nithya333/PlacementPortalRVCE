@@ -34,6 +34,10 @@ def submit_feedback(request):
     # Redirect back to the same page
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+def get_sample(request):
+    return HttpResponse("Hello")
+
+
 @csrf_exempt
 def reg_common_submit(request):
     if request.method == "POST":

@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-i@u373bq-2%k$c^hjjs%k06rd(ez8akal@_+whqvw0+uo3gc73
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2', '192.168.53.169', '127.0.0.1']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "company_func.apps.CompanyFuncConfig",
     "admin_func.apps.AdminFuncConfig",
     "coordinator_func.apps.CoordinatorFuncConfig",
+    "mobile_func.apps.MobileFuncConfig"
 ]
 
 MIDDLEWARE = [
