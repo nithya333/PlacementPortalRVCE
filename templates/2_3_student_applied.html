@@ -223,7 +223,7 @@
         {% comment %} [{'_id': ObjectId('67791dea9fd67f9b094e0983'), 'job_title': 'Testing', 'job_type': 'full_time', 'job_duration': 'Full time', 'job_desc': 'Testing appl', 'job_domain': 'software_development', 'job_salary': 9.25, 'cgpaMinCriteria': 7.5, 'cgpaMaxCriteria': 10, 'degreeCriteria': 'pg', 'job_locations': ['Bengaluru'], 'deptsCriteria': ['MCA', 'MCN', 'MCS'], 'yearOfPassingCriteria': [2026, 2027], 'skillsPreferences': ['Web dev', 'app dev'], 'job_enrolledDate': '2025-01-03 18:51:32', 'job_pptDate': '2025-01-05', 'job_oaDate': '2025-01-08', 'job_interviewDate': '2025-01-14', 'job_status': 1, 'job_stage': 1, 'job_companyId': 'C001', 'job_companyName': 'Google', 'job_numStudents': 2, 'job_lastUpdated': '2025-01-03 18:51:32', 'appl_id': '67791dea9fd67f9b094e0982', 'appl_date': '2025-01-04 17:09:22', 'appl_student_id': '1RV24MCN016', 'appl_job_id': '6777e45c7a803a745491da5f', 'appl_status': 0, 'appl_stage': 1, 'appl_lastUpdated': '2025-01-04 17:09:22'}] {% endcomment %}
         {% for appl in applied %}
         <div class="card">
-            <h3>Recruiter: {{ appl.job_companyName }}</h3>
+            <h3>{{ appl.job_companyName }} - {{ appl.job_title }}</h3>
             <div class="timeline">
               {% if appl.job_stage >= 1 and appl.appl_stage == 0 %}
               <div class="timeline-item rejected">

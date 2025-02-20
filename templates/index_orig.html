@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Portal - Login</title>
+    <link rel="stylesheet" href= "{% static 'css/register_common.css' %}"> <!-- Link to the external CSS file -->
+    <style>
+        /* Custom Styling */
+        .top-bar {
+            background-color: #d1d2d4;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            color: rgb(45, 43, 43);
+            padding: 10px 20px;
+            height: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .top-bar .name {
+            font-size: 2rem;
+            font-variant: small-caps;
+            text-align: center;
+        }
+  
+    </style>
+</head>
+<body>
+    <body>
+        <div class="top-bar d-flex justify-content-between align-items-center">
+            <div><a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <img src = "https://csitss.ieee-rvce.org/Logo3.png" style = "height: 4rem;"/>
+              </a></div>
+            <!-- <div class="logo">RV</div> -->
+            <div class="name">Charitham</div>
+            <div><a href="#" style="color: rgb(72, 71, 71); text-decoration:none ;font-style:italic; font-size:large">Go, Change The World</a></div>
+        </div></body>
+
+
+<div class="register-container">
+    <h2>Login</h2>
+    <form action="login_common_submit" method="post">
+        <div class="form-group">
+            <label for="usertype">Type of User</label>
+            <select id="usertype" name="usertype" required>
+                <option value="">Select User Type</option>
+                <option value="Student">Student</option>
+                <option value="Coordinator">Faculty Coordinator</option>
+                <option value="Company">Company</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="useremail">Email ID</label>
+            <input type="text" id="useremail" name="useremail" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="register-btn">Login</button>
+    </form>
+    <br>
+    <span>New to Charitham ? <a href="/register/">Register here</a></span>
+</div>
+
+</body>
+</html>

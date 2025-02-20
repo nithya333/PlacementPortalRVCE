@@ -233,18 +233,12 @@
         <div class="form-group">
           <label for="yearOfPassingGroup">Year of Passing Criteria *</label>
           <div id="yearOfPassingGroup" class="d-flex flex-wrap">
+            {% for year in year_list %}
             <div class="form-check me-3">
-              <input type="checkbox" class="form-check-input" id="year2025" name="yearOfPassingCriteria[]" value="2025">
-              <label class="form-check-label" for="year2025">2025</label>
+              <input type="checkbox" class="form-check-input" id="year{{year}}" name="yearOfPassingCriteria[]" value="{{year}}">
+              <label class="form-check-label" for="year{{year}}">{{year}}</label>
             </div>
-            <div class="form-check me-3">
-              <input type="checkbox" class="form-check-input" id="year2026" name="yearOfPassingCriteria[]" value="2026">
-              <label class="form-check-label" for="year2026">2026</label>
-            </div>
-            <div class="form-check me-3">
-              <input type="checkbox" class="form-check-input" id="year2027" name="yearOfPassingCriteria[]" value="2027">
-              <label class="form-check-label" for="year2027">2027</label>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>

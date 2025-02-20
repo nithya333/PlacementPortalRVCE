@@ -16,7 +16,7 @@ from .models import Company, Department, Education, Students
 from pymongo import MongoClient
 import time
 from bson import ObjectId
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from django import forms
 
 
@@ -63,9 +63,13 @@ def company_postjob(request):
     # Context dictionary
     dept_codes = Department.objects.values_list('d_abbr_code', flat=True)
     dept_codes_list = list(dept_codes)  # Convert to a list if needed
+    today = date.today()
+    this_year = today.year
+
     # print(dept_codes_list)
     context = {
-        'dept_codes_list': dept_codes_list
+        'dept_codes_list': dept_codes_list,
+        'year_list': [this_year, this_year+1, this_year+2]
     }
     return render(request, '5_2_company_postjob.html', context=context)
 
@@ -208,6 +212,7 @@ def company_ong_recruitments_vmore(request, job_id):
 
         job = job_collection.find_one({"_id": job_id})
         if job['job_stage'] == 0:
+            job_reglastdate = ''
             job['job_reglastdate'] = ''
         else:
             job_reglastdate = (datetime.strptime(job['job_pptDate'], "%Y-%m-%d") - timedelta(days=2)).strftime("%Y-%m-%d")
@@ -376,16 +381,16 @@ def company_results(request):
                     }
                     final_rec_collection.insert_one(final_rec_data)
             else:
-                if stage == 4:
-                    appl_collection.update_one(
-                        {"appl_id": result["Application ID"]},
-                        {"$set": {f"appl_{stage_name}_result": result["Result"]}}
-                    )
-                else:
-                    appl_collection.update_one(
-                        {"appl_id": result["Application ID"]},
-                        {"$set": {f"appl_{stage_name}_result": result["Result"], "appl_status": 2}}
-                    )
+                # if stage == 4:
+                #     appl_collection.update_one(
+                #         {"appl_id": result["Application ID"]},
+                #         {"$set": {f"appl_{stage_name}_result": result["Result"]}}
+                #     )
+                # else:
+                appl_collection.update_one(
+                    {"appl_id": result["Application ID"]},
+                    {"$set": {f"appl_{stage_name}_result": result["Result"], "appl_status": 2}}
+                )
         if stage == 4:
             job_collection.update_one(
                 {"_id": job_id},
