@@ -70,8 +70,7 @@ def parse_resume(request):
 
 def student_home(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
     appl_collection = db['application']
@@ -232,8 +231,7 @@ def student_profile_submit(request):
 
 def student_applied(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -305,7 +303,6 @@ def student_applied(request):
 
 def student_past_applied(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
     appl_collection = db['application']
@@ -326,8 +323,7 @@ def student_past_applied(request):
 
 def student_new(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -413,8 +409,6 @@ def student_new(request):
 
 def student_new_apply(request, job_id):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
-    # db = client['Placement']
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -449,8 +443,6 @@ def student_applied_vmore(request, job_id):
         print(job_id)
 
         # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        # db = client['Placement']
         db = get_db()  # Reuse the shared MongoDB connection
 
         job_collection = db['job']
@@ -605,8 +597,7 @@ def export_student_resume(request, u_id):
     
 def spc_shortlist(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -655,25 +646,7 @@ def spc_shortlist_vmore(request, job_id):
     print(applicants)
        
     return render(request, '2_7_spc_shortlist_vmore.html', {"job_details" : job_details, "applicants" : applicants})
-# MongoDB Connection
-# client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-# db = client['Placement']
-# job_collection = db['job']
-# appl_collection = db['application']
 
-# applied_jobs = []
-# events = []
-# applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
-# for appl in applications:
-#     job = job_collection.find_one({"_id": appl["appl_job_id"]})
-#     job_details = job
-#     job_details.update(appl)
-#     applied_jobs.append(job_details)
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
-    
-# return render(request, '2_1_student_home.html', context = {"events" : events})
 
 @csrf_exempt
 def spc_shortlist_selected(request):
@@ -710,5 +683,3 @@ def spc_shortlist_selected(request):
                     )
 
         return redirect('/student/spc_shortlist')
-        # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:

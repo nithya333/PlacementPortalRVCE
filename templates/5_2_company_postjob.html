@@ -96,7 +96,7 @@
                     <div class="col-md-5">  <!-- Adjust column width to control input field size -->
                       <div class="form-group">
                         <label for="job_title">Job Title *</label>
-                        <input type="text" class="form-control" id="job_title" name="job_title" required placeholder="Enter your full name">
+                        <input type="text" class="form-control" pattern = "[a-zA-Z ]+" id="job_title" name="job_title" required placeholder="Enter your full name">
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -162,14 +162,14 @@
                       <div class="field-container">
                         <label class="form-label">Job Locations</label>
                         <div id="job_locations_group">
-                            <input type="text" class="form-control" name="job_locations[]" placeholder="Job locations offered (comma separated)" multiple>
+                            <input type="text" class="form-control" name="job_locations[]" pattern = "[a-zA-Z ]+" placeholder="Job locations offered (comma separated)" multiple>
                         </div>
                       </div></div>
 
                       <div class="col-md-5">  <!-- Adjust column width to control input field size -->
                         <div class="form-group">
                           <label for="job_salary">Salary offered (in lpa - INR) *</label>
-                          <input type="number" class="form-control" id="job_salary" name="job_salary" step="0.01" required placeholder="Salary offered for this job role">
+                          <input type="number" class="form-control" id="job_salary" name="job_salary" step="0.01" min="0.01" required placeholder="Salary offered for this job role">
                         </div>
                       </div>
                   </div>

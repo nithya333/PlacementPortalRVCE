@@ -54,8 +54,7 @@ def coordinator_home(request):
 
 def coordinator_shortlist(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -104,25 +103,7 @@ def coordinator_shortlist_vmore(request, job_id):
     print(applicants)
        
     return render(request, '3_3_coord_shortlist_vmore.html', {"job_details" : job_details, "applicants" : applicants})
-# MongoDB Connection
-# client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-# db = client['Placement']
-# job_collection = db['job']
-# appl_collection = db['application']
 
-# applied_jobs = []
-# events = []
-# applications = appl_collection.find({"appl_student_id": request.session.get('u_id')})
-# for appl in applications:
-#     job = job_collection.find_one({"_id": appl["appl_job_id"]})
-#     job_details = job
-#     job_details.update(appl)
-#     applied_jobs.append(job_details)
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - PPT", "start": job["job_pptDate"], "round": 0})
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - OA", "start": job["job_oaDate"], "round": 1})
-#     events.append({"id": job["_id"], "compName": f"{job['job_companyName']} - Interview", "start": job["job_interviewDate"], "round": 2})
-    
-# return render(request, '2_1_student_home.html', context = {"events" : events})
 
 @csrf_exempt
 def coordinator_shortlist_selected(request):
@@ -158,8 +139,6 @@ def coordinator_shortlist_selected(request):
                     )
 
         return redirect('/coordinator/shortlist')
-        # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:
 
 def coordinator_track(request):
     cd_dept_id = Coordinator.objects.get(cd_id =  request.session.get('u_id')).cd_dept_id
@@ -252,8 +231,7 @@ def coordinator_track(request):
 
 def coordinator_applied(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
 
     job_collection = db['job']
@@ -288,8 +266,6 @@ def coordinator_applied_vmore(request, job_id):
         print(job_id)
 
         # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        # db = client['Placement']
         db = get_db()  # Reuse the shared MongoDB connection
 
         job_collection = db['job']

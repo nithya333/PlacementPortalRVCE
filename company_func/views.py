@@ -24,8 +24,7 @@ from django import forms
 
 def company_home(request):
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
@@ -119,8 +118,6 @@ def company_postjob_submit(request):
         job_data["job_lastUpdated"] = time.strftime("%Y-%m-%d %H:%M:%S")
 
         # Connect to MongoDB
-        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        # db = client['Placement']  # Database name
         db = get_db()  # Reuse the shared MongoDB connection
         job_collection = db['job']  # Collection name
         
@@ -134,8 +131,7 @@ def company_postjob_submit(request):
         return redirect('/company/home')
     
 def company_ong_recruitments(request):
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
@@ -184,8 +180,7 @@ def company_ong_recruitments(request):
 
    
 def company_past_recruitments(request):
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
+    
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
@@ -202,8 +197,6 @@ def company_ong_recruitments_vmore(request, job_id):
         print(job_id)
 
         # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-        # db = client['Placement']
         db = get_db()  # Reuse the shared MongoDB connection
 
         job_collection = db['job']

@@ -61,8 +61,6 @@ def head_allot_slots(request):
         interview_date = request.POST.get('interview_slot')
         print(job_id, ppt_date, oa_date, interview_date)
         # MongoDB Connection
-        # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')
-        # db = client['Placement']
         db = get_db()  # Reuse the shared MongoDB connection
 
         job_collection = db['job']
@@ -84,8 +82,6 @@ def head_allot_slots(request):
     # if request.method == 'GET':
 
     # MongoDB Connection
-    # client = MongoClient('mongodb+srv://nithya3169:MTUsn5fNh1xOurY5@cluster0charitham.hdany.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Charitham')  # Update with your MongoDB connection string
-    # db = client['Placement']
     db = get_db()  # Reuse the shared MongoDB connection
     job_collection = db['job']
 
