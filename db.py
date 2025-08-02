@@ -9,7 +9,7 @@ class MongoDBClient:
     def get_client():
         if MongoDBClient._client is None:
             # Initialize MongoDB client if not created already 
-            uri = 'mongodb+srv://?retryWrites=true&w=majority&appName=Cluster0Charitham'  # Use your MongoDB URI here
+            uri = 'mongodb+srv://?retryWrites=true&w=majority&appName=cluster_name'  # Use your MongoDB URI here
             
             MongoDBClient._client = MongoClient(uri)
         return MongoDBClient._client
